@@ -20,7 +20,7 @@ export default function Home() {
             Overture Systems Solutions
           </h1>
           <p className="mt-6 text-xl leading-8 text-muted-foreground">
-            Our platform delivers intelligent solutions to transform your business. From automation to insights, we&apos;ve got you covered.
+            AI-powered solutions for your business.
           </p>
           <div className="mt-10 flex justify-center gap-4">
             <Button size="lg" asChild>
