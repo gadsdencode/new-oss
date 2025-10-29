@@ -10,7 +10,7 @@ import { Marquee } from "@/components/ui/marquee"
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon } from "lucide-react";
+import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon, CodeIcon } from "lucide-react";
 
 const TechCard = ({
   name,
@@ -138,6 +138,17 @@ export default function Home() {
               description="Work seamlessly with your team in real-time." 
               href="/features/collaboration" 
               cta="Get Started" 
+            />
+            <BentoCard 
+              name="API Integration" 
+              className="col-span-1 md:col-span-2 lg:col-span-1" 
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 dark:from-teal-500/10 dark:to-cyan-500/10" />
+              } 
+              Icon={CodeIcon} 
+              description="Seamless integration with your existing tools and services." 
+              href="/features/api" 
+              cta="View API" 
             />
           </BentoGrid>
         </div>
