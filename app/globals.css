@@ -1,7 +1,7 @@
+/* globals.css */
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
-@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -98,6 +98,7 @@
   --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
   --sidebar-border: oklch(0.923 0.003 48.717);
   --sidebar-ring: oklch(0.709 0.01 56.259);
+  --ai-accent: oklch(0.6 0.2 270);
 }
 
 .dark {
@@ -132,6 +133,7 @@
   --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.553 0.013 58.071);
+  --ai-accent: oklch(0.7 0.15 280);
 }
 
 @layer base {
@@ -141,4 +143,14 @@
   body {
     @apply bg-background text-foreground;
   }
+  .ai-gradient {
+    background: var(--aiGradient);
+    background-size: var(--bg-size, 200%);
+    animation: gradient-flow var(--animation-duration, 5s) ease infinite;
+  }
+}
+
+::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
 }

@@ -1,65 +1,121 @@
+// page.tsx
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex min-h-screen flex-col bg-background font-sans">
+      {/* Hero Section */}
+      <header className="relative flex h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20 dark:from-primary/10 dark:to-accent/10">
+        <div className="absolute inset-0 ai-gradient opacity-50" />
+        <div className="z-10 mx-auto max-w-4xl px-6 text-center">
+          <Badge variant="outline" className="mb-4 border-primary text-primary">Beta Launch</Badge>
+          <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-7xl">
+            Overture Systems Solutions
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-6 text-xl leading-8 text-muted-foreground">
+            Our platform delivers intelligent solutions to transform your business. From automation to insights, we&apos;ve got you covered.
           </p>
+          <div className="mt-10 flex justify-center gap-4">
+            <Button size="lg" asChild>
+              <Link href="/signup">Get Started</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/demo">Watch Demo</Link>
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      {/* Features Section */}
+      <section className="py-24 bg-muted/50 dark:bg-muted/20">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="text-center text-4xl font-semibold tracking-tight text-foreground">
+            Powerful Features for Your AI Needs
+          </h2>
+          <Separator className="my-12" />
+          <div className="grid gap-8 md:grid-cols-3">
+            <Card className="shadow-ai-glow">
+              <CardHeader>
+                <CardTitle>Intelligent Automation</CardTitle>
+                <CardDescription>Streamline workflows with AI-driven tools.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Image
+                  src="/automation.svg"  // Placeholder; replace with actual asset
+                  alt="Automation"
+                  width={300}
+                  height={200}
+                  className="mx-auto"
+                />
+              </CardContent>
+              <CardFooter>
+                <Button variant="link">Learn More</Button>
+              </CardFooter>
+            </Card>
+            <Card className="shadow-ai-glow">
+              <CardHeader>
+                <CardTitle>Advanced Analytics</CardTitle>
+                <CardDescription>Gain deep insights from your data.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Image
+                  src="/analytics.svg"  // Placeholder
+                  alt="Analytics"
+                  width={300}
+                  height={200}
+                  className="mx-auto"
+                />
+              </CardContent>
+              <CardFooter>
+                <Button variant="link">Learn More</Button>
+              </CardFooter>
+            </Card>
+            <Card className="shadow-ai-glow">
+              <CardHeader>
+                <CardTitle>Custom AI Models</CardTitle>
+                <CardDescription>Build and deploy tailored AI solutions.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Image
+                  src="/models.svg"  // Placeholder
+                  alt="AI Models"
+                  width={300}
+                  height={200}
+                  className="mx-auto"
+                />
+              </CardContent>
+              <CardFooter>
+                <Button variant="link">Learn More</Button>
+              </CardFooter>
+            </Card>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 text-center">
+        <div className="mx-auto max-w-4xl px-6">
+          <h2 className="text-4xl font-semibold tracking-tight text-foreground">
+            Ready to Revolutionize Your Business?
+          </h2>
+          <p className="mt-6 text-lg text-muted-foreground">
+            Join thousands of innovators using our AI platform.
+          </p>
+          <Button size="lg" className="mt-8">Sign Up Free</Button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t py-8 text-center text-sm text-muted-foreground">
+        © 2025 AI Startup. All rights reserved.
+      </footer>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+// tailwind.config.ts
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
@@ -12,7 +13,7 @@ const config: Config = {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
-        // Custom color palette
+        // Custom color palette (refined for AI theme: blues/purples for tech/futuristic feel)
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',
@@ -91,6 +92,8 @@ const config: Config = {
           900: '#7f1d1d',
           950: '#450a0a',
         },
+        // Added AI-themed gradients/colors
+        aiGradient: 'linear-gradient(135deg, #3b82f6, #d946ef)',
       },
       fontFamily: {
         sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
@@ -137,6 +140,8 @@ const config: Config = {
         '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
         'inner': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
         'none': 'none',
+        // Added for sleek cards
+        'ai-glow': '0 0 15px rgba(59, 130, 246, 0.2)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
@@ -146,6 +151,8 @@ const config: Config = {
         'bounce-slow': 'bounce 2s infinite',
         'pulse-slow': 'pulse 3s infinite',
         'spin-slow': 'spin 3s linear infinite',
+        // Added for AI effects
+        'gradient-flow': 'gradientFlow 5s ease infinite',
       },
       keyframes: {
         fadeIn: {
@@ -164,6 +171,11 @@ const config: Config = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-100%)' },
         },
+        gradientFlow: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
       },
       screens: {
         'xs': '475px',
@@ -179,6 +191,9 @@ const config: Config = {
         '80': '80',
         '90': '90',
         '100': '100',
+      },
+      backgroundSize: {
+        '200': '200% 200%',
       },
     },
   },
