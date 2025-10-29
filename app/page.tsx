@@ -6,9 +6,46 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid"
+import { Marquee } from "@/components/ui/marquee"
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon } from "lucide-react";
+
+const TechCard = ({
+  name,
+  description,
+  category,
+}: {
+  name: string
+  description: string
+  category: string
+}) => {
+  return (
+    <figure
+      className={cn(
+        "relative w-64 cursor-pointer overflow-hidden rounded-xl border p-4",
+        // light styles
+        "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
+        // dark styles
+        "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
+        "transition-colors"
+      )}
+    >
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <figcaption className="text-sm font-medium dark:text-white">
+            {name}
+          </figcaption>
+          <Badge variant="secondary" className="text-xs">
+            {category}
+          </Badge>
+        </div>
+        <blockquote className="text-xs text-muted-foreground">{description}</blockquote>
+      </div>
+    </figure>
+  )
+}
 
 export default function Home() {
   return (
@@ -106,68 +143,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Tech Stack Section */}
       <section className="py-24 bg-muted/50 dark:bg-muted/20">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-center text-4xl font-semibold tracking-tight text-foreground">
-            Powerful Features for Your AI Needs
-          </h2>
-          <Separator className="my-12" />
-          <div className="grid gap-8 md:grid-cols-3">
-            <Card className="shadow-ai-glow">
-              <CardHeader>
-                <CardTitle>Intelligent Automation</CardTitle>
-                <CardDescription>Streamline workflows with AI-driven tools.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Image
-                  src="/automation.svg"  // Placeholder; replace with actual asset
-                  alt="Automation"
-                  width={300}
-                  height={200}
-                  className="mx-auto"
-                />
-              </CardContent>
-              <CardFooter>
-                <Button variant="link">Learn More</Button>
-              </CardFooter>
-            </Card>
-            <Card className="shadow-ai-glow">
-              <CardHeader>
-                <CardTitle>Advanced Analytics</CardTitle>
-                <CardDescription>Gain deep insights from your data.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Image
-                  src="/analytics.svg"  // Placeholder
-                  alt="Analytics"
-                  width={300}
-                  height={200}
-                  className="mx-auto"
-                />
-              </CardContent>
-              <CardFooter>
-                <Button variant="link">Learn More</Button>
-              </CardFooter>
-            </Card>
-            <Card className="shadow-ai-glow">
-              <CardHeader>
-                <CardTitle>Custom AI Models</CardTitle>
-                <CardDescription>Build and deploy tailored AI solutions.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Image
-                  src="/models.svg"  // Placeholder
-                  alt="AI Models"
-                  width={300}
-                  height={200}
-                  className="mx-auto"
-                />
-              </CardContent>
-              <CardFooter>
-                <Button variant="link">Learn More</Button>
-              </CardFooter>
-            </Card>
+        <div className="w-full">
+          <div className="px-6">
+            <h2 className="text-center text-4xl font-semibold tracking-tight text-foreground">
+              Built with Modern Technologies
+            </h2>
+            <Separator className="my-12" />
+          </div>
+          <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
+            <Marquee pauseOnHover className="[--duration:30s]">
+              <TechCard name="Next.js" description="React Framework for Production" category="Framework" />
+              <TechCard name="React" description="UI Component Library" category="Library" />
+              <TechCard name="TypeScript" description="Type-Safe JavaScript" category="Language" />
+              <TechCard name="Tailwind CSS" description="Utility-First CSS Framework" category="Styling" />
+              <TechCard name="shadcn/ui" description="Re-usable Components" category="Components" />
+              <TechCard name="Radix UI" description="Accessible Primitives" category="Primitives" />
+            </Marquee>
+            <Marquee reverse pauseOnHover className="[--duration:30s] mt-4">
+              <TechCard name="Lucide Icons" description="Beautiful Icon Set" category="Icons" />
+              <TechCard name="Framer Motion" description="Animation Library" category="Animation" />
+              <TechCard name="Zod" description="Schema Validation" category="Validation" />
+              <TechCard name="React Hook Form" description="Form Management" category="Forms" />
+              <TechCard name="Recharts" description="Chart Components" category="Charts" />
+              <TechCard name="date-fns" description="Date Utilities" category="Utilities" />
+            </Marquee>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-muted/50 dark:from-muted/20"></div>
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-muted/50 dark:from-muted/20"></div>
           </div>
         </div>
       </section>
