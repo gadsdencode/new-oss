@@ -1,25 +1,35 @@
 import {
   CopilotRuntime,
-  ExperimentalEmptyAdapter,
+  GoogleGenerativeAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
-  LangGraphAgent
 } from "@copilotkit/runtime";
 import { NextRequest } from "next/server";
 
-// 1. You can use any service adapter here for multi-agent support. We use
-//    the empty adapter since we're only using one agent.
-const serviceAdapter = new ExperimentalEmptyAdapter();
+// 1. Use GoogleGenerativeAIAdapter for direct Gemini API integration
+//    This adapter uses Google Gemini API directly without requiring LangGraph
+const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+
+// Log for debugging (remove in production)
+if (!apiKey) {
+  console.error("ERROR: No Gemini API key found. Please set GEMINI_API_KEY or GOOGLE_API_KEY in .env.local");
+}
+
+const serviceAdapter = new GoogleGenerativeAIAdapter({
+  model: "gemini-1.5-pro",
+  apiKey: apiKey,
+});
  
-// 2. Create the CopilotRuntime instance and utilize the LangGraph AG-UI
-//    integration to setup the connection.
+// 2. Create the CopilotRuntime instance without LangGraph agents
+//    LangGraph configuration is commented out but preserved for future use
 const runtime = new CopilotRuntime({
-  agents: {
-    starterAgent: new LangGraphAgent({
-      deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
-      graphId: "starterAgent",
-      langsmithApiKey: process.env.LANGSMITH_API_KEY || ""
-    })
-  }   
+  // Uncomment the following to enable LangGraph agents:
+  // agents: {
+  //   starterAgent: new LangGraphAgent({
+  //     deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
+  //     graphId: "starterAgent",
+  //     langsmithApiKey: process.env.LANGSMITH_API_KEY || ""
+  //   })
+  // }
 });
  
 // 3. Build a Next.js API route that handles the CopilotKit runtime requests.

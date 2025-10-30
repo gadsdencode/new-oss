@@ -50,7 +50,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-sans`}>
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="starterAgent" publicLicenseKey="ck_pub_079278b2bd4b959809f2a4767c5fa899">
+        <CopilotKit runtimeUrl="/api/copilotkit" publicLicenseKey="ck_pub_079278b2bd4b959809f2a4767c5fa899">
           <div className="fixed top-4 right-4 z-50">
             <AnimatedThemeToggler />
           </div>
