@@ -124,7 +124,7 @@ export default function Home() {
               } 
               Icon={ShieldCheckIcon} 
               description="Enterprise-level compliance with SOC 2." 
-              href="/features/security" 
+              href="/compliance" 
               cta="View Security" 
             />
             <BentoCard 
