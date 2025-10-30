@@ -1,20 +1,23 @@
 import {
   CopilotRuntime,
-  LangGraphAgent,
+  GoogleGenerativeAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
+  langGraphPlatformEndpoint,
 } from "@copilotkit/runtime";
 import { NextRequest } from "next/server";
 import { handleApiError, createErrorResponse, validateEnvVars } from "@/lib/errors";
 
 // Validate required environment variables
-const envValidation = validateEnvVars(["GEMINI_API_KEY", "GOOGLE_API_KEY", "LANGGRAPH_DEPLOYMENT_URL"]);
+const envValidation = validateEnvVars(["GEMINI_API_KEY", "GOOGLE_API_KEY"]);
 if (!envValidation.valid && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_API_KEY) {
   console.warn(
     "Warning: Neither GEMINI_API_KEY nor GOOGLE_API_KEY is set. API functionality may be limited."
   );
 }
 
-// Use LangGraph agent for advanced AI capabilities
+// Service adapter is required even when using LangGraph agents
+// It handles multi-agent coordination and fallback scenarios
+let serviceAdapter: GoogleGenerativeAIAdapter;
 let runtime: CopilotRuntime;
 
 try {
@@ -24,13 +27,22 @@ try {
     throw new Error("Missing required API key: GEMINI_API_KEY or GOOGLE_API_KEY must be set");
   }
 
-  // Create the CopilotRuntime instance with LangGraph agent
+  // Initialize the Google Gemini adapter
+  serviceAdapter = new GoogleGenerativeAIAdapter();
+
+  // Create the CopilotRuntime instance with LangGraph Platform endpoint
+  // This connects to the LangGraph agent running on port 8123
   runtime = new CopilotRuntime({
-    agents: {
-      starterAgent: new LangGraphAgent({
+    remoteEndpoints: [
+      langGraphPlatformEndpoint({
         deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
+        langsmithApiKey: process.env.LANGSMITH_API_KEY || "",
+        agents: [{
+          name: "starterAgent",
+          description: "A helpful AI agent powered by Google Gemini"
+        }]
       })
-    }
+    ],
   });
 } catch (error) {
   console.error("Failed to initialize CopilotKit runtime:", error);
@@ -43,8 +55,8 @@ try {
  */
 export const POST = async (req: NextRequest) => {
   try {
-    // Check if runtime was initialized successfully
-    if (!runtime) {
+    // Check if runtime and serviceAdapter were initialized successfully
+    if (!runtime || !serviceAdapter) {
       return createErrorResponse(
         "Service Unavailable",
         "CopilotKit runtime failed to initialize. Please check server configuration.",
@@ -62,9 +74,10 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    // Get the request handler
+    // Get the request handler with both runtime and serviceAdapter
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
       runtime,
+      serviceAdapter,
       endpoint: "/api/copilotkit",
     });
 
