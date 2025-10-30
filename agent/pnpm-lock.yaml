@@ -13,7 +13,7 @@ importers:
     dependencies:
       '@copilotkit/sdk-js':
         specifier: ^1.10.4
-        version: 1.10.6(e54dc9014a5ea55aaf81e17879a0beb5)
+        version: 1.10.6(435e31f76f596b682b04e99ee9276c92)
       '@langchain/anthropic':
         specifier: ^0.3.8
         version: 0.3.33(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76)
@@ -29,6 +29,9 @@ importers:
       '@langchain/langgraph-checkpoint':
         specifier: ^0.0.16
         version: 0.0.16(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))
+      '@langchain/langgraph-sdk':
+        specifier: ^1.0.0
+        version: 1.0.0(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))
       '@langchain/openai':
         specifier: ^0.3.14
         version: 0.3.17(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(ws@8.18.3)
@@ -513,6 +516,20 @@ packages:
     resolution: {integrity: sha512-9srSCb2bSvcvehMgjA2sMMwX0o1VUgPN6ghwm5Fwc9JGAKsQa6n1S4eCwy1h4abuYxwajH5n3spBw+4I2WYbgw==}
     peerDependencies:
       '@langchain/core': '>=0.2.31 <0.4.0 || ^1.0.0-alpha'
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
+    peerDependenciesMeta:
+      '@langchain/core':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
+  '@langchain/langgraph-sdk@1.0.0':
+    resolution: {integrity: sha512-g25ti2W7Dl5wUPlNK+0uIGbeNFqf98imhHlbdVVKTTkDYLhi/pI1KTgsSSkzkeLuBIfvt2b0q6anQwCs7XBlbw==}
+    peerDependencies:
+      '@langchain/core': ^1.0.1
       react: ^18 || ^19
       react-dom: ^18 || ^19
     peerDependenciesMeta:
@@ -1275,13 +1292,13 @@ snapshots:
 
   '@cfworker/json-schema@4.1.1': {}
 
-  '@copilotkit/sdk-js@1.10.6(e54dc9014a5ea55aaf81e17879a0beb5)':
+  '@copilotkit/sdk-js@1.10.6(435e31f76f596b682b04e99ee9276c92)':
     dependencies:
       '@copilotkit/shared': 1.10.6
       '@langchain/community': 1.0.0(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.56.1)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.7.0(ws@8.18.3)(zod@3.25.76))(zod@3.25.76))(@ibm-cloud/watsonx-ai@1.7.2)(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(fast-xml-parser@4.5.3)(ibm-cloud-sdk-core@5.4.3)(jsonwebtoken@9.0.2)(openai@6.7.0(ws@8.18.3)(zod@3.25.76))(playwright@1.56.1)(ws@8.18.3)
       '@langchain/core': 0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76))
       '@langchain/langgraph': 0.4.9(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod-to-json-schema@3.24.6(zod@3.25.76))
-      langchain: 0.3.36(@langchain/anthropic@0.3.33(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76))(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(@langchain/google-genai@0.1.12(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76))(axios@1.13.1(debug@4.4.3))(handlebars@4.7.8)(openai@6.7.0(ws@8.18.3)(zod@3.25.76))(ws@8.18.3)
+      langchain: 0.3.36(@langchain/anthropic@0.3.33(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76))(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(@langchain/google-genai@0.1.12(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76))(axios@1.13.1)(handlebars@4.7.8)(openai@6.7.0(ws@8.18.3)(zod@3.25.76))(ws@8.18.3)
       typescript: 5.9.3
       zod: 3.25.76
     transitivePeerDependencies:
@@ -1408,6 +1425,14 @@ snapshots:
   '@langchain/langgraph-sdk@0.1.10(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))':
     dependencies:
       '@types/json-schema': 7.0.15
+      p-queue: 6.6.2
+      p-retry: 4.6.2
+      uuid: 9.0.1
+    optionalDependencies:
+      '@langchain/core': 0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76))
+
+  '@langchain/langgraph-sdk@1.0.0(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))':
+    dependencies:
       p-queue: 6.6.2
       p-retry: 4.6.2
       uuid: 9.0.1
@@ -1740,7 +1765,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.1(debug@4.4.3))
+      retry-axios: 2.6.0(axios@1.13.1)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -1790,7 +1815,7 @@ snapshots:
       jwa: 1.4.2
       safe-buffer: 5.2.1
 
-  langchain@0.3.36(@langchain/anthropic@0.3.33(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76))(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(@langchain/google-genai@0.1.12(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76))(axios@1.13.1(debug@4.4.3))(handlebars@4.7.8)(openai@6.7.0(ws@8.18.3)(zod@3.25.76))(ws@8.18.3):
+  langchain@0.3.36(@langchain/anthropic@0.3.33(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76))(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(@langchain/google-genai@0.1.12(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(zod@3.25.76))(axios@1.13.1)(handlebars@4.7.8)(openai@6.7.0(ws@8.18.3)(zod@3.25.76))(ws@8.18.3):
     dependencies:
       '@langchain/core': 0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76))
       '@langchain/openai': 0.3.17(@langchain/core@0.3.79(openai@6.7.0(ws@8.18.3)(zod@3.25.76)))(ws@8.18.3)
@@ -1939,7 +1964,7 @@ snapshots:
 
   requires-port@1.0.0: {}
 
-  retry-axios@2.6.0(axios@1.13.1(debug@4.4.3)):
+  retry-axios@2.6.0(axios@1.13.1):
     dependencies:
       axios: 1.13.1(debug@4.4.3)
 

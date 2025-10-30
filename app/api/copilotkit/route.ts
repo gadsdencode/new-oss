@@ -8,10 +8,22 @@ import { NextRequest } from "next/server";
 import { handleApiError, createErrorResponse, validateEnvVars } from "@/lib/errors";
 
 // Validate required environment variables
-const envValidation = validateEnvVars(["GEMINI_API_KEY", "GOOGLE_API_KEY"]);
+const envValidation = validateEnvVars([
+  "GEMINI_API_KEY",
+  "GOOGLE_API_KEY",
+  "LANGGRAPH_API_KEY",
+]);
 if (!envValidation.valid && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_API_KEY) {
   console.warn(
     "Warning: Neither GEMINI_API_KEY nor GOOGLE_API_KEY is set. API functionality may be limited."
+  );
+}
+
+// Critical security check for LangGraph authentication
+if (!process.env.LANGGRAPH_API_KEY) {
+  console.error(
+    "⚠️  CRITICAL SECURITY WARNING: LANGGRAPH_API_KEY is not set! " +
+    "Your LangGraph agent endpoint is UNSECURED and can be accessed by anyone."
   );
 }
 
@@ -32,6 +44,7 @@ try {
 
   // Create the CopilotRuntime instance with LangGraph Platform endpoint
   // This connects to the LangGraph agent running on port 8123
+  // SECURITY: API key authentication is added via headers
   runtime = new CopilotRuntime({
     remoteEndpoints: [
       langGraphPlatformEndpoint({
@@ -40,7 +53,11 @@ try {
         agents: [{
           name: "starterAgent",
           description: "A helpful AI agent powered by Google Gemini"
-        }]
+        }],
+        // Add authentication headers to secure the agent endpoint
+        headers: {
+          "x-langgraph-api-key": process.env.LANGGRAPH_API_KEY || "",
+        },
       })
     ],
   });
