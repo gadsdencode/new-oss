@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "concurrently \"npm:dev:ui\" \"npm:dev:agent\" --names ui,agent --prefix-colors blue,green --kill-others",
+    "dev:ui": "next dev --webpack",
+    "dev:agent": "cd agent && npx @langchain/langgraph-cli dev --port 8123 --no-browser",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint"
@@ -66,10 +68,12 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@langchain/langgraph-cli": "0.0.40",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
     "tailwindcss": "^4",

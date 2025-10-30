@@ -51,7 +51,7 @@ export default function Home() {
       {/* Hero Section */}
       <header className="relative flex min-h-[50vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20 dark:from-primary/10 dark:to-accent/10">
         <div className="absolute inset-0 ai-gradient opacity-50" />
-        <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-16">
+        <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 pt-16 pb-8">
           <Badge variant="outline" className="mb-3 border-primary text-primary">Beta Launch</Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl whitespace-nowrap">
             Overture Systems Solutions
@@ -59,7 +59,7 @@ export default function Home() {
           <p className="mt-4 text-lg sm:text-xl leading-7 text-muted-foreground">
             AI-powered solutions for your business.
           </p>
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-6 flex justify-center gap-4">
             <Button size="lg" asChild>
               <Link href="/signup">Get Started</Link>
             </Button>
@@ -68,7 +68,7 @@ export default function Home() {
       </header>
 
       {/* Bento Grid Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
+      <section className="pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <BentoGrid>
             <BentoCard 
