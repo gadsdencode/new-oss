@@ -2,8 +2,11 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "@copilotkit/react-ui/styles.css";
 
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
+import { CopilotKit } from "@copilotkit/react-core";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { CopilotSidebarWrapper } from "./components/copilot-sidebar-wrapper";
 
 // Fallback: Inter ≈ Geist Sans, JetBrains Mono ≈ Geist Mono
 const inter = Inter({
@@ -47,10 +50,13 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-sans`}>
-        <div className="fixed top-4 right-4 z-50">
-          <AnimatedThemeToggler />
-        </div>
-        {children}
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="starterAgent" publicLicenseKey="ck_pub_079278b2bd4b959809f2a4767c5fa899">
+          <div className="fixed top-4 right-4 z-50">
+            <AnimatedThemeToggler />
+          </div>
+          {children}
+          <CopilotSidebarWrapper />
+        </CopilotKit>
       </body>
     </html>
   );

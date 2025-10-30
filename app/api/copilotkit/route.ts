@@ -17,7 +17,7 @@ const runtime = new CopilotRuntime({
     starterAgent: new LangGraphAgent({
       deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
       graphId: "starterAgent",
-      langsmithApiKey: process.env.LANGSMITH_API_KEY || ""
+      langsmithApiKey: process.env.LANGSMITH_API_KEY || "",
     })
   }   
 });
@@ -32,3 +32,4 @@ export const POST = async (req: NextRequest) => {
  
   return handleRequest(req);
 };
+
