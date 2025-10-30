@@ -411,7 +411,7 @@ export default function B2BResearchPage() {
           </div>
           <p className="mt-8 text-sm text-muted-foreground">
             <ShieldCheckIcon className="w-4 h-4 inline mr-2 text-green-500" />
-            HIPAA Compliant • Enterprise Security • Dedicated Support
+            HIPAA Compliant • Enterprise Compliance • Dedicated Support
           </p>
         </div>
       </section>

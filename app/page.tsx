@@ -119,13 +119,13 @@ export default function Home() {
               cta="Discover AI" 
             />
             <BentoCard 
-              name="Enterprise Security" 
+              name="Enterprise Compliance" 
               className="col-span-1 md:col-span-1 lg:col-span-1" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10" />
               } 
               Icon={ShieldCheckIcon} 
-              description="Bank-level security with SOC 2 compliance." 
+              description="Enterprise-level compliance with SOC 2." 
               href="/features/security" 
               cta="View Security" 
             />
@@ -194,7 +194,7 @@ export default function Home() {
             Ready to Revolutionize Your Business?
           </h2>
           <p className="mt-6 text-lg text-muted-foreground">
-            Join thousands of innovators using our AI platform.
+            Join thousands of innovators using our AI-powered solutions.
           </p>
           <Button size="lg" className="mt-8">Sign Up Free</Button>
         </div>
@@ -202,7 +202,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-        © 2025 AI Startup. All rights reserved.
+        © 2025 Overture Systems Solutions. All rights reserved.
       </footer>
     </div>
   );

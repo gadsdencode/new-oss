@@ -19,8 +19,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Startup - Revolutionizing Intelligence",
-  description: "Empowering businesses with cutting-edge AI solutions.",
+  title: "Overture Systems Solutions - Revolutionizing Intelligence",
+  description: "Empowering businesses with cutting-edge AI-powered solutions.",
 };
 
 export default function RootLayout({
