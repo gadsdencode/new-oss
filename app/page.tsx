@@ -10,7 +10,7 @@ import { Marquee } from "@/components/ui/marquee"
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon, SearchCheckIcon, HeartPulseIcon } from "lucide-react";
+import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon, SearchCheckIcon, HeartPulseIcon, MailIcon } from "lucide-react";
 
 const TechCard = ({
   name,
@@ -97,15 +97,15 @@ export default function Home() {
               cta="Get Consultation" 
             />
             <BentoCard 
-              name="Lightning Fast" 
+              name="Contact Us" 
               className="col-span-1 md:col-span-1 lg:col-span-1" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 dark:from-yellow-500/10 dark:to-orange-500/10" />
               } 
-              Icon={ZapIcon} 
-              description="Optimized performance for enterprise-scale applications." 
-              href="/features/performance" 
-              cta="See Speed" 
+              Icon={MailIcon} 
+              description="Get in touch with our team for personalized support and solutions." 
+              href="/contact" 
+              cta="Get In Touch" 
             />
             <BentoCard 
               name="Advanced AI Models" 
