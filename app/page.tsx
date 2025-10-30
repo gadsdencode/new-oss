@@ -10,7 +10,7 @@ import { Marquee } from "@/components/ui/marquee"
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon, CodeIcon } from "lucide-react";
+import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon, SearchCheckIcon, HeartPulseIcon } from "lucide-react";
 
 const TechCard = ({
   name,
@@ -74,15 +74,16 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <BentoGrid>
             <BentoCard 
-              name="Intelligent Automation" 
+              name="Uterpi" 
               className="col-span-1 md:col-span-2 lg:col-span-2" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 dark:from-primary/10 dark:to-accent/10" />
               } 
-              Icon={BotIcon} 
-              description="Streamline workflows with AI-driven tools and smart automation." 
-              href="/features/automation" 
-              cta="Learn More" 
+              Icon={BrainCircuitIcon} 
+              description="Advanced AI platform for modern businesses and workflows." 
+              href="https://uterpi.com" 
+              cta="Visit Uterpi" 
+              title="Uterpi - AI-powered platform for modern businesses and workflows."
             />
             <BentoCard 
               name="Real-time Analytics" 
@@ -140,15 +141,15 @@ export default function Home() {
               cta="Get Started" 
             />
             <BentoCard 
-              name="API Integration" 
+              name="B2B Research" 
               className="col-span-1 md:col-span-2 lg:col-span-1" 
               background={
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 dark:from-teal-500/10 dark:to-cyan-500/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-rose-500/20 to-pink-500/20 dark:from-rose-500/10 dark:to-pink-500/10" />
               } 
-              Icon={CodeIcon} 
-              description="Seamless integration with your existing tools and services." 
-              href="/features/api" 
-              cta="View API" 
+              Icon={SearchCheckIcon} 
+              description="AI-powered research platform for healthcare and non-profit organizations." 
+              href="/research" 
+              cta="Explore Research" 
             />
           </BentoGrid>
         </div>
