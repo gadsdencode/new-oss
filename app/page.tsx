@@ -86,15 +86,15 @@ export default function Home() {
               title="Uterpi - AI-powered platform for modern businesses and workflows."
             />
             <BentoCard 
-              name="Real-time Analytics" 
+              name="AI Consulting" 
               className="col-span-1 md:col-span-2 lg:col-span-1" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 dark:from-blue-500/10 dark:to-cyan-500/10" />
               } 
               Icon={ChartBarIcon} 
-              description="Gain deep insights from your data in real-time." 
-              href="/features/analytics" 
-              cta="Explore" 
+              description="Expert AI strategy and implementation consulting for your business." 
+              href="/consulting" 
+              cta="Get Consultation" 
             />
             <BentoCard 
               name="Lightning Fast" 

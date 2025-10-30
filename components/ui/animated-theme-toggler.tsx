@@ -20,11 +20,23 @@ export const AnimatedThemeToggler = ({
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
+    // Load theme from localStorage on mount
+    const storedTheme = localStorage.getItem("theme")
+    const isDarkMode = storedTheme === "dark" || 
+      (!storedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    
+    setIsDark(isDarkMode)
+    
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
+
+    // Watch for changes to theme
     const updateTheme = () => {
       setIsDark(document.documentElement.classList.contains("dark"))
     }
-
-    updateTheme()
 
     const observer = new MutationObserver(updateTheme)
     observer.observe(document.documentElement, {
