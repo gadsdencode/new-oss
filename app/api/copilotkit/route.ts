@@ -3,15 +3,17 @@ import {
   GoogleGenerativeAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
   langGraphPlatformEndpoint,
+  copilotKitEndpoint,
 } from "@copilotkit/runtime";
 import { NextRequest } from "next/server";
 import { handleApiError, createErrorResponse, validateEnvVars } from "@/lib/errors";
 
-// Validate required environment variables
+// Validate optional environment variables (warn-only; follow CopilotKit docs behavior)
 const envValidation = validateEnvVars([
   "GEMINI_API_KEY",
   "GOOGLE_API_KEY",
-  "LANGGRAPH_API_KEY",
+  "NEXT_PUBLIC_LANGGRAPH_URL",
+  "LANGGRAPH_DEPLOYMENT_URL",
 ]);
 if (!envValidation.valid && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_API_KEY) {
   console.warn(
@@ -19,11 +21,16 @@ if (!envValidation.valid && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_A
   );
 }
 
-// Critical security check for LangGraph authentication
-if (!process.env.LANGGRAPH_API_KEY) {
-  console.error(
-    "⚠️  CRITICAL SECURITY WARNING: LANGGRAPH_API_KEY is not set! " +
-    "Your LangGraph agent endpoint is UNSECURED and can be accessed by anyone."
+// Critical security check for LangGraph URL
+const langGraphUrl = 
+  process.env.NEXT_PUBLIC_LANGGRAPH_URL ||
+  process.env.LANGGRAPH_DEPLOYMENT_URL ||
+  "http://localhost:8123";
+
+if (!process.env.LANGGRAPH_DEPLOYMENT_URL && !process.env.NEXT_PUBLIC_LANGGRAPH_URL) {
+  console.warn(
+    "⚠️  WARNING: LANGGRAPH_DEPLOYMENT_URL or NEXT_PUBLIC_LANGGRAPH_URL is not set! " +
+    "Falling back to http://localhost:8123. Set this environment variable for production."
   );
 }
 
@@ -33,38 +40,95 @@ let serviceAdapter: GoogleGenerativeAIAdapter;
 let runtime: CopilotRuntime;
 
 try {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-  
-  if (!apiKey) {
-    throw new Error("Missing required API key: GEMINI_API_KEY or GOOGLE_API_KEY must be set");
-  }
-
-  // Initialize the Google Gemini adapter
+  // Initialize the Google Gemini adapter (per CopilotKit docs; uses env for keys)
   serviceAdapter = new GoogleGenerativeAIAdapter();
 
-  // Create the CopilotRuntime instance with LangGraph Platform endpoint
-  // This connects to the LangGraph agent running on port 8123
-  // SECURITY: API key authentication is added via headers
-  runtime = new CopilotRuntime({
-    remoteEndpoints: [
-      langGraphPlatformEndpoint({
-        deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
-        langsmithApiKey: process.env.LANGSMITH_API_KEY || "",
-        agents: [{
-          name: "starterAgent",
-          description: "A helpful AI agent powered by Google Gemini"
-        }],
-        // Add authentication headers to secure the agent endpoint
-        headers: {
-          "x-langgraph-api-key": process.env.LANGGRAPH_API_KEY || "",
-        },
-      })
-    ],
-  });
+  // Create the CopilotRuntime with remoteEndpoints (official CopilotKit method for self-hosted agents)
+  // Reference: https://www.copilotkit.ai/blog/heres-how-to-build-fullstack-agent-apps-gemini-copilotkit-langgraph
+  // For self-hosted LangGraph deployments, use langGraphPlatformEndpoint with agent configuration
+  // The agent name "starterAgent" comes from agent/langgraph.json
+  
+  // Check if we have authentication key for LangGraph
+  const langGraphApiKey = process.env.LANGGRAPH_API_KEY;
+  
+  // Build remote endpoints configuration
+  // For self-hosted LangGraph deployments, use copilotKitEndpoint with onBeforeRequest for auth
+  // This handles the /info endpoint with authentication headers
+  // For LangGraph Platform Cloud deployments, use langGraphPlatformEndpoint
+  if (langGraphUrl.includes("localhost") || langGraphUrl.includes("127.0.0.1") || !langGraphUrl.includes("platform.langchain.com")) {
+    // Self-hosted LangGraph: use copilotKitEndpoint with authentication
+    runtime = new CopilotRuntime({
+      remoteEndpoints: [
+        copilotKitEndpoint({
+          url: langGraphUrl,
+          onBeforeRequest: () => {
+            const headers: Record<string, string> = {};
+            if (langGraphApiKey) {
+              headers["x-langgraph-api-key"] = langGraphApiKey;
+            }
+            return { headers };
+          },
+        }),
+      ],
+    });
+  } else {
+    // LangGraph Platform Cloud: use langGraphPlatformEndpoint with agent configuration
+    runtime = new CopilotRuntime({
+      remoteEndpoints: [
+        langGraphPlatformEndpoint({
+          deploymentUrl: langGraphUrl,
+          langsmithApiKey: process.env.LANGSMITH_API_KEY || undefined,
+          agents: [
+            {
+              name: "starterAgent",
+              description: "A helpful LLM agent that can assist with various tasks.",
+            },
+          ],
+        }),
+      ],
+    });
+  }
 } catch (error) {
   console.error("Failed to initialize CopilotKit runtime:", error);
   // We'll handle this in the POST handler
 }
+
+/**
+ * GET handler for CopilotKit info endpoint
+ * Returns information about available agents and actions
+ */
+export const GET = async (req: NextRequest) => {
+  try {
+    // Check if runtime and serviceAdapter were initialized successfully
+    if (!runtime || !serviceAdapter) {
+      return createErrorResponse(
+        "Service Unavailable",
+        "CopilotKit runtime failed to initialize. Please check server configuration.",
+        503,
+        { reason: "Runtime initialization failed" }
+      );
+    }
+
+    // Get the request handler with both runtime and serviceAdapter
+    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+      runtime,
+      serviceAdapter,
+      endpoint: "/api/copilotkit",
+    });
+
+    // Handle the GET request
+    try {
+      const response = await handleRequest(req);
+      return response;
+    } catch (handlerError) {
+      console.error("Error in CopilotKit GET handler:", handlerError);
+      return handleApiError(handlerError);
+    }
+  } catch (error) {
+    console.error("Unexpected error in CopilotKit GET route:", error);
+    return handleApiError(error);
+  }
+};
 
 /**
  * POST handler for CopilotKit runtime requests
@@ -79,15 +143,6 @@ export const POST = async (req: NextRequest) => {
         "CopilotKit runtime failed to initialize. Please check server configuration.",
         503,
         { reason: "Runtime initialization failed" }
-      );
-    }
-
-    // Validate request
-    if (!req.body) {
-      return createErrorResponse(
-        "Bad Request",
-        "Request body is required",
-        400
       );
     }
 
