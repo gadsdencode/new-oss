@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import {
   XCircleIcon,
   AlertTriangleIcon,
 } from "lucide-react";
+import { submitContactForm } from "./actions";
 
 interface FormError {
   type: "error" | "warning";
@@ -21,149 +22,47 @@ interface FormError {
   message: string;
 }
 
+interface FormState {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
 export function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const initialState: FormState = { success: false };
+  const [state, formAction, isPending] = useActionState<FormState, FormData>(
+    submitContactForm,
+    initialState
+  );
   const [error, setError] = useState<FormError | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Clear error when user starts typing
-    if (error) {
-      setError(null);
-    }
-    
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const validateForm = (): boolean => {
-    // Client-side validation
-    if (!formData.name.trim()) {
-      setError({
-        type: "warning",
-        title: "Validation Error",
-        message: "Please enter your full name.",
-      });
-      return false;
-    }
-
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError({
-        type: "warning",
-        title: "Validation Error",
-        message: "Please enter a valid email address.",
-      });
-      return false;
-    }
-
-    if (!formData.subject.trim()) {
-      setError({
-        type: "warning",
-        title: "Validation Error",
-        message: "Please enter a subject.",
-      });
-      return false;
-    }
-
-    if (!formData.message.trim() || formData.message.trim().length < 10) {
-      setError({
-        type: "warning",
-        title: "Validation Error",
-        message: "Please enter a message with at least 10 characters.",
-      });
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Clear any previous errors
-    setError(null);
-
-    // Validate form before submission
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // Simulate form submission (replace with actual API call)
-      // Example API call:
-      // const response = await fetch('/api/contact', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
-      // });
-
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simulate random success/failure for demonstration
-          // Remove this and use actual API call in production
-          const simulateError = Math.random() < 0.1; // 10% chance of error
-          if (simulateError) {
-            reject(new Error("Network error: Unable to send message"));
-          } else {
-            resolve(true);
-          }
-        }, 2000);
-      });
-
-      // If we get here, submission was successful
+  // Handle server action response
+  useEffect(() => {
+    if (state.success) {
       setIsSubmitted(true);
-
+      setError(null);
+      
       // Reset form after 5 seconds
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          company: "",
-          phone: "",
-          subject: "",
-          message: "",
-        });
+      const timer = setTimeout(() => {
         setIsSubmitted(false);
-      }, 5000);
-
-    } catch (err) {
-      // Handle submission errors
-      console.error("Form submission error:", err);
-      
-      let errorMessage = "Unable to send your message. Please try again later.";
-      
-      if (err instanceof Error) {
-        // Check for specific error types
-        if (err.message.includes("network") || err.message.includes("fetch")) {
-          errorMessage = "Network error. Please check your connection and try again.";
-        } else if (err.message.includes("timeout")) {
-          errorMessage = "Request timed out. Please try again.";
-        } else {
-          errorMessage = err.message || errorMessage;
+        // Reset form by clearing it
+        const form = document.querySelector('form') as HTMLFormElement;
+        if (form) {
+          form.reset();
         }
-      }
-
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    } else if (state.error) {
       setError({
         type: "error",
         title: "Submission Failed",
-        message: errorMessage,
+        message: state.error,
       });
-    } finally {
-      setIsSubmitting(false);
+      setIsSubmitted(false);
     }
-  };
+  }, [state]);
 
   const handleRetry = () => {
     setError(null);
@@ -213,7 +112,7 @@ export function ContactForm() {
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form action={formAction} className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">
@@ -223,10 +122,8 @@ export function ContactForm() {
                   id="name"
                   name="name"
                   placeholder="John Doe"
-                  value={formData.name}
-                  onChange={handleChange}
                   required
-                  disabled={isSubmitting}
+                  disabled={isPending}
                 />
               </div>
               <div className="space-y-2">
@@ -238,10 +135,8 @@ export function ContactForm() {
                   name="email"
                   type="email"
                   placeholder="john@company.com"
-                  value={formData.email}
-                  onChange={handleChange}
                   required
-                  disabled={isSubmitting}
+                  disabled={isPending}
                 />
               </div>
             </div>
@@ -253,9 +148,7 @@ export function ContactForm() {
                   id="company"
                   name="company"
                   placeholder="Your Company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
+                  disabled={isPending}
                 />
               </div>
               <div className="space-y-2">
@@ -265,9 +158,7 @@ export function ContactForm() {
                   name="phone"
                   type="tel"
                   placeholder="+1 (555) 000-0000"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
+                  disabled={isPending}
                 />
               </div>
             </div>
@@ -280,10 +171,8 @@ export function ContactForm() {
                 id="subject"
                 name="subject"
                 placeholder="How can we help you?"
-                value={formData.subject}
-                onChange={handleChange}
                 required
-                disabled={isSubmitting}
+                disabled={isPending}
               />
             </div>
 
@@ -296,11 +185,10 @@ export function ContactForm() {
                 name="message"
                 placeholder="Tell us more about your needs..."
                 rows={6}
-                value={formData.message}
-                onChange={handleChange}
                 required
-                disabled={isSubmitting}
+                disabled={isPending}
                 className="resize-none"
+                minLength={10}
               />
             </div>
 
@@ -308,9 +196,9 @@ export function ContactForm() {
               type="submit"
               size="lg"
               className="w-full"
-              disabled={isSubmitting}
+              disabled={isPending}
             >
-              {isSubmitting ? (
+              {isPending ? (
                 <>
                   <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                   Sending...
