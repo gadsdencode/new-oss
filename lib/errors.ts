@@ -28,8 +28,12 @@ export function createErrorResponse(
     message,
     statusCode,
     timestamp: new Date().toISOString(),
-    ...(details && { details }),
   };
+
+  // Conditionally add details if provided
+  if (details !== undefined && details !== null) {
+    errorResponse.details = details;
+  }
 
   return NextResponse.json(errorResponse, { status: statusCode });
 }
