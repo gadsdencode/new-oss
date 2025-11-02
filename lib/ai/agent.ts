@@ -35,7 +35,8 @@ const getWeatherSchema = z.object({
 });
 
 const getWeather = tool(
-  (args: z.infer<typeof getWeatherSchema>) => {
+  (input) => {
+    const args = getWeatherSchema.parse(input);
     return `The weather for ${args.location} is 70 degrees, clear skies, 45% humidity, 5 mph wind, and feels like 72 degrees.`;
   },
   {
@@ -62,7 +63,8 @@ const searchApiSchema = z.object({
 });
 
 const searchApi = tool(
-  async (args: z.infer<typeof searchApiSchema>) => {
+  async (input) => {
+    const args = searchApiSchema.parse(input);
     try {
       // Check if API key is configured
       if (!process.env.TAVILY_API_KEY) {
