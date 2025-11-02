@@ -37,9 +37,18 @@ export function ContactForm() {
   const [error, setError] = useState<FormError | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Debug: Log state changes
+  useEffect(() => {
+    console.log('[Contact Form Client] State changed:', state);
+    console.log('[Contact Form Client] isPending:', isPending);
+  }, [state, isPending]);
+
   // Handle server action response
   useEffect(() => {
+    console.log('[Contact Form Client] Processing state:', state);
+    
     if (state.success) {
+      console.log('[Contact Form Client] Success - showing success message');
       setIsSubmitted(true);
       setError(null);
       
@@ -55,6 +64,7 @@ export function ContactForm() {
       
       return () => clearTimeout(timer);
     } else if (state.error) {
+      console.log('[Contact Form Client] Error:', state.error);
       setError({
         type: "error",
         title: "Submission Failed",
@@ -112,7 +122,15 @@ export function ContactForm() {
             </p>
           </div>
         ) : (
-          <form action={formAction} className="space-y-6">
+          <form 
+            action={formAction} 
+            method="POST"
+            className="space-y-6"
+            onSubmit={(e) => {
+              console.log('[Contact Form Client] Form submit triggered');
+              // Don't prevent default - let Next.js handle it
+            }}
+          >
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">
