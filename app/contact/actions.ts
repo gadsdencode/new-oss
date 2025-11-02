@@ -1,6 +1,8 @@
 'use server';
 
 import { neon } from '@neondatabase/serverless';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { validateContactForm, formatValidationError } from '@/lib/contact-form-schema';
 
 interface FormState {
   success: boolean;
@@ -11,6 +13,11 @@ interface FormState {
 /**
  * Server action to handle contact form submission
  * Stores form data in NeonDB PostgreSQL database
+ * 
+ * Security features:
+ * - Rate limiting to prevent DoS attacks
+ * - Zod schema validation for robust type safety
+ * - SQL injection prevention via parameterized queries
  */
 export async function submitContactForm(
   prevState: FormState | null,
@@ -22,6 +29,18 @@ export async function submitContactForm(
   console.log('[Contact Form] Environment:', process.env.VERCEL_ENV || process.env.NODE_ENV || 'unknown');
   
   try {
+    // Rate limiting: Check before processing to prevent DoS attacks
+    const rateLimitResult = await checkRateLimit();
+    if (!rateLimitResult.success) {
+      console.warn('[Contact Form] Rate limit exceeded:', rateLimitResult);
+      return {
+        success: false,
+        error: rateLimitResult.error || 'Too many requests. Please try again later.',
+      };
+    }
+    
+    console.log('[Contact Form] ✅ Rate limit check passed (remaining:', rateLimitResult.remaining, ')');
+  
     // Check for DATABASE_URL with various possible prefixes
     // Vercel's Neon integration may prefix variables with project name (e.g., NEWOSS_)
     const databaseUrl = 
@@ -66,58 +85,30 @@ export async function submitContactForm(
     const sql = neon(databaseUrl);
     console.log('[Contact Form] Database connection object created');
 
-    // Extract form data with proper null handling
-    const nameRaw = formData.get('name');
-    const emailRaw = formData.get('email');
-    const companyRaw = formData.get('company');
-    const phoneRaw = formData.get('phone');
-    const subjectRaw = formData.get('subject');
-    const messageRaw = formData.get('message');
+    // Validate form data using Zod schema
+    console.log('[Contact Form] Validating form data with Zod schema...');
+    const validationResult = validateContactForm(formData);
+    
+    if (!validationResult.success) {
+      const errorMessage = formatValidationError(validationResult.errors);
+      console.error('[Contact Form] Validation failed:', validationResult.errors);
+      return {
+        success: false,
+        error: errorMessage,
+      };
+    }
 
-    const name = nameRaw ? String(nameRaw).trim() : '';
-    const email = emailRaw ? String(emailRaw).trim() : '';
-    const company = companyRaw ? String(companyRaw).trim() : null;
-    const phone = phoneRaw ? String(phoneRaw).trim() : null;
-    const subject = subjectRaw ? String(subjectRaw).trim() : '';
-    const message = messageRaw ? String(messageRaw).trim() : '';
+    // Extract validated data
+    const { name, email, company, phone, subject, message } = validationResult.data;
 
-    // Convert empty strings to null for optional fields
-    const companyValue = company && company.length > 0 ? company : null;
-    const phoneValue = phone && phone.length > 0 ? phone : null;
-
-    console.log('[Contact Form] Form data extracted:', {
+    console.log('[Contact Form] Form data validated successfully:', {
       name: name ? 'provided' : 'missing',
       email: email ? 'provided' : 'missing',
-      company: companyValue ? 'provided' : 'null',
-      phone: phoneValue ? 'provided' : 'null',
+      company: company ? 'provided' : 'null',
+      phone: phone ? 'provided' : 'null',
       subject: subject ? 'provided' : 'missing',
       message: message ? 'provided' : 'missing'
     });
-
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
-      const missingFields = [];
-      if (!name) missingFields.push('name');
-      if (!email) missingFields.push('email');
-      if (!subject) missingFields.push('subject');
-      if (!message) missingFields.push('message');
-      
-      console.error('[Contact Form] Missing required fields:', missingFields);
-      return {
-        success: false,
-        error: 'Missing required fields. Please fill in all required fields.'
-      };
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      console.error('[Contact Form] Invalid email format:', email);
-      return {
-        success: false,
-        error: 'Invalid email address format.'
-      };
-    }
 
     // Insert the contact form submission into the database
     // Note: created_at will use the DEFAULT value from schema (CURRENT_TIMESTAMP)
@@ -134,8 +125,8 @@ export async function submitContactForm(
       ) VALUES (
         ${name}, 
         ${email}, 
-        ${companyValue}, 
-        ${phoneValue}, 
+        ${company ?? null}, 
+        ${phone ?? null}, 
         ${subject}, 
         ${message}
       )
