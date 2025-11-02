@@ -3,10 +3,10 @@
   "dockerfile_lines": [],
   "dependencies": ["."],
   "graphs": {
-    "starterAgent": "./src/agent.ts:graph"
+    "starterAgent": "./lib/ai/agent.ts:graph"
   },
   "auth": {
-    "path": "./src/auth.ts:auth"
+    "path": "./lib/ai/auth.ts:auth"
   },
   "env": ".env"
 }
