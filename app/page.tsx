@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon, SearchCheckIcon, HeartPulseIcon, MailIcon } from "lucide-react";
 
-const TechCard = ({
+const ServiceCard = ({
   name,
   description,
   category,
@@ -153,31 +153,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tech Stack Section */}
+      {/* Services Section */}
       <section className="py-24 bg-muted/50 dark:bg-muted/20">
         <div className="w-full">
           <div className="px-6">
             <h2 className="text-center text-4xl font-semibold tracking-tight text-foreground">
-              Built with Modern Technologies
+              Our Comprehensive Services
             </h2>
+            <p className="mt-4 text-center text-lg text-muted-foreground max-w-2xl mx-auto">
+              From AI consulting to research platforms, we provide end-to-end solutions to transform your business.
+            </p>
             <Separator className="my-12" />
           </div>
           <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
             <Marquee pauseOnHover className="[--duration:30s]">
-              <TechCard name="Next.js" description="React Framework for Production" category="Framework" />
-              <TechCard name="React" description="UI Component Library" category="Library" />
-              <TechCard name="TypeScript" description="Type-Safe JavaScript" category="Language" />
-              <TechCard name="Tailwind CSS" description="Utility-First CSS Framework" category="Styling" />
-              <TechCard name="shadcn/ui" description="Re-usable Components" category="Components" />
-              <TechCard name="Radix UI" description="Accessible Primitives" category="Primitives" />
+              <ServiceCard name="AI Consulting" description="Expert AI strategy, implementation, and optimization consulting for your business." category="Consulting" />
+              <ServiceCard name="B2B Research" description="AI-powered research platform for healthcare and non-profit organizations." category="Research" />
+              <ServiceCard name="AI Strategy & Roadmap" description="Comprehensive AI strategies aligned with your business objectives." category="Strategy" />
+              <ServiceCard name="AI Implementation" description="End-to-end AI solution implementation from proof-of-concept to production." category="Implementation" />
+              <ServiceCard name="Advanced AI Models" description="Custom AI models tailored to your specific business needs." category="AI Models" />
+              <ServiceCard name="AI Operations & Optimization" description="Optimize AI systems for better performance and cost-efficiency." category="Operations" />
             </Marquee>
             <Marquee reverse pauseOnHover className="[--duration:30s] mt-4">
-              <TechCard name="Lucide Icons" description="Beautiful Icon Set" category="Icons" />
-              <TechCard name="Framer Motion" description="Animation Library" category="Animation" />
-              <TechCard name="Zod" description="Schema Validation" category="Validation" />
-              <TechCard name="React Hook Form" description="Form Management" category="Forms" />
-              <TechCard name="Recharts" description="Chart Components" category="Charts" />
-              <TechCard name="date-fns" description="Date Utilities" category="Utilities" />
+              <ServiceCard name="AI Training & Enablement" description="Empower your teams with AI knowledge through customized training." category="Training" />
+              <ServiceCard name="AI Governance & Ethics" description="Establish responsible AI practices with governance frameworks." category="Governance" />
+              <ServiceCard name="AI Analytics & Insights" description="Transform data into actionable insights using advanced AI analytics." category="Analytics" />
+              <ServiceCard name="Enterprise Compliance" description="Enterprise-level compliance with SOC 2 and security standards." category="Compliance" />
+              <ServiceCard name="Team Collaboration" description="Work seamlessly with your team in real-time collaboration." category="Collaboration" />
+              <ServiceCard name="Uterpi Platform" description="Advanced AI platform for modern businesses and workflows." category="Platform" />
             </Marquee>
             <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-muted/50 dark:from-muted/20"></div>
             <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-muted/50 dark:from-muted/20"></div>
