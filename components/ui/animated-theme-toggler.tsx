@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { flushSync } from "react-dom"
@@ -19,10 +19,16 @@ export const AnimatedThemeToggler = ({
 }: AnimatedThemeTogglerProps) => {
   const { setTheme, resolvedTheme } = useTheme()
   const buttonRef = useRef<HTMLButtonElement>(null)
+  const [mounted, setMounted] = useState(false)
+
+  // Prevent hydration mismatch by ensuring consistent initial render
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Determine if dark mode is active
-  // resolvedTheme will be undefined during SSR, default to false for light mode
-  const isDark = resolvedTheme === "dark"
+  // Only check resolvedTheme after component has mounted to avoid hydration mismatch
+  const isDark = mounted && resolvedTheme === "dark"
 
   const toggleTheme = useCallback(async () => {
     if (!buttonRef.current) return
@@ -58,6 +64,23 @@ export const AnimatedThemeToggler = ({
       }
     )
   }, [isDark, setTheme, duration])
+
+  // Render consistent placeholder during SSR and initial client render
+  // This ensures server and client HTML match during hydration
+  if (!mounted) {
+    return (
+      <button
+        ref={buttonRef}
+        onClick={toggleTheme}
+        className={cn(className)}
+        {...props}
+        aria-label="Toggle theme"
+      >
+        <Moon />
+        <span className="sr-only">Toggle theme</span>
+      </button>
+    )
+  }
 
   return (
     <button
