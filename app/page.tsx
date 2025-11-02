@@ -197,7 +197,9 @@ export default function Home() {
           <p className="mt-6 text-lg text-muted-foreground">
             Join thousands of innovators using our AI-powered solutions.
           </p>
-          <Button size="lg" className="mt-8">Sign Up Free</Button>
+          <Button size="lg" className="mt-8" asChild>
+            <Link href="/contact">Get Started Now</Link>
+          </Button>
         </div>
       </section>
 
