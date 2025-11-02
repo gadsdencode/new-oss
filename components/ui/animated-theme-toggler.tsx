@@ -1,7 +1,8 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useRef } from "react"
 import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
 import { flushSync } from "react-dom"
 
 import { cn } from "@/lib/utils"
@@ -16,46 +17,21 @@ export const AnimatedThemeToggler = ({
   duration = 400,
   ...props
 }: AnimatedThemeTogglerProps) => {
-  const [isDark, setIsDark] = useState(false)
+  const { setTheme, resolvedTheme } = useTheme()
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  useEffect(() => {
-    // Load theme from localStorage on mount
-    const storedTheme = localStorage.getItem("theme")
-    const isDarkMode = storedTheme === "dark" || 
-      (!storedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-    
-    setIsDark(isDarkMode)
-    
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-
-    // Watch for changes to theme
-    const updateTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"))
-    }
-
-    const observer = new MutationObserver(updateTheme)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    })
-
-    return () => observer.disconnect()
-  }, [])
+  // Determine if dark mode is active
+  // resolvedTheme will be undefined during SSR, default to false for light mode
+  const isDark = resolvedTheme === "dark"
 
   const toggleTheme = useCallback(async () => {
     if (!buttonRef.current) return
 
+    const newTheme = isDark ? "light" : "dark"
+
     await document.startViewTransition(() => {
       flushSync(() => {
-        const newTheme = !isDark
-        setIsDark(newTheme)
-        document.documentElement.classList.toggle("dark")
-        localStorage.setItem("theme", newTheme ? "dark" : "light")
+        setTheme(newTheme)
       })
     }).ready
 
@@ -81,7 +57,7 @@ export const AnimatedThemeToggler = ({
         pseudoElement: "::view-transition-new(root)",
       }
     )
-  }, [isDark, duration])
+  }, [isDark, setTheme, duration])
 
   return (
     <button
