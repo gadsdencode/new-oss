@@ -112,8 +112,8 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 dark:from-purple-500/10 dark:to-pink-500/10" />
               } 
               Icon={BrainCircuitIcon} 
-              description="Custom AI models tailored to your specific business needs." 
-              href="/features/ai-models" 
+              description="Explore the leading AI models powering the industry today." 
+              href="/ai" 
               cta="Discover AI" 
             />
             <BentoCard 

@@ -123,8 +123,7 @@ export function ContactForm() {
           </div>
         ) : (
           <form 
-            action={formAction} 
-            method="POST"
+            action={formAction}
             className="space-y-6"
             onSubmit={(e) => {
               console.log('[Contact Form Client] Form submit triggered');
