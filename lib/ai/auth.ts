@@ -60,14 +60,17 @@ export const auth = new Auth()
   // Authorization handler for all resources
   // Allow all operations after successful authentication
   .on("*", ({ value, user }) => {
-    // Add owner metadata to resources
-    if (!value.metadata) {
-      value.metadata = {};
+    // Add owner metadata to resources (only if metadata property exists on value)
+    if ("metadata" in value && value.metadata) {
+      value.metadata.owner = user;
+    } else if ("metadata" in value) {
+      // Create metadata object if it doesn't exist
+      (value as any).metadata = { owner: user };
     }
-    value.metadata.owner = user;
     
     // Return filters for resource access
-    // For single-user scenarios, allow all
-    return { owner: user };
+    // Filters must use string values, so use user.identity instead of user object
+    // For single-user scenarios, filter by owner identity
+    return { owner: user.identity };
   });
 
