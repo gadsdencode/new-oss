@@ -203,7 +203,7 @@ const config: Config = {
     // Example: require('@tailwindcss/typography'),
   ],
   // Dark mode configuration
-  darkMode: 'media', // or 'class' if you want to use class-based dark mode
+  darkMode: 'class', // or 'class' if you want to use class-based dark mode
 }
 
 export default config
