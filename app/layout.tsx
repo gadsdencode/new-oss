@@ -5,8 +5,8 @@ import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
 
 import { CopilotKit } from "@copilotkit/react-core";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { CopilotSidebarWrapper } from "./components/copilot-sidebar-wrapper";
+import { ThemeToggleWrapper } from "./components/theme-toggle-wrapper";
 
 // Fallback: Inter ≈ Geist Sans, JetBrains Mono ≈ Geist Mono
 const inter = Inter({
@@ -51,9 +51,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-sans`}>
         <CopilotKit runtimeUrl="/api/copilotkit" publicLicenseKey="ck_pub_079278b2bd4b959809f2a4767c5fa899">
-          <div className="fixed top-4 right-4 z-40">
-            <AnimatedThemeToggler />
-          </div>
+          <ThemeToggleWrapper />
           {children}
           <CopilotSidebarWrapper />
         </CopilotKit>
