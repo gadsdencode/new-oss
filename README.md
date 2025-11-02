@@ -18,15 +18,23 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    GEMINI_API_KEY=your_gemini_api_key
    LANGGRAPH_API_KEY=your_generated_key_here
    LANGGRAPH_DEPLOYMENT_URL=http://localhost:8123
+   TAVILY_API_KEY=your_tavily_api_key
    ```
 
-3. Create `agent/.env` with the same key:
+3. Create `agent/.env` with the same keys:
    ```bash
    LANGGRAPH_API_KEY=your_generated_key_here
    GEMINI_API_KEY=your_gemini_api_key
+   TAVILY_API_KEY=your_tavily_api_key
    ```
 
 ## Getting Started
+
+### Obtaining API Keys
+
+1. **Gemini API Key**: Get your Google Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+
+2. **Tavily API Key**: Get your Tavily Search API key from [Tavily](https://tavily.com) to enable the `searchApi` tool for web searches
 
 First, run the development server:
 

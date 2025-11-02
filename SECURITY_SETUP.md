@@ -50,15 +50,19 @@ LANGGRAPH_API_KEY=langgraph-api-key-YOUR_GENERATED_KEY_HERE
 # LangGraph Deployment URL
 LANGGRAPH_DEPLOYMENT_URL=http://localhost:8123
 
+# Tavily Search API Key - Required for searchApi tool
+TAVILY_API_KEY=your_tavily_api_key_here
+
 # LangSmith API Key (optional)
 LANGSMITH_API_KEY=your_langsmith_api_key_here
 ```
 
-**Also create** `agent/.env` with the same `LANGGRAPH_API_KEY`:
+**Also create** `agent/.env` with the same `LANGGRAPH_API_KEY` and `TAVILY_API_KEY`:
 
 ```bash
 LANGGRAPH_API_KEY=langgraph-api-key-YOUR_GENERATED_KEY_HERE
 GEMINI_API_KEY=your_gemini_api_key_here
+TAVILY_API_KEY=your_tavily_api_key_here
 ```
 
 ⚠️ **IMPORTANT**: Never commit these files to version control. They should already be in `.gitignore`.

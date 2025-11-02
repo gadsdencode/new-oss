@@ -20,6 +20,7 @@
     "@langchain/langgraph-checkpoint": "^0.0.16",
     "@langchain/langgraph-sdk": "^1.0.0",
     "@langchain/openai": "^0.3.14",
+    "@tavily/core": "^0.5.12",
     "zod": "^3.23.8"
   },
   "pnpm": {
