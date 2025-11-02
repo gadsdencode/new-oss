@@ -61,7 +61,7 @@ export default function Home() {
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Button size="lg" asChild>
-              <Link href="/signup">Get Started</Link>
+              <Link href="/contact">Get Started</Link>
             </Button>
           </div>
         </div>
