@@ -27,6 +27,12 @@ import {
   ClockIcon,
   AwardIcon,
   BarChart3Icon,
+  HeartPulseIcon,
+  DollarSignIcon,
+  ShoppingCartIcon,
+  FactoryIcon,
+  LaptopIcon,
+  HeartIcon,
 } from "lucide-react";
 
 const consultingServices = [
@@ -72,32 +78,32 @@ const industryExpertise = [
   {
     name: "Healthcare",
     description: "HIPAA-compliant AI solutions for clinical operations, patient care, and research.",
-    icon: "🏥",
+    icon: HeartPulseIcon,
   },
   {
     name: "Financial Services",
     description: "Secure AI for fraud detection, risk assessment, and automated trading.",
-    icon: "💰",
+    icon: DollarSignIcon,
   },
   {
     name: "Retail & E-commerce",
     description: "Personalization engines, demand forecasting, and inventory optimization.",
-    icon: "🛒",
+    icon: ShoppingCartIcon,
   },
   {
     name: "Manufacturing",
     description: "Predictive maintenance, quality control, and supply chain optimization.",
-    icon: "🏭",
+    icon: FactoryIcon,
   },
   {
     name: "Technology",
     description: "MLOps, AI product development, and scalable AI infrastructure.",
-    icon: "💻",
+    icon: LaptopIcon,
   },
   {
     name: "Non-Profits",
     description: "Cost-effective AI for donor management, impact analysis, and operations.",
-    icon: "❤️",
+    icon: HeartIcon,
   },
 ];
 
@@ -348,21 +354,26 @@ export default function AIConsultingPage() {
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {industryExpertise.map((industry, idx) => (
-              <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="text-4xl">{industry.icon}</div>
-                    <div>
-                      <CardTitle className="text-lg">{industry.name}</CardTitle>
+            {industryExpertise.map((industry, idx) => {
+              const IconComponent = industry.icon;
+              return (
+                <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
+                  <CardHeader>
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20">
+                        <IconComponent className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg">{industry.name}</CardTitle>
+                      </div>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">{industry.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">{industry.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -27,6 +27,9 @@ import {
   GlobeIcon,
   NetworkIcon,
   LayersIcon,
+  TrophyIcon,
+  HeartPulseIcon,
+  CreditCardIcon,
 } from "lucide-react";
 
 const complianceStandards = [
@@ -144,28 +147,28 @@ const certifications = [
     issuer: "AICPA",
     status: "Active",
     year: "2025",
-    icon: "🏆",
+    icon: TrophyIcon,
   },
   {
     name: "HIPAA",
     issuer: "HHS",
     status: "Compliant",
     year: "2025",
-    icon: "🏥",
+    icon: HeartPulseIcon,
   },
   {
     name: "ISO 27001",
     issuer: "ISO",
     status: "Certified",
     year: "2024",
-    icon: "🌐",
+    icon: GlobeIcon,
   },
   {
     name: "PCI DSS",
     issuer: "PCI SSC",
     status: "Level 1",
     year: "2025",
-    icon: "💳",
+    icon: CreditCardIcon,
   },
 ];
 
@@ -416,23 +419,28 @@ export default function CompliancePage() {
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {certifications.map((cert, idx) => (
-              <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="text-4xl">{cert.icon}</div>
-                    <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
-                      {cert.status}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-lg">{cert.name}</CardTitle>
-                  <CardDescription>Issued by {cert.issuer}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Valid through {cert.year}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {certifications.map((cert, idx) => {
+              const IconComponent = cert.icon;
+              return (
+                <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20">
+                        <IconComponent className="h-6 w-6 text-primary" />
+                      </div>
+                      <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
+                        {cert.status}
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-lg">{cert.name}</CardTitle>
+                    <CardDescription>Issued by {cert.issuer}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">Valid through {cert.year}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>

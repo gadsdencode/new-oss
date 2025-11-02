@@ -13,45 +13,49 @@ const config: Config = {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
-        // Custom color palette (refined for AI theme: blues/purples for tech/futuristic feel)
+        // Premium Brand Palette: Deep Ocean Blues & Electric Purples
+        // Sophisticated gradient from deep navy to vibrant purple for tech/innovation
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50: '#f0f4ff',
+          100: '#e0e9ff',
+          200: '#c7d7fe',
+          300: '#a4b9fc',
+          400: '#8193f8',
+          500: '#6366f1', // Indigo-500 - Premium brand primary
+          600: '#4f46e5', // Indigo-600 - Deep brand accent
+          700: '#4338ca', // Indigo-700 - Rich brand depth
+          800: '#3730a3', // Indigo-800 - Professional depth
+          900: '#312e81', // Indigo-900 - Deep authority
+          950: '#1e1b4b', // Indigo-950 - Maximum depth
+          DEFAULT: '#6366f1',
         },
         secondary: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#a855f7', // Purple-500 - Premium secondary
+          600: '#9333ea', // Purple-600 - Rich secondary
+          700: '#7e22ce', // Purple-700 - Deep secondary
+          800: '#6b21a8', // Purple-800 - Professional secondary
+          900: '#581c87', // Purple-900 - Authority secondary
+          950: '#3b0764', // Purple-950 - Maximum secondary
+          DEFAULT: '#a855f7',
         },
         accent: {
-          50: '#fdf4ff',
-          100: '#fae8ff',
-          200: '#f5d0fe',
-          300: '#f0abfc',
-          400: '#e879f9',
-          500: '#d946ef',
-          600: '#c026d3',
-          700: '#a21caf',
-          800: '#86198f',
-          900: '#701a75',
-          950: '#4a044e',
+          50: '#fef3f2',
+          100: '#fee4e2',
+          200: '#fecdca',
+          300: '#fda4af',
+          400: '#fb7185',
+          500: '#f43f5e', // Rose-500 - Energetic accent
+          600: '#e11d48', // Rose-600 - Vibrant accent
+          700: '#be123c', // Rose-700 - Deep accent
+          800: '#9f1239', // Rose-800 - Rich accent
+          900: '#881337', // Rose-900 - Authority accent
+          950: '#4c0519', // Rose-950 - Maximum accent
+          DEFAULT: '#f43f5e',
         },
         success: {
           50: '#f0fdf4',
@@ -92,8 +96,15 @@ const config: Config = {
           900: '#7f1d1d',
           950: '#450a0a',
         },
-        // Added AI-themed gradients/colors
-        aiGradient: 'linear-gradient(135deg, #3b82f6, #d946ef)',
+        // Premium brand gradients
+        brand: {
+          gradient: 'linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #f43f5e 100%)',
+          gradientSoft: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 50%, rgba(244,63,94,0.1) 100%)',
+          glow: '0 0 20px rgba(99,102,241,0.3), 0 0 40px rgba(168,85,247,0.2)',
+          glowStrong: '0 0 30px rgba(99,102,241,0.5), 0 0 60px rgba(168,85,247,0.3)',
+        },
+        // Legacy support
+        aiGradient: 'linear-gradient(135deg, #6366f1, #a855f7)',
       },
       fontFamily: {
         sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
@@ -140,8 +151,14 @@ const config: Config = {
         '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
         'inner': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
         'none': 'none',
-        // Added for sleek cards
-        'ai-glow': '0 0 15px rgba(59, 130, 246, 0.2)',
+        // Premium brand shadows
+        'brand': '0 4px 14px rgba(99, 102, 241, 0.25), 0 2px 8px rgba(168, 85, 247, 0.15)',
+        'brand-lg': '0 10px 30px rgba(99, 102, 241, 0.3), 0 4px 12px rgba(168, 85, 247, 0.2)',
+        'brand-xl': '0 20px 50px rgba(99, 102, 241, 0.35), 0 8px 20px rgba(168, 85, 247, 0.25)',
+        'glow': '0 0 15px rgba(99, 102, 241, 0.3)',
+        'glow-lg': '0 0 25px rgba(99, 102, 241, 0.4), 0 0 50px rgba(168, 85, 247, 0.2)',
+        // Legacy support
+        'ai-glow': '0 0 15px rgba(99, 102, 241, 0.3)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
@@ -151,8 +168,11 @@ const config: Config = {
         'bounce-slow': 'bounce 2s infinite',
         'pulse-slow': 'pulse 3s infinite',
         'spin-slow': 'spin 3s linear infinite',
-        // Added for AI effects
+        // Premium brand animations
         'gradient-flow': 'gradientFlow 5s ease infinite',
+        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+        'shimmer': 'shimmer 2s linear infinite',
+        'float': 'float 3s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -175,6 +195,18 @@ const config: Config = {
           '0%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
           '100%': { backgroundPosition: '0% 50%' },
+        },
+        glowPulse: {
+          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.8', transform: 'scale(1.02)' },
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
         },
       },
       screens: {
