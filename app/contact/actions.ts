@@ -17,21 +17,49 @@ export async function submitContactForm(
   formData: FormData
 ): Promise<FormState> {
   // Log entry point for debugging
-  console.log('[Contact Form] Submission started');
+  console.log('[Contact Form] ===== SUBMISSION STARTED =====');
+  console.log('[Contact Form] Timestamp:', new Date().toISOString());
+  console.log('[Contact Form] Environment:', process.env.VERCEL_ENV || process.env.NODE_ENV || 'unknown');
   
   try {
-    // Validate required DATABASE_URL environment variable
-    if (!process.env.DATABASE_URL) {
-      console.error('[Contact Form] DATABASE_URL environment variable is not set');
+    // Check for DATABASE_URL (Vercel Neon integration standard)
+    // Also check for POSTGRES_URL (some integrations use this)
+    const databaseUrl = 
+      process.env.DATABASE_URL || 
+      process.env.POSTGRES_URL || 
+      process.env.POSTGRES_PRISMA_URL ||
+      process.env.POSTGRES_URL_NON_POOLING ||
+      process.env.DATABASE_URL_UNPOOLED;
+
+    // Log available environment variables for debugging (without sensitive data)
+    const availableEnvKeys = Object.keys(process.env)
+      .filter(key => key.includes('DATABASE') || key.includes('POSTGRES') || key.includes('NEON'))
+      .sort();
+    
+    console.log('[Contact Form] Available database-related env keys:', availableEnvKeys);
+    console.log('[Contact Form] Checked variables:', {
+      DATABASE_URL: process.env.DATABASE_URL ? `SET (${process.env.DATABASE_URL.length} chars)` : 'NOT SET',
+      POSTGRES_URL: process.env.POSTGRES_URL ? `SET (${process.env.POSTGRES_URL.length} chars)` : 'NOT SET',
+      POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL ? 'SET' : 'NOT SET',
+      POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING ? 'SET' : 'NOT SET',
+      DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED ? 'SET' : 'NOT SET',
+    });
+
+    if (!databaseUrl) {
+      console.error('[Contact Form] ❌ CRITICAL: No database URL found in environment variables');
+      console.error('[Contact Form] This means DATABASE_URL is not accessible in the server runtime');
+      console.error('[Contact Form] Visit /api/test-env to diagnose environment variable availability');
       return {
         success: false,
-        error: 'Database configuration error. Please contact support.'
+        error: 'Database not configured. Check Vercel environment variables and redeploy. Visit /api/test-env for diagnostics.'
       };
     }
 
+    console.log('[Contact Form] ✅ Database URL found (length:', databaseUrl.length, 'chars)');
+
     // Connect to the Neon database
-    const sql = neon(process.env.DATABASE_URL);
-    console.log('[Contact Form] Database connection initialized');
+    const sql = neon(databaseUrl);
+    console.log('[Contact Form] Database connection object created');
 
     // Extract form data with proper null handling
     const nameRaw = formData.get('name');
