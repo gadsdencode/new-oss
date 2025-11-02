@@ -109,7 +109,7 @@ export function validateContactForm(formData: FormData): {
  * @returns User-friendly error message
  */
 export function formatValidationError(errors: z.ZodError): string {
-  const firstError = errors.errors[0];
+  const firstError = errors.issues[0];
   if (firstError) {
     return firstError.message || 'Please check your input and try again.';
   }
