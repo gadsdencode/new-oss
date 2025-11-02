@@ -46,7 +46,7 @@ try {
   // Create the CopilotRuntime with remoteEndpoints (official CopilotKit method for self-hosted agents)
   // Reference: https://www.copilotkit.ai/blog/heres-how-to-build-fullstack-agent-apps-gemini-copilotkit-langgraph
   // For self-hosted LangGraph deployments, use langGraphPlatformEndpoint with agent configuration
-  // The agent name "starterAgent" comes from agent/langgraph.json
+  // The agent name "starterAgent" comes from lib/ai/langgraph.json
   
   // Check if we have authentication key for LangGraph
   const langGraphApiKey = process.env.LANGGRAPH_API_KEY;
