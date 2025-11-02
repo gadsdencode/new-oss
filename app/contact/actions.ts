@@ -22,14 +22,20 @@ export async function submitContactForm(
   console.log('[Contact Form] Environment:', process.env.VERCEL_ENV || process.env.NODE_ENV || 'unknown');
   
   try {
-    // Check for DATABASE_URL (Vercel Neon integration standard)
-    // Also check for POSTGRES_URL (some integrations use this)
+    // Check for DATABASE_URL with various possible prefixes
+    // Vercel's Neon integration may prefix variables with project name (e.g., NEWOSS_)
     const databaseUrl = 
       process.env.DATABASE_URL || 
       process.env.POSTGRES_URL || 
       process.env.POSTGRES_PRISMA_URL ||
       process.env.POSTGRES_URL_NON_POOLING ||
-      process.env.DATABASE_URL_UNPOOLED;
+      process.env.DATABASE_URL_UNPOOLED ||
+      // Check for project-prefixed variables (NEWOSS_ prefix)
+      process.env.NEWOSS_DATABASE_URL ||
+      process.env.NEWOSS_POSTGRES_URL ||
+      process.env.NEWOSS_POSTGRES_PRISMA_URL ||
+      process.env.NEWOSS_POSTGRES_URL_NON_POOLING ||
+      process.env.NEWOSS_DATABASE_URL_UNPOOLED;
 
     // Log available environment variables for debugging (without sensitive data)
     const availableEnvKeys = Object.keys(process.env)
@@ -40,18 +46,17 @@ export async function submitContactForm(
     console.log('[Contact Form] Checked variables:', {
       DATABASE_URL: process.env.DATABASE_URL ? `SET (${process.env.DATABASE_URL.length} chars)` : 'NOT SET',
       POSTGRES_URL: process.env.POSTGRES_URL ? `SET (${process.env.POSTGRES_URL.length} chars)` : 'NOT SET',
-      POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL ? 'SET' : 'NOT SET',
-      POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING ? 'SET' : 'NOT SET',
-      DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED ? 'SET' : 'NOT SET',
+      NEWOSS_DATABASE_URL: process.env.NEWOSS_DATABASE_URL ? `SET (${process.env.NEWOSS_DATABASE_URL.length} chars)` : 'NOT SET',
+      NEWOSS_POSTGRES_URL: process.env.NEWOSS_POSTGRES_URL ? `SET (${process.env.NEWOSS_POSTGRES_URL.length} chars)` : 'NOT SET',
+      NEWOSS_POSTGRES_PRISMA_URL: process.env.NEWOSS_POSTGRES_PRISMA_URL ? 'SET' : 'NOT SET',
     });
 
     if (!databaseUrl) {
       console.error('[Contact Form] ❌ CRITICAL: No database URL found in environment variables');
-      console.error('[Contact Form] This means DATABASE_URL is not accessible in the server runtime');
-      console.error('[Contact Form] Visit /api/test-env to diagnose environment variable availability');
+      console.error('[Contact Form] Available keys:', availableEnvKeys);
       return {
         success: false,
-        error: 'Database not configured. Check Vercel environment variables and redeploy. Visit /api/test-env for diagnostics.'
+        error: 'Database not configured. No DATABASE_URL or NEWOSS_DATABASE_URL found.'
       };
     }
 
