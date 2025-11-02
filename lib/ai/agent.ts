@@ -30,22 +30,39 @@ const tavilyClient = tavily({
 });
 
 // 3. Define a simple tool to get the weather statically
+const getWeatherSchema = z.object({
+  location: z.string().describe("The location to get weather for"),
+});
+
 const getWeather = tool(
-  (args) => {
+  (args: z.infer<typeof getWeatherSchema>) => {
     return `The weather for ${args.location} is 70 degrees, clear skies, 45% humidity, 5 mph wind, and feels like 72 degrees.`;
   },
   {
     name: "getWeather",
     description: "Get the weather for a given location.",
-    schema: z.object({
-      location: z.string().describe("The location to get weather for"),
-    }),
+    schema: getWeatherSchema,
   }
 );
 
 // 3.1 Define the searchApi tool using Tavily Search API
+const searchApiSchema = z.object({
+  query: z.string().describe("The search query to look up on the web"),
+  search_depth: z
+    .enum(["basic", "advanced"])
+    .optional()
+    .describe("Search depth: 'basic' is faster for simple queries, 'advanced' provides more comprehensive results. Defaults to 'basic'."),
+  max_results: z
+    .number()
+    .int()
+    .min(1)
+    .max(10)
+    .optional()
+    .describe("Maximum number of search results to return. Defaults to 5, maximum is 10."),
+});
+
 const searchApi = tool(
-  async (args) => {
+  async (args: z.infer<typeof searchApiSchema>) => {
     try {
       // Check if API key is configured
       if (!process.env.TAVILY_API_KEY) {
@@ -83,20 +100,7 @@ Content: ${result.content || "No content available"}
   {
     name: "searchApi",
     description: "Search the web for real-time information using Tavily Search API. Use this when you need current information, facts, or data from the internet.",
-    schema: z.object({
-      query: z.string().describe("The search query to look up on the web"),
-      search_depth: z
-        .enum(["basic", "advanced"])
-        .optional()
-        .describe("Search depth: 'basic' is faster for simple queries, 'advanced' provides more comprehensive results. Defaults to 'basic'."),
-      max_results: z
-        .number()
-        .int()
-        .min(1)
-        .max(10)
-        .optional()
-        .describe("Maximum number of search results to return. Defaults to 5, maximum is 10."),
-    }),
+    schema: searchApiSchema,
   }
 );
 
