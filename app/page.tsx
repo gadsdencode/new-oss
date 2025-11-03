@@ -387,7 +387,7 @@ export default function Home() {
             Free Consultation Available
           </Badge>
           <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Ready to Transform Your Enterprise?
+            Ready to Transform Your Business?
           </h2>
           <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
             Schedule a free consultation with our AI experts. Let's discuss how we can help you achieve measurable results and competitive advantage through AI.
