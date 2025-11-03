@@ -223,10 +223,10 @@ export default function Home() {
           <div className="text-center mb-16">
             <Badge variant="secondary" className="mb-4">Our Solutions</Badge>
             <h2 className="text-4xl font-bold tracking-tight text-foreground">
-              The Right Solution for Your Business
+              The Right Solutions for Your Business
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Three core offerings designed to transform your enterprise with AI
+              Four core offerings designed to transform your enterprise with AI
             </p>
           </div>
           <BentoGrid className="auto-rows-[28rem]">
