@@ -72,7 +72,7 @@ const coreServices = [
   },
   {
     icon: LayersIcon,
-    title: "Enterprise AI Platform - Uterpi",
+    title: "Uterpi",
     description: "Modern AI platform for businesses. Streamline workflows, automate processes, and unlock productivity with cutting-edge AI technology.",
     href: "https://uterpi.com",
     features: ["Advanced AI Models", "Team Collaboration", "SOC 2 Compliant"],
@@ -101,7 +101,7 @@ export default function Home() {
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
             Transform Your Business
             <span className="block mt-3 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
-              With Enterprise AI
+              With AI Solutions
             </span>
           </h1>
           
@@ -210,13 +210,13 @@ export default function Home() {
               cta="Learn More" 
             />
             <BentoCard 
-              name="Enterprise AI Platform" 
+              name="Uterpi" 
               className="col-span-1 md:col-span-1 lg:col-span-1" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-secondary/10 to-secondary/5" />
               } 
               Icon={LayersIcon} 
-              description="Uterpi - Modern AI platform for businesses. Advanced models, team collaboration, and SOC 2 compliance." 
+              description="Modern AI platform for businesses. Advanced models, team collaboration, and SOC 2 compliant." 
               href="https://uterpi.com" 
               cta="Visit Uterpi" 
             />
