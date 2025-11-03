@@ -1,206 +1,362 @@
 # Running the Project Guide
 
-## Quick Start
+## 🚀 Quick Start
 
-### ✅ **Correct Way** (Recommended)
+### **Simple Setup (CopilotKit + Google Gemini)**
 
-Run both the UI and Agent server together:
+```bash
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local and add your GEMINI_API_KEY
+
+# Run development server
+npm run dev
+
+# Open http://localhost:3000
+```
+
+That's it! No complex setup, no multiple servers.
+
+---
+
+## 🎯 What You Get
+
+### **Single Server Architecture**
+
+```
+┌────────────────────────────────────┐
+│  Browser (http://localhost:3000)  │
+└───────────────┬────────────────────┘
+                │
+                ▼
+┌────────────────────────────────────┐
+│  Next.js Dev Server                │
+│  • UI pages                        │
+│  • API routes                      │
+│  • CopilotKit runtime              │
+└───────────────┬────────────────────┘
+                │
+                ▼
+┌────────────────────────────────────┐
+│  Google Gemini API                 │
+│  (AI Model Provider)               │
+└────────────────────────────────────┘
+```
+
+### **AI Features**
+
+✅ **Conversational AI** - Chat with your website  
+✅ **Context-Aware** - Understands your company services  
+✅ **Real-time Responses** - Powered by Google Gemini  
+✅ **Production-Ready** - Simple, reliable architecture  
+
+---
+
+## 📋 Prerequisites
+
+1. **Node.js 18+**
+   ```bash
+   node --version  # Should be 18.0.0 or higher
+   ```
+
+2. **npm or pnpm**
+   ```bash
+   npm --version
+   # or
+   pnpm --version
+   ```
+
+3. **Google Gemini API Key**
+   - Get yours: https://aistudio.google.com/app/apikey
+   - Free tier available
+
+---
+
+## 🔧 Environment Setup
+
+### **1. Create Environment File**
+
+```bash
+# Create .env.local file
+touch .env.local
+```
+
+### **2. Add Required Variables**
+
+Edit `.env.local`:
+
+```env
+# Required: Google Gemini API Key
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Optional: CopilotKit License (for advanced features)
+NEXT_PUBLIC_COPILOT_LICENSE_KEY=your_copilotkit_license_key
+```
+
+### **3. Verify Setup**
+
+```bash
+# Check that environment variables are loaded
+npm run dev
+
+# Look for: "🤖 Initializing CopilotKit with Google Gemini"
+# And: "✅ CopilotKit runtime initialized successfully"
+```
+
+---
+
+## 🚀 Development
+
+### **Start Development Server**
 
 ```bash
 npm run dev
 ```
 
-This will start:
-- **UI Server** on `http://localhost:3000` (Next.js)
-- **Agent Server** on `http://localhost:8123` (LangGraph)
+**Output:**
+```
+ ▲ Next.js 16.0.1
+ - Local:        http://localhost:3000
+ - Network:      http://192.168.1.100:3000
 
-You should see output like:
+🤖 Initializing CopilotKit with Google Gemini
+✅ CopilotKit runtime initialized successfully with Google Gemini
+
+ ✓ Ready in 2.3s
 ```
-[ui]    ▲ Next.js 16.0.1
-[ui]    - Local:        http://localhost:3000
-[agent] LangGraph API server running on http://localhost:8123
-```
+
+### **Test the AI**
+
+1. Open http://localhost:3000
+2. Look for the AI assistant icon (bottom-right or sidebar)
+3. Click to open the chat
+4. Try asking:
+   - "What services does your company offer?"
+   - "Are you HIPAA compliant?"
+   - "How do I contact you?"
 
 ---
 
-## Alternative Commands
+## 🏗️ Build for Production
 
-### UI Only (Limited Functionality)
-
-If you only need the UI without agent capabilities:
+### **Build the Application**
 
 ```bash
-npm run dev:ui
+npm run build
 ```
 
-⚠️ **Note**: The agent features will be disabled, but the app will still work with basic AI chat using Google Gemini.
+This will:
+- ✅ Compile TypeScript
+- ✅ Optimize bundles
+- ✅ Generate static pages
+- ✅ Prepare for deployment
 
-### Agent Server Only
-
-To run just the LangGraph agent server:
+### **Test Production Build Locally**
 
 ```bash
-npm run dev:agent
+npm run build
+npm start
 ```
+
+Open http://localhost:3000 to test the production build.
 
 ---
 
-## What Each Server Does
+## 📦 Package Scripts
 
-### UI Server (`npm run dev:ui`)
-- Runs the Next.js web application
-- Serves pages, API routes, and static assets
-- Handles user interactions and UI state
-- Uses Google Gemini for basic AI responses
-
-### Agent Server (`npm run dev:agent`)
-- Runs the LangGraph workflow engine
-- Provides advanced AI agent capabilities:
-  - Web search (via Tavily API)
-  - Weather information
-  - Multi-step reasoning
-  - Tool usage and orchestration
-- Exposes endpoints at `http://localhost:8123`
+| Script | Command | Description |
+|--------|---------|-------------|
+| `dev` | `npm run dev` | Start development server |
+| `build` | `npm run build` | Build for production |
+| `start` | `npm start` | Start production server |
+| `lint` | `npm run lint` | Run ESLint |
 
 ---
 
-## Architecture
+## 🔍 Troubleshooting
 
-```
-┌─────────────────────────────────────────┐
-│  Browser (http://localhost:3000)       │
-└────────────────┬────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────┐
-│  Next.js UI Server                      │
-│  (npm run dev:ui)                       │
-└────────────────┬────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────┐
-│  CopilotKit Runtime                     │
-│  (/api/copilotkit)                      │
-└─────┬────────────────────┬──────────────┘
-      │                    │
-      ▼                    ▼
-┌──────────────┐    ┌─────────────────────┐
-│ Google Gemini│    │ LangGraph Agent     │
-│ (Fallback)   │    │ (port 8123)         │
-└──────────────┘    └─────────────────────┘
-```
+### **Issue: "GEMINI_API_KEY is not set"**
 
----
+**Solution:**
+1. Create `.env.local` file in project root
+2. Add: `GEMINI_API_KEY=your_key_here`
+3. Restart dev server
 
-## Troubleshooting
+### **Issue: "Failed to initialize CopilotKit runtime"**
 
-### Error: "Failed to fetch CopilotKit agents/action information"
+**Possible causes:**
+1. Invalid API key
+2. Network connectivity issues
+3. API key quota exceeded
 
-**Cause**: The agent server isn't running.
+**Solution:**
+1. Verify API key at https://aistudio.google.com
+2. Check internet connection
+3. Try regenerating API key
 
-**Solution**: 
-1. Stop your current dev server (`Ctrl+C`)
-2. Run `npm run dev` instead of `npm run dev:ui`
+### **Issue: AI not responding**
 
-### Port Already in Use
+**Check:**
+1. Browser console for errors (F12)
+2. Network tab for failed requests
+3. Server logs for error messages
 
-If you see "Port 8123 is already in use":
-
+**Solution:**
 ```bash
+# Restart dev server
+# Press Ctrl+C to stop
+npm run dev
+```
+
+### **Issue: Port 3000 already in use**
+
+**Solution:**
+```bash
+# Find and kill process on port 3000
 # Windows
-netstat -ano | findstr :8123
+netstat -ano | findstr :3000
 taskkill /PID <PID> /F
 
 # macOS/Linux
-lsof -ti:8123 | xargs kill -9
-```
+lsof -ti:3000 | xargs kill -9
 
-### Agent Server Won't Start
-
-Check that you have the required environment variables:
-
-```env
-# Required for agent functionality
-GEMINI_API_KEY=your_gemini_api_key
-GOOGLE_API_KEY=your_google_api_key
-
-# Optional for web search
-TAVILY_API_KEY=your_tavily_api_key
+# Or use a different port
+PORT=3001 npm run dev
 ```
 
 ---
 
-## Production Deployment
+## 🎯 Architecture Changes
 
-For production, you'll need to:
+### **What Changed from Previous Setup**
 
-1. Deploy the LangGraph agent separately (or use LangGraph Cloud)
-2. Set the environment variable:
-   ```env
-   LANGGRAPH_DEPLOYMENT_URL=https://your-agent-server.com
-   ```
-3. Deploy the Next.js app normally:
+**Before:**
+- ❌ Complex multi-server setup
+- ❌ LangGraph agent server (port 8123)
+- ❌ Concurrent processes
+- ❌ Agent configuration files
+
+**Now:**
+- ✅ Single Next.js server
+- ✅ Direct Google Gemini integration
+- ✅ Simplified deployment
+- ✅ No external dependencies
+
+### **Benefits**
+
+| Benefit | Description |
+|---------|-------------|
+| **Simplicity** | One server, one command |
+| **Reliability** | Fewer moving parts = fewer failures |
+| **Production-Ready** | Works seamlessly on Vercel, Netlify, etc. |
+| **Cost-Effective** | No separate agent server costs |
+| **Easy Maintenance** | Simpler to debug and update |
+
+---
+
+## 🚀 Deployment
+
+### **Vercel (Recommended)**
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+
+# Or for production
+vercel --prod
+```
+
+**Environment Variables on Vercel:**
+1. Go to project settings
+2. Add `GEMINI_API_KEY`
+3. Redeploy
+
+### **Other Platforms**
+
+Works with any platform that supports Next.js:
+- Netlify
+- AWS Amplify
+- Railway
+- Render
+- DigitalOcean App Platform
+
+---
+
+## 📊 Performance
+
+### **Development Mode**
+
+- Fast refresh for instant updates
+- Hot module replacement
+- Source maps for debugging
+
+### **Production Mode**
+
+- Optimized bundles
+- Static generation where possible
+- Edge-ready deployment
+- Fast response times
+
+---
+
+## 🎨 Customization
+
+### **Modify AI Behavior**
+
+The AI understands your company through `useCopilotReadable` hooks in each page.
+
+**Example:**
+```typescript
+// In any page
+useCopilotReadable({
+  description: "Product information",
+  value: {
+    products: [...],
+    pricing: {...}
+  }
+});
+```
+
+### **Change AI Model**
+
+Currently using Google Gemini. To change:
+
+1. Install different adapter:
    ```bash
-   npm run build
-   npm start
+   npm install @copilotkit/runtime-adapter-openai
+   ```
+
+2. Update `app/api/copilotkit/route.ts`:
+   ```typescript
+   import { OpenAIAdapter } from "@copilotkit/runtime-adapter-openai";
+   
+   const serviceAdapter = new OpenAIAdapter();
    ```
 
 ---
 
-## Development Tips
+## 📚 Additional Resources
 
-### See What's Running
-
-```bash
-# Check UI server
-curl http://localhost:3000
-
-# Check Agent server
-curl http://localhost:8123/info
-```
-
-### View Agent Logs
-
-The agent server logs are prefixed with `[agent]` in the console output.
-
-### Restart Just One Server
-
-Since `concurrently` is used with `--kill-others`, stopping one server stops both. To restart individually during development, run them in separate terminals:
-
-**Terminal 1:**
-```bash
-npm run dev:ui
-```
-
-**Terminal 2:**
-```bash
-npm run dev:agent
-```
+- **CopilotKit Docs**: https://docs.copilotkit.ai
+- **Google Gemini**: https://ai.google.dev
+- **Next.js Docs**: https://nextjs.org/docs
 
 ---
 
-## What You Implemented
+## ✅ Summary
 
-✅ **useCopilotReadable on All Pages**
-- Homepage: Company overview and services
-- Consulting: AI consulting services details
-- Research: B2B research platform information
-- Compliance: Security certifications and standards
-- Contact: Contact methods and office locations
+**To run the project:**
+1. ✅ Install dependencies: `npm install`
+2. ✅ Set `GEMINI_API_KEY` in `.env.local`
+3. ✅ Run: `npm run dev`
+4. ✅ Open: http://localhost:3000
 
-✅ **Improved Error Handling**
-- Graceful fallback when agent server isn't running
-- Clear console warnings with helpful instructions
-- No more scary error messages in the UI
+**That's it!** No complex setup, no multiple servers, just one command.
 
----
-
-## Next Steps
-
-1. **Run the full project**: `npm run dev`
-2. **Test the AI chat**: Open the chatbot and ask about your services
-3. **Verify agent features**: The AI should now understand your company's offerings
-4. **Check both servers**: Look for the ✅ confirmation in the console logs
-
-Need help? Check the console output for helpful error messages and warnings.
-
+Your AI-powered website is ready! 🎉

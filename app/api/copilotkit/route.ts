@@ -2,133 +2,59 @@ import {
   CopilotRuntime,
   GoogleGenerativeAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
-  langGraphPlatformEndpoint,
-  copilotKitEndpoint,
 } from "@copilotkit/runtime";
 import { NextRequest } from "next/server";
 import { handleApiError, createErrorResponse, validateEnvVars } from "@/lib/errors";
 
-// Validate optional environment variables (warn-only; follow CopilotKit docs behavior)
+// Validate required environment variables
 const envValidation = validateEnvVars([
   "GEMINI_API_KEY",
   "GOOGLE_API_KEY",
-  "NEXT_PUBLIC_LANGGRAPH_URL",
-  "LANGGRAPH_DEPLOYMENT_URL",
 ]);
+
 if (!envValidation.valid && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_API_KEY) {
-  console.warn(
-    "Warning: Neither GEMINI_API_KEY nor GOOGLE_API_KEY is set. API functionality may be limited."
+  console.error(
+    "❌ ERROR: Neither GEMINI_API_KEY nor GOOGLE_API_KEY is set. AI functionality will not work."
   );
 }
 
-// Critical security check for LangGraph URL
-const langGraphUrl = 
-  process.env.NEXT_PUBLIC_LANGGRAPH_URL ||
-  process.env.LANGGRAPH_DEPLOYMENT_URL ||
-  "http://localhost:8123";
+// Determine if we're in production/deployed environment
+const isProduction = process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
+const isDeployed = !!process.env.VERCEL; // Running on Vercel
 
-if (!process.env.LANGGRAPH_DEPLOYMENT_URL && !process.env.NEXT_PUBLIC_LANGGRAPH_URL) {
-  console.warn(
-    "⚠️  WARNING: LANGGRAPH_DEPLOYMENT_URL or NEXT_PUBLIC_LANGGRAPH_URL is not set! " +
-    "Falling back to http://localhost:8123. Set this environment variable for production."
-  );
+// Log environment configuration
+if (isDeployed) {
+  console.log("🚀 Running on Vercel");
+  console.log("Environment:", process.env.VERCEL_ENV || "unknown");
 }
 
-// Service adapter is required even when using LangGraph agents
-// It handles multi-agent coordination and fallback scenarios
+console.log("🤖 Initializing CopilotKit with Google Gemini");
+
+// Initialize service adapter and runtime
 let serviceAdapter: GoogleGenerativeAIAdapter;
 let runtime: CopilotRuntime;
-let agentServerAvailable = false;
-
-// Check if LangGraph agent server is running
-async function checkAgentServer(): Promise<boolean> {
-  if (!langGraphUrl.includes("localhost") && !langGraphUrl.includes("127.0.0.1")) {
-    // For remote deployments, assume available
-    return true;
-  }
-  
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
-    
-    const response = await fetch(`${langGraphUrl}/info`, {
-      signal: controller.signal,
-    });
-    
-    clearTimeout(timeoutId);
-    return response.ok;
-  } catch (error) {
-    return false;
-  }
-}
 
 try {
-  // Initialize the Google Gemini adapter (per CopilotKit docs; uses env for keys)
+  // Initialize the Google Gemini adapter
+  // This will use GEMINI_API_KEY or GOOGLE_API_KEY from environment
   serviceAdapter = new GoogleGenerativeAIAdapter();
-
-  // Check if agent server is running
-  agentServerAvailable = await checkAgentServer();
   
-  if (agentServerAvailable) {
-    console.log("✅ LangGraph agent server detected at", langGraphUrl);
-    
-    // Create the CopilotRuntime with remoteEndpoints (official CopilotKit method for self-hosted agents)
-    // Reference: https://www.copilotkit.ai/blog/heres-how-to-build-fullstack-agent-apps-gemini-copilotkit-langgraph
-    // For self-hosted LangGraph deployments, use langGraphPlatformEndpoint with agent configuration
-    // The agent name "starterAgent" comes from lib/ai/langgraph.json
-    
-    // Check if we have authentication key for LangGraph
-    const langGraphApiKey = process.env.LANGGRAPH_API_KEY;
-    
-    // Build remote endpoints configuration
-    // For self-hosted LangGraph deployments, use copilotKitEndpoint with onBeforeRequest for auth
-    // This handles the /info endpoint with authentication headers
-    // For LangGraph Platform Cloud deployments, use langGraphPlatformEndpoint
-    if (langGraphUrl.includes("localhost") || langGraphUrl.includes("127.0.0.1") || !langGraphUrl.includes("platform.langchain.com")) {
-      // Self-hosted LangGraph: use copilotKitEndpoint with authentication
-      runtime = new CopilotRuntime({
-        remoteEndpoints: [
-          copilotKitEndpoint({
-            url: langGraphUrl,
-            onBeforeRequest: () => {
-              const headers: Record<string, string> = {};
-              if (langGraphApiKey) {
-                headers["x-langgraph-api-key"] = langGraphApiKey;
-              }
-              return { headers };
-            },
-          }),
-        ],
-      });
-    } else {
-      // LangGraph Platform Cloud: use langGraphPlatformEndpoint with agent configuration
-      runtime = new CopilotRuntime({
-        remoteEndpoints: [
-          langGraphPlatformEndpoint({
-            deploymentUrl: langGraphUrl,
-            langsmithApiKey: process.env.LANGSMITH_API_KEY || undefined,
-            agents: [
-              {
-                name: "starterAgent",
-                description: "A helpful LLM agent that can assist with various tasks.",
-              },
-            ],
-          }),
-        ],
-      });
-    }
-  } else {
-    console.warn("⚠️  LangGraph agent server not detected. Running in fallback mode with Google Gemini only.");
-    console.warn("💡 To enable full agent capabilities, run: npm run dev");
-    console.warn("   (This starts both the UI and agent server concurrently)");
-    
-    // Create runtime without remote endpoints (uses serviceAdapter directly)
-    runtime = new CopilotRuntime();
-  }
-} catch (error) {
-  console.error("Failed to initialize CopilotKit runtime:", error);
-  // Create a basic runtime as fallback
+  // Create runtime with direct adapter (no remote endpoints needed)
+  // This is the simplest and most reliable setup for production
   runtime = new CopilotRuntime();
+  
+  console.log("✅ CopilotKit runtime initialized successfully with Google Gemini");
+} catch (error) {
+  console.error("❌ Failed to initialize CopilotKit runtime:", error);
+  console.error("Error details:", error instanceof Error ? error.message : String(error));
+  
+  // Create a basic runtime as fallback
+  try {
+    runtime = new CopilotRuntime();
+    console.log("✅ Fallback runtime created");
+  } catch (fallbackError) {
+    console.error("❌ Failed to create fallback runtime:", fallbackError);
+  }
 }
 
 /**
@@ -139,11 +65,19 @@ export const GET = async (req: NextRequest) => {
   try {
     // Check if runtime and serviceAdapter were initialized successfully
     if (!runtime || !serviceAdapter) {
+      console.error("❌ GET request failed: Runtime or serviceAdapter not initialized");
+      console.error("Runtime exists:", !!runtime);
+      console.error("ServiceAdapter exists:", !!serviceAdapter);
+      
       return createErrorResponse(
         "Service Unavailable",
-        "CopilotKit runtime failed to initialize. Please check server configuration.",
+        "CopilotKit runtime failed to initialize. Please check server logs and environment variables.",
         503,
-        { reason: "Runtime initialization failed" }
+        { 
+          reason: "Runtime initialization failed",
+          hasRuntime: !!runtime,
+          hasServiceAdapter: !!serviceAdapter
+        }
       );
     }
 
@@ -159,11 +93,16 @@ export const GET = async (req: NextRequest) => {
       const response = await handleRequest(req);
       return response;
     } catch (handlerError) {
-      console.error("Error in CopilotKit GET handler:", handlerError);
+      console.error("❌ Error in CopilotKit GET handler:", handlerError);
+      console.error("Error type:", handlerError instanceof Error ? handlerError.constructor.name : typeof handlerError);
+      if (handlerError instanceof Error) {
+        console.error("Error message:", handlerError.message);
+        console.error("Error stack:", handlerError.stack);
+      }
       return handleApiError(handlerError);
     }
   } catch (error) {
-    console.error("Unexpected error in CopilotKit GET route:", error);
+    console.error("❌ Unexpected error in CopilotKit GET route:", error);
     return handleApiError(error);
   }
 };
@@ -176,11 +115,24 @@ export const POST = async (req: NextRequest) => {
   try {
     // Check if runtime and serviceAdapter were initialized successfully
     if (!runtime || !serviceAdapter) {
+      console.error("❌ POST request failed: Runtime or serviceAdapter not initialized");
+      console.error("Runtime exists:", !!runtime);
+      console.error("ServiceAdapter exists:", !!serviceAdapter);
+      console.error("Environment check:");
+      console.error("- GEMINI_API_KEY:", process.env.GEMINI_API_KEY ? "Set" : "Not set");
+      console.error("- GOOGLE_API_KEY:", process.env.GOOGLE_API_KEY ? "Set" : "Not set");
+      console.error("- VERCEL_ENV:", process.env.VERCEL_ENV || "Not set");
+      
       return createErrorResponse(
         "Service Unavailable",
-        "CopilotKit runtime failed to initialize. Please check server configuration.",
+        "CopilotKit runtime failed to initialize. Please check server logs and environment variables.",
         503,
-        { reason: "Runtime initialization failed" }
+        { 
+          reason: "Runtime initialization failed",
+          hasRuntime: !!runtime,
+          hasServiceAdapter: !!serviceAdapter,
+          environment: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown"
+        }
       );
     }
 
@@ -196,12 +148,44 @@ export const POST = async (req: NextRequest) => {
       const response = await handleRequest(req);
       return response;
     } catch (handlerError) {
-      console.error("Error in CopilotKit request handler:", handlerError);
+      console.error("❌ Error in CopilotKit POST handler:", handlerError);
+      console.error("Error type:", handlerError instanceof Error ? handlerError.constructor.name : typeof handlerError);
+      
+      if (handlerError instanceof Error) {
+        console.error("Error message:", handlerError.message);
+        console.error("Error stack:", handlerError.stack);
+        
+        // Check for specific GraphQL errors
+        if (handlerError.message.includes("GraphQL")) {
+          console.error("📊 GraphQL Error detected");
+          console.error("This may be caused by:");
+          console.error("1. Missing or invalid API keys (GEMINI_API_KEY or GOOGLE_API_KEY)");
+          console.error("2. LangGraph endpoint configuration issues");
+          console.error("3. Network connectivity problems");
+          console.error("4. Model API rate limits or quota exceeded");
+        }
+      }
+      
+      // Log request details for debugging
+      try {
+        const url = new URL(req.url);
+        console.error("Request URL:", url.pathname);
+        console.error("Request method:", req.method);
+      } catch (urlError) {
+        console.error("Could not parse request URL");
+      }
+      
       return handleApiError(handlerError);
     }
   } catch (error) {
     // Catch any unexpected errors in the route handler
-    console.error("Unexpected error in CopilotKit POST route:", error);
+    console.error("❌ Unexpected error in CopilotKit POST route:", error);
+    console.error("Error details:", error instanceof Error ? {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    } : error);
+    
     return handleApiError(error);
   }
 };
