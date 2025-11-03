@@ -1,4 +1,5 @@
 // app/compliance/page.tsx
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useCopilotReadable } from "@copilotkit/react-core";
 import {
   ShieldCheckIcon,
   LockIcon,
@@ -224,6 +226,91 @@ const testimonials = [
 ];
 
 export default function CompliancePage() {
+  // Provide context to the AI agent about security and compliance
+  useCopilotReadable({
+    description: "Security and Compliance page with certifications and standards",
+    value: {
+      pageTitle: "Security & Compliance",
+      overview: "Industry-leading security standards and compliance certifications. Enterprise-grade infrastructure trusted by leading organizations.",
+      certifications: [
+        {
+          name: "SOC 2 Type II",
+          description: "Comprehensive security, availability, and confidentiality controls independently audited and certified annually.",
+          features: ["Annual audits", "Continuous monitoring", "Independent validation", "Public reports available"],
+          status: "Active",
+          issuer: "AICPA",
+          year: "2025"
+        },
+        {
+          name: "HIPAA Compliance",
+          description: "Full compliance with Health Insurance Portability and Accountability Act for handling protected health information.",
+          features: ["BAA agreements", "PHI encryption", "Access controls", "Audit logging"],
+          status: "Compliant",
+          issuer: "HHS",
+          year: "2025"
+        },
+        {
+          name: "GDPR Ready",
+          description: "General Data Protection Regulation compliance for processing EU citizen data with privacy-by-design principles.",
+          features: ["Data portability", "Right to deletion", "Consent management", "Privacy controls"]
+        },
+        {
+          name: "ISO 27001",
+          description: "International standard for information security management systems ensuring systematic risk management.",
+          features: ["Risk assessment", "Security policies", "Incident response", "Business continuity"],
+          status: "Certified",
+          issuer: "ISO",
+          year: "2024"
+        },
+        {
+          name: "CCPA Compliant",
+          description: "California Consumer Privacy Act compliance protecting consumer privacy rights and data transparency.",
+          features: ["Data disclosure", "Opt-out rights", "Non-discrimination", "Consumer requests"]
+        },
+        {
+          name: "FedRAMP Ready",
+          description: "Federal Risk and Authorization Management Program readiness for government cloud services.",
+          features: ["Security controls", "Continuous monitoring", "Government standards", "Authorization package"]
+        },
+        {
+          name: "PCI DSS",
+          description: "Payment Card Industry Data Security Standard Level 1 compliance",
+          status: "Level 1",
+          issuer: "PCI SSC",
+          year: "2025"
+        }
+      ],
+      securityFeatures: [
+        "End-to-End Encryption - AES-256 encryption for data at rest and TLS 1.3 for data in transit",
+        "Multi-Factor Authentication - Mandatory MFA with support for TOTP, SMS, and hardware security keys",
+        "Real-Time Monitoring - 24/7 security monitoring with automated threat detection and response",
+        "Infrastructure Security - Enterprise-grade infrastructure with redundancy and DDoS protection",
+        "Compliance Audits - Regular third-party security audits and penetration testing",
+        "Access Controls - Role-based access control with principle of least privilege"
+      ],
+      statistics: {
+        uptimeSLA: "99.99% uptime with multi-region redundancy",
+        encryption: "256-bit AES encryption (military-grade)",
+        monitoring: "24/7 security monitoring and incident response",
+        certificationsCount: "4+ major compliance frameworks independently verified"
+      },
+      complianceProcess: [
+        "Security Assessment (1 week) - Comprehensive evaluation of security requirements and compliance needs",
+        "Implementation Planning (1-2 weeks) - Develop detailed compliance roadmap with timelines and milestones",
+        "Controls Deployment (4-8 weeks) - Implement security controls, policies, and procedures",
+        "Continuous Compliance (Ongoing) - Ongoing monitoring, documentation, and updates"
+      ],
+      documentation: {
+        available: true,
+        includes: ["Full audit reports", "BAA agreements", "Security whitepapers", "Dedicated security support"]
+      },
+      contactInfo: {
+        securityTeam: true,
+        contactPage: "/contact"
+      }
+    }
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
       {/* Home Button */}

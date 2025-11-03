@@ -38,59 +38,97 @@ if (!process.env.LANGGRAPH_DEPLOYMENT_URL && !process.env.NEXT_PUBLIC_LANGGRAPH_
 // It handles multi-agent coordination and fallback scenarios
 let serviceAdapter: GoogleGenerativeAIAdapter;
 let runtime: CopilotRuntime;
+let agentServerAvailable = false;
+
+// Check if LangGraph agent server is running
+async function checkAgentServer(): Promise<boolean> {
+  if (!langGraphUrl.includes("localhost") && !langGraphUrl.includes("127.0.0.1")) {
+    // For remote deployments, assume available
+    return true;
+  }
+  
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+    
+    const response = await fetch(`${langGraphUrl}/info`, {
+      signal: controller.signal,
+    });
+    
+    clearTimeout(timeoutId);
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+}
 
 try {
   // Initialize the Google Gemini adapter (per CopilotKit docs; uses env for keys)
   serviceAdapter = new GoogleGenerativeAIAdapter();
 
-  // Create the CopilotRuntime with remoteEndpoints (official CopilotKit method for self-hosted agents)
-  // Reference: https://www.copilotkit.ai/blog/heres-how-to-build-fullstack-agent-apps-gemini-copilotkit-langgraph
-  // For self-hosted LangGraph deployments, use langGraphPlatformEndpoint with agent configuration
-  // The agent name "starterAgent" comes from lib/ai/langgraph.json
+  // Check if agent server is running
+  agentServerAvailable = await checkAgentServer();
   
-  // Check if we have authentication key for LangGraph
-  const langGraphApiKey = process.env.LANGGRAPH_API_KEY;
-  
-  // Build remote endpoints configuration
-  // For self-hosted LangGraph deployments, use copilotKitEndpoint with onBeforeRequest for auth
-  // This handles the /info endpoint with authentication headers
-  // For LangGraph Platform Cloud deployments, use langGraphPlatformEndpoint
-  if (langGraphUrl.includes("localhost") || langGraphUrl.includes("127.0.0.1") || !langGraphUrl.includes("platform.langchain.com")) {
-    // Self-hosted LangGraph: use copilotKitEndpoint with authentication
-    runtime = new CopilotRuntime({
-      remoteEndpoints: [
-        copilotKitEndpoint({
-          url: langGraphUrl,
-          onBeforeRequest: () => {
-            const headers: Record<string, string> = {};
-            if (langGraphApiKey) {
-              headers["x-langgraph-api-key"] = langGraphApiKey;
-            }
-            return { headers };
-          },
-        }),
-      ],
-    });
-  } else {
-    // LangGraph Platform Cloud: use langGraphPlatformEndpoint with agent configuration
-    runtime = new CopilotRuntime({
-      remoteEndpoints: [
-        langGraphPlatformEndpoint({
-          deploymentUrl: langGraphUrl,
-          langsmithApiKey: process.env.LANGSMITH_API_KEY || undefined,
-          agents: [
-            {
-              name: "starterAgent",
-              description: "A helpful LLM agent that can assist with various tasks.",
+  if (agentServerAvailable) {
+    console.log("✅ LangGraph agent server detected at", langGraphUrl);
+    
+    // Create the CopilotRuntime with remoteEndpoints (official CopilotKit method for self-hosted agents)
+    // Reference: https://www.copilotkit.ai/blog/heres-how-to-build-fullstack-agent-apps-gemini-copilotkit-langgraph
+    // For self-hosted LangGraph deployments, use langGraphPlatformEndpoint with agent configuration
+    // The agent name "starterAgent" comes from lib/ai/langgraph.json
+    
+    // Check if we have authentication key for LangGraph
+    const langGraphApiKey = process.env.LANGGRAPH_API_KEY;
+    
+    // Build remote endpoints configuration
+    // For self-hosted LangGraph deployments, use copilotKitEndpoint with onBeforeRequest for auth
+    // This handles the /info endpoint with authentication headers
+    // For LangGraph Platform Cloud deployments, use langGraphPlatformEndpoint
+    if (langGraphUrl.includes("localhost") || langGraphUrl.includes("127.0.0.1") || !langGraphUrl.includes("platform.langchain.com")) {
+      // Self-hosted LangGraph: use copilotKitEndpoint with authentication
+      runtime = new CopilotRuntime({
+        remoteEndpoints: [
+          copilotKitEndpoint({
+            url: langGraphUrl,
+            onBeforeRequest: () => {
+              const headers: Record<string, string> = {};
+              if (langGraphApiKey) {
+                headers["x-langgraph-api-key"] = langGraphApiKey;
+              }
+              return { headers };
             },
-          ],
-        }),
-      ],
-    });
+          }),
+        ],
+      });
+    } else {
+      // LangGraph Platform Cloud: use langGraphPlatformEndpoint with agent configuration
+      runtime = new CopilotRuntime({
+        remoteEndpoints: [
+          langGraphPlatformEndpoint({
+            deploymentUrl: langGraphUrl,
+            langsmithApiKey: process.env.LANGSMITH_API_KEY || undefined,
+            agents: [
+              {
+                name: "starterAgent",
+                description: "A helpful LLM agent that can assist with various tasks.",
+              },
+            ],
+          }),
+        ],
+      });
+    }
+  } else {
+    console.warn("⚠️  LangGraph agent server not detected. Running in fallback mode with Google Gemini only.");
+    console.warn("💡 To enable full agent capabilities, run: npm run dev");
+    console.warn("   (This starts both the UI and agent server concurrently)");
+    
+    // Create runtime without remote endpoints (uses serviceAdapter directly)
+    runtime = new CopilotRuntime();
   }
 } catch (error) {
   console.error("Failed to initialize CopilotKit runtime:", error);
-  // We'll handle this in the POST handler
+  // Create a basic runtime as fallback
+  runtime = new CopilotRuntime();
 }
 
 /**

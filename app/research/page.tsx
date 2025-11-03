@@ -1,4 +1,5 @@
 // app/research/page.tsx
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useCopilotReadable } from "@copilotkit/react-core";
 import {
   BrainCircuitIcon,
   HeartPulseIcon,
@@ -126,6 +128,74 @@ const testimonials = [
 ];
 
 export default function B2BResearchPage() {
+  // Provide context to the AI agent about B2B research platform
+  useCopilotReadable({
+    description: "B2B Research Platform for Healthcare and Non-Profit Organizations",
+    value: {
+      pageTitle: "B2B Research Platform",
+      overview: "AI-powered B2B research solutions specifically designed for healthcare and non-profit organizations. HIPAA-compliant, secure, and built for impact.",
+      targetIndustries: ["Healthcare", "Non-Profits"],
+      features: [
+        {
+          name: "AI-Powered Insights",
+          description: "Leverage advanced machine learning to uncover hidden patterns and trends in healthcare and non-profit data."
+        },
+        {
+          name: "Intelligent Research",
+          description: "Automated data collection and analysis across multiple sources with AI-driven accuracy."
+        },
+        {
+          name: "Data Integration",
+          description: "Seamlessly integrate disparate data sources for comprehensive B2B intelligence."
+        },
+        {
+          name: "Predictive Analytics",
+          description: "Forecast market trends and identify opportunities before your competitors."
+        },
+        {
+          name: "HIPAA Compliant",
+          description: "Enterprise-grade security with full HIPAA and data privacy compliance."
+        },
+        {
+          name: "Real-Time Updates",
+          description: "Get instant alerts on market changes, competitor moves, and industry developments."
+        }
+      ],
+      healthcareUseCases: [
+        "Hospital systems market analysis and competitive intelligence",
+        "Medical device and pharmaceutical partnership opportunities",
+        "Healthcare provider network expansion research",
+        "Clinical trial site identification and evaluation",
+        "Payer and reimbursement landscape analysis"
+      ],
+      nonProfitUseCases: [
+        "Grant funding opportunity identification and tracking",
+        "Donor prospect research and wealth screening",
+        "Foundation and corporate partnership discovery",
+        "Impact measurement and program evaluation",
+        "Non-profit landscape and competitive analysis"
+      ],
+      benefits: {
+        timeSavings: "80% reduction in research time - from weeks to hours",
+        accuracy: "95% accuracy rate validated against industry benchmarks",
+        costReduction: "70% lower research expenses compared to traditional methods",
+        revenueImpact: "Identify high-value opportunities faster and close deals quicker"
+      },
+      statistics: {
+        organizationsServed: "500+",
+        dataPoints: "10M+",
+        timeSaved: "80%",
+        accuracyRate: "95%"
+      },
+      compliance: ["HIPAA Compliant", "Enterprise Security", "Data Privacy"],
+      trial: {
+        available: true,
+        duration: "14 days",
+        noCreditCard: true
+      }
+    }
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
       {/* Home Button */}
