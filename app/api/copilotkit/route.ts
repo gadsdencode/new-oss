@@ -6,6 +6,12 @@ import {
 import { NextRequest } from "next/server";
 import { handleApiError, createErrorResponse } from "@/lib/errors";
 
+// --- NEW CODE FIX ---
+// Force the Node.js runtime to ensure process.env is available
+// This rules out any Vercel Edge Runtime conflicts.
+export const runtime = "nodejs";
+// --- END NEW CODE FIX ---
+
 /**
  * Extract detailed error information from GraphQL errors
  * GraphQL errors typically have an extensions object with originalError
@@ -77,6 +83,10 @@ function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
     return null;
   }
 
+  // --- NEW CODE FIX: Enhanced Logging ---
+  console.log(`✅ API Key detected. Length: ${apiKey.length}.`);
+  // --- END NEW CODE FIX ---
+
   try {
     // Validate API key format (should be non-empty string)
     if (typeof apiKey !== "string" || apiKey.trim().length === 0) {
@@ -84,14 +94,11 @@ function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
       return null;
     }
 
-    // Initialize the Google Gemini adapter
-    // Default to gemini-1.5-flash (widely supported, fast, cost-effective)
-    // Can be overridden with GEMINI_MODEL environment variable
-    // Supported models: gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash, etc.
-    // Check https://ai.google.dev/gemini-api/docs/models for latest available models
     const modelName = process.env.GEMINI_MODEL || "gemini-1.5-flash";
     
-    console.log(`🔧 Creating Google Gemini adapter with model: ${modelName}`);
+    // --- NEW CODE FIX: Enhanced Logging ---
+    console.log(`🔧 Attempting to create Google Gemini adapter with model: "${modelName}"`);
+    // --- END NEW CODE FIX ---
     
     const adapter = new GoogleGenerativeAIAdapter({
       model: modelName,
@@ -304,11 +311,11 @@ export const POST = async (req: NextRequest) => {
         if (errorDetails.originalError instanceof Error) {
           const origMsg = errorDetails.originalError.message.toLowerCase();
           
-          if (origMsg.includes("api key") || origMsg.includes("authentication") || origMsg.includes("401")) {
+          if (origMsg.includes("api key") || origMsg.includes("authentication") || origMsg.includes("401") || origMsg.includes("permission_denied") || origMsg.includes("403")) {
             console.error("🔐 Authentication Issue Detected:");
-            console.error("   - The Gemini API key may be invalid, expired, or missing required permissions");
+            console.error("   - The Gemini API key may be invalid, expired, or MISSING PERMISSIONS");
             console.error("   - Verify API key at: https://aistudio.google.com/app/apikey");
-            console.error("   - Ensure GEMINI_API_KEY is set correctly in environment variables");
+            console.error("   - ✅ ENSURE the 'Gemini API' or 'Vertex AI API' is ENABLED in your Google Cloud Project.");
             console.error("   - Check that the API key has Gemini API enabled in Google Cloud Console");
           } else if (origMsg.includes("quota") || origMsg.includes("429") || origMsg.includes("rate limit")) {
             console.error("⏱️ Rate Limit / Quota Issue Detected:");
@@ -323,7 +330,7 @@ export const POST = async (req: NextRequest) => {
           } else if (origMsg.includes("model") || origMsg.includes("invalid")) {
             console.error("⚙️ Configuration Issue Detected:");
             console.error("   - The model name or configuration may be invalid");
-            console.error("   - Check GEMINI_MODEL environment variable");
+            console.error("   - Check GEMINI_MODEL environment variable in Vercel (current value was logged above).");
             console.error("   - Verify model name is supported: gemini-1.5-flash, gemini-1.5-pro, etc.");
           } else {
             console.error("❓ Unknown Error Type:");
@@ -333,11 +340,10 @@ export const POST = async (req: NextRequest) => {
         
         console.error("");
         console.error("💡 Common Fixes:");
-        console.error("1. Verify API key: https://aistudio.google.com/app/apikey");
-        console.error("2. Check quota: https://console.cloud.google.com");
-        console.error("3. Ensure GEMINI_API_KEY is set in Vercel environment variables");
-        console.error("4. Verify API key has Gemini API enabled");
-        console.error("5. Check model name is valid (GEMINI_MODEL env var)");
+        console.error("1. ✅ GO TO GOOGLE CLOUD CONSOLE and ensure the 'Gemini API' is ENABLED for this project/API key.");
+        console.error("2. Verify API key is valid: https://aistudio.google.com/app/apikey");
+        console.error("3. Check quota: https://console.cloud.google.com");
+        console.error("4. Check Vercel logs to verify the GEMINI_MODEL name is correct.");
       }
 
       // Check for authentication errors
