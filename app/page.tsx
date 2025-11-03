@@ -224,7 +224,7 @@ export default function Home() {
               name="Enterprise Compliance" 
               className="col-span-1 md:col-span-2 lg:col-span-2" 
               background={
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/15 via-green-500/10 to-green-500/5" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/5" />
               } 
               Icon={ShieldCheckIcon} 
               description="SOC 2 Type II certified. Enterprise-grade security, compliance, and data protection built into every solution." 
