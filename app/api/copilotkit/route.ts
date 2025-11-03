@@ -4,69 +4,50 @@ import {
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
 import { NextRequest } from "next/server";
-import { handleApiError, createErrorResponse, validateEnvVars } from "@/lib/errors";
+import { handleApiError, createErrorResponse } from "@/lib/errors";
 
-// Get API key from environment
-const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-
-// Validate API key
-if (!apiKey) {
-  console.error(
-    "❌ ERROR: Neither GEMINI_API_KEY nor GOOGLE_API_KEY is set. AI functionality will not work."
-  );
-  console.error("Please set one of these environment variables in your Vercel project settings.");
+/**
+ * Get API key from environment variables
+ * Supports both GEMINI_API_KEY and GOOGLE_API_KEY for compatibility
+ */
+function getApiKey(): string | null {
+  return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || null;
 }
 
-// Determine if we're in production/deployed environment
-const isProduction = process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
-const isDeployed = !!process.env.VERCEL; // Running on Vercel
+/**
+ * Create and initialize the Google Gemini adapter
+ * This is called per-request to avoid serverless environment issues
+ */
+function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
+  const apiKey = getApiKey();
 
-// Log environment configuration
-if (isDeployed) {
-  console.log("🚀 Running on Vercel");
-  console.log("Environment:", process.env.VERCEL_ENV || "unknown");
-  console.log("API Key configured:", apiKey ? "Yes" : "No");
-}
+  if (!apiKey) {
+    console.error("❌ ERROR: Neither GEMINI_API_KEY nor GOOGLE_API_KEY is set.");
+    return null;
+  }
 
-console.log("🤖 Initializing CopilotKit with Google Gemini");
-
-// Initialize service adapter and runtime
-let serviceAdapter: GoogleGenerativeAIAdapter | undefined;
-let runtime: CopilotRuntime;
-
-try {
-  // Initialize the Google Gemini adapter with explicit configuration
-  // Pass the API key and model name directly to the adapter
-  if (apiKey) {
-    serviceAdapter = new GoogleGenerativeAIAdapter({
-      model: "gemini-1.5-pro", // Use the latest Gemini model
-      // @ts-ignore - apiKey might not be in type definitions but is supported
+  try {
+    // Initialize the Google Gemini adapter
+    // Default to gemini-1.5-flash (widely supported, fast, cost-effective)
+    // Can be overridden with GEMINI_MODEL environment variable
+    // Supported models: gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash, etc.
+    // Check https://ai.google.dev/gemini-api/docs/models for latest available models
+    const modelName = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+    
+    const adapter = new GoogleGenerativeAIAdapter({
+      model: modelName,
       apiKey: apiKey,
     });
-    console.log("✅ Google Gemini adapter created with API key");
-  } else {
-    console.error("❌ Cannot create adapter: No API key available");
-  }
-  
-  // Create runtime (adapter will be passed to endpoint handler)
-  runtime = new CopilotRuntime();
-  
-  console.log("✅ CopilotKit runtime initialized successfully");
-} catch (error) {
-  console.error("❌ Failed to initialize CopilotKit runtime:", error);
-  console.error("Error details:", error instanceof Error ? error.message : String(error));
-  
-  if (error instanceof Error && error.message) {
-    console.error("Error stack:", error.stack);
-  }
-  
-  // Create a basic runtime as fallback
-  try {
-    runtime = new CopilotRuntime();
-    console.log("✅ Fallback runtime created (without adapter)");
-  } catch (fallbackError) {
-    console.error("❌ Failed to create fallback runtime:", fallbackError);
-    throw fallbackError; // Re-throw if we can't even create basic runtime
+
+    console.log(`✅ Google Gemini adapter created successfully with model: ${modelName}`);
+    return adapter;
+  } catch (error) {
+    console.error("❌ Failed to create Google Gemini adapter:", error);
+    if (error instanceof Error) {
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
+    return null;
   }
 }
 
@@ -76,35 +57,44 @@ try {
  */
 export const GET = async (req: NextRequest) => {
   try {
-    // Check if runtime and serviceAdapter were initialized successfully
-    if (!runtime || !serviceAdapter) {
-      console.error("❌ GET request failed: Runtime or serviceAdapter not initialized");
-      console.error("Runtime exists:", !!runtime);
-      console.error("ServiceAdapter exists:", !!serviceAdapter);
-      console.error("API Key present:", !!apiKey);
-      
-      const errorMessage = !apiKey 
-        ? "GEMINI_API_KEY or GOOGLE_API_KEY is not set in environment variables. Please configure it in Vercel project settings."
-        : "CopilotKit runtime failed to initialize. Please check server logs.";
-      
+    const apiKey = getApiKey();
+
+    if (!apiKey) {
+      console.error("❌ GET request failed: API key not configured");
       return createErrorResponse(
         "Service Unavailable",
-        errorMessage,
+        "GEMINI_API_KEY or GOOGLE_API_KEY is not set in environment variables. Please configure it in Vercel project settings.",
         503,
-        { 
-          reason: !apiKey ? "API key not configured" : "Runtime initialization failed",
-          hasRuntime: !!runtime,
-          hasServiceAdapter: !!serviceAdapter,
-          hasApiKey: !!apiKey
+        {
+          reason: "API key not configured",
+          hasApiKey: false,
         }
       );
     }
 
-    // Get the request handler with both runtime and serviceAdapter
+    // Create adapter per-request for serverless compatibility
+    const serviceAdapter = createServiceAdapter();
+    if (!serviceAdapter) {
+      return createErrorResponse(
+        "Service Unavailable",
+        "Failed to initialize Google Gemini adapter. Please check server logs.",
+        503,
+        {
+          reason: "Adapter initialization failed",
+          hasApiKey: true,
+        }
+      );
+    }
+
+    // Create runtime per-request
+    const runtime = new CopilotRuntime();
+
+    // Get the request handler
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
       runtime,
       serviceAdapter,
       endpoint: "/api/copilotkit",
+      logLevel: process.env.NODE_ENV === "production" ? "error" : "debug",
     });
 
     // Handle the GET request
@@ -113,7 +103,6 @@ export const GET = async (req: NextRequest) => {
       return response;
     } catch (handlerError) {
       console.error("❌ Error in CopilotKit GET handler:", handlerError);
-      console.error("Error type:", handlerError instanceof Error ? handlerError.constructor.name : typeof handlerError);
       if (handlerError instanceof Error) {
         console.error("Error message:", handlerError.message);
         console.error("Error stack:", handlerError.stack);
@@ -132,40 +121,54 @@ export const GET = async (req: NextRequest) => {
  */
 export const POST = async (req: NextRequest) => {
   try {
-    // Check if runtime and serviceAdapter were initialized successfully
-    if (!runtime || !serviceAdapter) {
-      console.error("❌ POST request failed: Runtime or serviceAdapter not initialized");
-      console.error("Runtime exists:", !!runtime);
-      console.error("ServiceAdapter exists:", !!serviceAdapter);
-      console.error("API Key present:", !!apiKey);
+    const apiKey = getApiKey();
+
+    if (!apiKey) {
+      console.error("❌ POST request failed: API key not configured");
       console.error("Environment check:");
-      console.error("- GEMINI_API_KEY:", process.env.GEMINI_API_KEY ? "Set (length: " + process.env.GEMINI_API_KEY.length + ")" : "Not set");
-      console.error("- GOOGLE_API_KEY:", process.env.GOOGLE_API_KEY ? "Set (length: " + process.env.GOOGLE_API_KEY.length + ")" : "Not set");
+      console.error("- GEMINI_API_KEY:", process.env.GEMINI_API_KEY ? `Set (length: ${process.env.GEMINI_API_KEY.length})` : "Not set");
+      console.error("- GOOGLE_API_KEY:", process.env.GOOGLE_API_KEY ? `Set (length: ${process.env.GOOGLE_API_KEY.length})` : "Not set");
       console.error("- VERCEL_ENV:", process.env.VERCEL_ENV || "Not set");
-      
-      const errorMessage = !apiKey 
-        ? "GEMINI_API_KEY or GOOGLE_API_KEY is not set. Please configure it in Vercel project settings: Settings → Environment Variables"
-        : "CopilotKit runtime failed to initialize. Please check server logs.";
-      
+      console.error("- NODE_ENV:", process.env.NODE_ENV || "Not set");
+
       return createErrorResponse(
         "Service Unavailable",
-        errorMessage,
+        "GEMINI_API_KEY or GOOGLE_API_KEY is not set. Please configure it in Vercel project settings: Settings → Environment Variables",
         503,
-        { 
-          reason: !apiKey ? "API key not configured" : "Runtime initialization failed",
-          hasRuntime: !!runtime,
-          hasServiceAdapter: !!serviceAdapter,
-          hasApiKey: !!apiKey,
-          environment: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown"
+        {
+          reason: "API key not configured",
+          hasApiKey: false,
+          environment: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
         }
       );
     }
+
+    // Create adapter per-request for serverless compatibility
+    // This ensures fresh initialization on each request
+    const serviceAdapter = createServiceAdapter();
+    if (!serviceAdapter) {
+      console.error("❌ POST request failed: Service adapter initialization failed");
+      return createErrorResponse(
+        "Service Unavailable",
+        "Failed to initialize Google Gemini adapter. Please check API key validity and server logs.",
+        503,
+        {
+          reason: "Adapter initialization failed",
+          hasApiKey: true,
+        }
+      );
+    }
+
+    // Create runtime per-request
+    // This is important for serverless environments where module-level state can cause issues
+    const runtime = new CopilotRuntime();
 
     // Get the request handler with both runtime and serviceAdapter
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
       runtime,
       serviceAdapter,
       endpoint: "/api/copilotkit",
+      logLevel: process.env.NODE_ENV === "production" ? "error" : "debug",
     });
 
     // Handle the request with additional error catching
@@ -175,37 +178,53 @@ export const POST = async (req: NextRequest) => {
     } catch (handlerError) {
       console.error("❌ Error in CopilotKit POST handler:", handlerError);
       console.error("Error type:", handlerError instanceof Error ? handlerError.constructor.name : typeof handlerError);
-      
+
       if (handlerError instanceof Error) {
         console.error("Error message:", handlerError.message);
         console.error("Error stack:", handlerError.stack);
-        
+
         // Check for specific GraphQL errors
-        if (handlerError.message.includes("GraphQL")) {
-          console.error("📊 GraphQL Error detected");
-          console.error("Common causes:");
+        if (handlerError.message.includes("GraphQL") || handlerError.message.includes("GraphQLError")) {
+          console.error("📊 GraphQL Error detected - Common causes:");
           console.error("1. Invalid or expired API key");
           console.error("2. API key lacks necessary permissions");
           console.error("3. Google Gemini API quota exceeded");
           console.error("4. Network connectivity issues");
           console.error("5. Incorrect model name or configuration");
+          console.error("6. Service adapter not properly initialized");
           console.error("");
           console.error("To fix:");
           console.error("- Verify API key at: https://aistudio.google.com/app/apikey");
           console.error("- Check quota at: https://console.cloud.google.com");
           console.error("- Ensure GEMINI_API_KEY is set correctly in Vercel");
+          console.error("- Verify the API key has Gemini API enabled");
+        }
+
+        // Check for authentication errors
+        if (handlerError.message.includes("401") || handlerError.message.includes("Unauthorized") || handlerError.message.includes("API key")) {
+          console.error("🔐 Authentication Error detected");
+          console.error("The API key may be invalid or expired");
+          console.error("Please verify the API key in Vercel environment variables");
+        }
+
+        // Check for rate limiting
+        if (handlerError.message.includes("429") || handlerError.message.includes("quota") || handlerError.message.includes("rate limit")) {
+          console.error("⏱️ Rate Limit Error detected");
+          console.error("The API quota may have been exceeded");
+          console.error("Check usage at: https://console.cloud.google.com");
         }
       }
-      
+
       // Log request details for debugging
       try {
         const url = new URL(req.url);
         console.error("Request URL:", url.pathname);
         console.error("Request method:", req.method);
+        console.error("Request headers:", Object.fromEntries(req.headers.entries()));
       } catch (urlError) {
-        console.error("Could not parse request URL");
+        console.error("Could not parse request details");
       }
-      
+
       return handleApiError(handlerError);
     }
   } catch (error) {
@@ -214,10 +233,9 @@ export const POST = async (req: NextRequest) => {
     console.error("Error details:", error instanceof Error ? {
       name: error.name,
       message: error.message,
-      stack: error.stack
+      stack: error.stack,
     } : error);
-    
+
     return handleApiError(error);
   }
 };
-
