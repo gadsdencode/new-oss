@@ -94,7 +94,7 @@ export default function Home() {
         <div className="relative z-10 mx-auto max-w-7xl text-center px-4 sm:px-6 lg:px-8 py-20">
           <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
-            Next-Generation AI Solutions for Enterprise
+            AI Solutions for Business Intelligence
           </Badge>
           
           {/* Hero Headline - Clear Value Proposition */}
