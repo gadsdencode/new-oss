@@ -1,118 +1,265 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app) with integrated LangGraph agent support and CopilotKit.
+# Overture Systems Solutions - AI-Powered Business Platform
 
-## 🔒 Security Notice
+Modern business website with integrated AI assistant powered by CopilotKit and Google Gemini.
 
-**IMPORTANT**: This project includes a LangGraph agent endpoint that **MUST** be secured with API key authentication to prevent unauthorized access and API quota drainage.
-
-👉 **See [SECURITY_SETUP.md](./SECURITY_SETUP.md) for complete setup instructions**
-
-### Quick Security Setup
-
-1. Generate a secure API key:
-   ```bash
-   node -e "console.log('langgraph-api-key-' + require('crypto').randomBytes(32).toString('base64url'))"
-   ```
-
-2. Create `.env.local` in the project root:
-   ```bash
-   GEMINI_API_KEY=your_gemini_api_key
-   LANGGRAPH_API_KEY=your_generated_key_here
-   LANGGRAPH_DEPLOYMENT_URL=http://localhost:8123
-   TAVILY_API_KEY=your_tavily_api_key
-   ```
-
-3. Create `agent/.env` with the same keys:
-   ```bash
-   LANGGRAPH_API_KEY=your_generated_key_here
-   GEMINI_API_KEY=your_gemini_api_key
-   TAVILY_API_KEY=your_tavily_api_key
-   ```
-
-## Getting Started
-
-### Obtaining API Keys
-
-1. **Gemini API Key**: Get your Google Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
-
-2. **Tavily API Key**: Get your Tavily Search API key from [Tavily](https://tavily.com) to enable the `searchApi` tool for web searches
-
-First, run the development server:
+## 🚀 Quick Start
 
 ```bash
-# Option 1: Run both Next.js and LangGraph agent together
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
 
-# Option 2: Run separately in different terminals
-# Terminal 1: Next.js app
-npm run dev:ui
-
-# Terminal 2: LangGraph agent
-npm run dev:agent
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏗️ Architecture
 
-### Testing Authentication
+### **Simple & Production-Ready**
 
-After setting up the environment variables, test the authentication:
+```
+┌─────────────────────────────────────────┐
+│  User's Browser                         │
+└────────────────┬────────────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────────────┐
+│  Next.js Application                    │
+│  (React 19 + Next.js 16)                │
+└────────────────┬────────────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────────────┐
+│  CopilotKit Runtime                     │
+│  (/api/copilotkit)                      │
+└────────────────┬────────────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────────────┐
+│  Google Gemini API                      │
+│  (AI Model Provider)                    │
+└─────────────────────────────────────────┘
+```
+
+## ✨ Features
+
+### **AI Assistant**
+- ✅ Conversational AI chatbot
+- ✅ Understands company services and offerings
+- ✅ Context-aware responses using `useCopilotReadable`
+- ✅ Powered by Google Gemini
+
+### **Pages with AI Context**
+- 🏠 **Homepage** - Company overview and services
+- 💼 **Consulting** - AI consulting services and expertise
+- 🔬 **Research** - B2B research platform details
+- 🔒 **Compliance** - Security certifications and standards
+- 📞 **Contact** - Contact methods and office locations
+
+### **Modern Stack**
+- ⚡ Next.js 16 with App Router
+- ⚛️ React 19
+- 🎨 Tailwind CSS 4
+- 🤖 CopilotKit for AI integration
+- 🔐 Google Gemini for AI responses
+
+## 🔧 Environment Variables
+
+Create a `.env.local` file:
+
+```env
+# Required: Google Gemini API Key
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Alternative (if not using GEMINI_API_KEY)
+GOOGLE_API_KEY=your_google_api_key_here
+
+# Optional: CopilotKit License
+NEXT_PUBLIC_COPILOT_LICENSE_KEY=your_copilotkit_license_key
+```
+
+**Get your API key:** https://aistudio.google.com/app/apikey
+
+## 📦 Scripts
 
 ```bash
-node test-auth.js
+# Development
+npm run dev          # Start development server
+
+# Production
+npm run build        # Build for production
+npm start            # Start production server
+
+# Linting
+npm run lint         # Run ESLint
 ```
 
-This will verify that:
-- ✅ Requests without API keys are rejected (401)
-- ✅ Requests with invalid API keys are rejected (401)
-- ✅ Requests with valid API keys are accepted (200)
+## 🚀 Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **Vercel (Recommended)**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Connect Repository**
+   - Push your code to GitHub
+   - Import project in Vercel Dashboard
 
-## Project Structure
+2. **Set Environment Variables**
+   - Add `GEMINI_API_KEY` in Vercel project settings
+   - Go to Settings → Environment Variables
+
+3. **Deploy**
+   - Vercel auto-deploys on every push
+   - Or manually: `vercel --prod`
+
+### **Environment Variables on Vercel**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GEMINI_API_KEY` | ✅ Yes | Google Gemini API key |
+| `GOOGLE_API_KEY` | Alternative | Alternative to GEMINI_API_KEY |
+
+## 🧪 Testing
+
+### **Local Testing**
+
+```bash
+# Start the dev server
+npm run dev
+
+# Test the AI assistant
+1. Open http://localhost:3000
+2. Click the AI assistant icon (bottom right)
+3. Ask: "What services does your company offer?"
+```
+
+### **Production Testing**
+
+After deploying to Vercel:
+
+```bash
+# Check API endpoint
+curl https://your-app.vercel.app/api/copilotkit
+
+# Should return 200 or 405 (not 500)
+```
+
+## 📁 Project Structure
 
 ```
 new-oss/
-├── app/                          # Next.js app directory
-│   ├── api/copilotkit/          # CopilotKit API route with auth
+├── app/                        # Next.js App Router
+│   ├── page.tsx               # Homepage
+│   ├── consulting/            # Consulting page
+│   ├── research/              # Research page
+│   ├── compliance/            # Compliance page
+│   ├── contact/               # Contact page
+│   ├── api/copilotkit/        # CopilotKit API route
+│   ├── layout.tsx             # Root layout
+│   └── globals.css            # Global styles
+├── components/                 # React components
+│   ├── ui/                    # shadcn/ui components
 │   └── ...
-├── agent/                        # LangGraph agent service
-│   ├── src/
-│   │   ├── agent.ts             # Agent logic and tools
-│   │   ├── auth.ts              # 🔒 Authentication middleware
-│   │   └── index.ts             # Entry point
-│   ├── langgraph.json           # LangGraph configuration
-│   └── .env                     # Agent environment variables
-├── components/                   # React components
-├── .env.local                   # Next.js environment variables
-├── SECURITY_SETUP.md            # 📖 Security documentation
-└── test-auth.js                 # Authentication test script
+├── lib/                       # Utility functions
+│   ├── errors.ts              # Error handling
+│   └── utils.ts               # General utilities
+├── public/                    # Static assets
+├── .env.local                 # Environment variables (git-ignored)
+└── package.json               # Dependencies
 ```
 
-## Learn More
+## 🎨 UI Components
 
-To learn more about the technologies used in this project:
+Built with **shadcn/ui** and **Tailwind CSS**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - Next.js features and API
-- [Learn Next.js](https://nextjs.org/learn) - Interactive Next.js tutorial
-- [CopilotKit Documentation](https://docs.copilotkit.ai) - Build AI copilots
-- [LangGraph Documentation](https://langchain-ai.github.io/langgraphjs/) - Build agent workflows
-- [LangGraph Authentication](https://langchain-ai.github.io/langgraphjs/concepts/auth/) - Secure your agents
+- Modern, accessible components
+- Dark mode support
+- Fully customizable
+- TypeScript-first
 
-## Security Features
+## 🔐 Security
 
-This project implements enterprise-grade security for the LangGraph agent:
+- ✅ SOC 2 Type II compliant infrastructure
+- ✅ HIPAA-ready for healthcare data
+- ✅ Secure API key management
+- ✅ Environment variable validation
+- ✅ Error boundary protection
 
-- 🔐 **API Key Authentication**: All agent requests require valid API keys
-- 🛡️ **Request Validation**: Every request is validated by authentication middleware
-- 📝 **Audit Logging**: Invalid access attempts are logged with IP addresses
-- 🔒 **Environment-based Secrets**: API keys stored securely in environment variables
-- ⚡ **Zero Trust Architecture**: No requests are trusted by default
+## 🤖 AI Features
 
-See [SECURITY_SETUP.md](./SECURITY_SETUP.md) for detailed security documentation.
+### **How It Works**
 
-## Deploy on Vercel
+1. **Context Injection**: Each page uses `useCopilotReadable` to provide context
+2. **User Query**: User asks a question via the chatbot
+3. **AI Processing**: CopilotKit sends context + query to Google Gemini
+4. **Intelligent Response**: AI responds with relevant, contextual information
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### **Example Usage**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```typescript
+// In any page component
+import { useCopilotReadable } from "@copilotkit/react-core";
+
+export default function Page() {
+  useCopilotReadable({
+    description: "Page description",
+    value: {
+      key: "value",
+      data: {...}
+    }
+  });
+
+  return <div>Your page content</div>;
+}
+```
+
+## 📚 Documentation
+
+- `VERCEL_DEPLOYMENT.md` - Detailed deployment guide
+- `VERCEL_CHECKLIST.md` - Pre-deployment checklist
+
+## 🐛 Troubleshooting
+
+### **AI Not Responding**
+
+1. Check `GEMINI_API_KEY` is set
+2. Verify API key is valid at https://aistudio.google.com
+3. Check browser console for errors
+4. Review Vercel function logs
+
+### **Build Errors**
+
+```bash
+# Clean install
+rm -rf .next node_modules
+npm install
+npm run build
+```
+
+### **Environment Variable Issues**
+
+Ensure `.env.local` exists with required variables:
+```env
+GEMINI_API_KEY=AIza...
+```
+
+## 🚀 Performance
+
+- ⚡ Fast page loads with Next.js 16
+- 📦 Optimized bundle sizes
+- 🔄 Incremental Static Regeneration
+- 🌐 Edge-ready for global deployment
+- 💨 Streaming responses from AI
+
+## 📝 License
+
+Private project - All rights reserved
+
+## 🤝 Support
+
+For issues or questions:
+- Email: hello@overturesystems.com
+- Website: https://overturesystems.com
+
+---
+
+**Built with ❤️ using Next.js, React, and CopilotKit**
