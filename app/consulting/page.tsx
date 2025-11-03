@@ -1,4 +1,5 @@
 // app/consulting/page.tsx
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useCopilotReadable } from "@copilotkit/react-core";
 import {
   BrainCircuitIcon,
   RocketIcon,
@@ -190,6 +192,71 @@ const testimonials = [
 ];
 
 export default function AIConsultingPage() {
+  // Provide context to the AI agent about AI consulting services
+  useCopilotReadable({
+    description: "AI Consulting Services page with comprehensive service offerings",
+    value: {
+      pageTitle: "AI Strategy & Consulting",
+      overview: "Enterprise AI consulting services from strategy development to production deployment. Partner with AI experts who combine deep technical expertise with business acumen.",
+      services: [
+        {
+          name: "AI Strategy & Roadmap",
+          description: "Develop comprehensive AI strategies aligned with your business objectives and create actionable implementation roadmaps.",
+          features: ["Strategic planning", "ROI analysis", "Technology assessment", "Risk evaluation"]
+        },
+        {
+          name: "AI Implementation",
+          description: "End-to-end AI solution implementation from proof-of-concept to production deployment with ongoing support.",
+          features: ["Custom AI solutions", "System integration", "Performance optimization", "Quality assurance"]
+        },
+        {
+          name: "AI Operations & Optimization",
+          description: "Optimize existing AI systems for better performance, cost-efficiency, and scalability in production environments.",
+          features: ["Model optimization", "Cost reduction", "Performance tuning", "Infrastructure design"]
+        },
+        {
+          name: "AI Training & Enablement",
+          description: "Empower your teams with AI knowledge through customized training programs and workshops.",
+          features: ["Team training", "Best practices", "Hands-on workshops", "Ongoing mentorship"]
+        },
+        {
+          name: "AI Governance & Ethics",
+          description: "Establish responsible AI practices with governance frameworks, compliance strategies, and ethical guidelines.",
+          features: ["Policy development", "Compliance frameworks", "Ethics assessment", "Risk management"]
+        },
+        {
+          name: "AI Analytics & Insights",
+          description: "Transform data into actionable insights using advanced AI analytics and predictive modeling techniques.",
+          features: ["Predictive analytics", "Data strategy", "Business intelligence", "Performance metrics"]
+        }
+      ],
+      industries: [
+        "Healthcare - HIPAA-compliant AI solutions for clinical operations, patient care, and research",
+        "Financial Services - Secure AI for fraud detection, risk assessment, and automated trading",
+        "Retail & E-commerce - Personalization engines, demand forecasting, and inventory optimization",
+        "Manufacturing - Predictive maintenance, quality control, and supply chain optimization",
+        "Technology - MLOps, AI product development, and scalable AI infrastructure",
+        "Non-Profits - Cost-effective AI for donor management, impact analysis, and operations"
+      ],
+      process: [
+        "Discovery & Assessment (1-2 weeks) - Deep dive into business challenges and AI readiness",
+        "Strategy & Planning (2-3 weeks) - Develop tailored AI strategy with detailed roadmap and ROI projections",
+        "Implementation & Integration (8-16 weeks) - Execute AI strategy with agile development and testing",
+        "Optimization & Support (Ongoing) - Continuous monitoring, performance optimization, and support"
+      ],
+      results: {
+        averageROI: "3.5x return on AI investments within 18 months",
+        timeSavings: "60% reduction in operational costs through automation",
+        successRate: "95% project success rate with measurable business impact",
+        clientsServed: "200+ organizations transformed through AI consulting"
+      },
+      contactInfo: {
+        freeConsultation: true,
+        contactPage: "/contact"
+      }
+    }
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
       {/* Home Button */}

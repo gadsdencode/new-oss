@@ -1,10 +1,12 @@
 // page.tsx
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid"
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useCopilotReadable } from "@copilotkit/react-core";
 import { 
   BrainCircuitIcon, 
   ChartBarIcon, 
@@ -80,6 +82,47 @@ const coreServices = [
 ];
 
 export default function Home() {
+  // Provide context to the AI agent about this page
+  useCopilotReadable({
+    description: "Homepage of Overture Systems Solutions",
+    value: {
+      companyName: "Overture Systems Solutions",
+      tagline: "Transform Your Business With AI Solutions",
+      description: "Strategic AI consulting, implementation, and platforms built for Fortune 500 companies and innovative enterprises. We deliver measurable results, not promises.",
+      mainServices: [
+        {
+          name: "AI Strategy & Implementation",
+          description: "End-to-end AI consulting from strategy development to production deployment. We help identify opportunities, build roadmaps, and deliver measurable results.",
+          link: "/consulting",
+          features: ["Strategic Planning", "Custom Solutions", "ROI Optimization"]
+        },
+        {
+          name: "B2B Research Platform",
+          description: "AI-powered research solutions for healthcare and non-profit organizations. HIPAA-compliant, secure, and designed for impact.",
+          link: "/research",
+          features: ["HIPAA Compliant", "Advanced Analytics", "Impact Measurement"]
+        },
+        {
+          name: "Uterpi",
+          description: "Modern AI platform for businesses. Streamline workflows, automate processes, and unlock productivity with cutting-edge AI technology.",
+          link: "https://uterpi.com",
+          features: ["Advanced AI Models", "Team Collaboration", "SOC 2 Compliant"]
+        }
+      ],
+      keyStats: {
+        averageROI: "3.5x return on AI investments within 18 months",
+        timeSavings: "60% operational efficiency improvement",
+        successRate: "95% projects with measurable impact",
+        clientsServed: "200+ organizations transformed"
+      },
+      certifications: ["SOC 2 Type II Certified", "HIPAA Compliant", "Enterprise-Grade Security"],
+      contactInfo: {
+        freeConsultation: true,
+        contactPage: "/contact"
+      }
+    }
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
       {/* Premium Hero Section - Enterprise Value Proposition */}

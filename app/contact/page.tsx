@@ -1,10 +1,12 @@
 // app/contact/page.tsx
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useCopilotReadable } from "@copilotkit/react-core";
 import {
   MailIcon,
   PhoneIcon,
@@ -109,6 +111,89 @@ const faqs = [
 ];
 
 export default function ContactPage() {
+  // Provide context to the AI agent about contact information
+  useCopilotReadable({
+    description: "Contact page with multiple ways to reach Overture Systems Solutions",
+    value: {
+      pageTitle: "Contact Us",
+      overview: "Multiple ways to get in touch with Overture Systems Solutions. We're here to help transform your business with AI.",
+      contactMethods: [
+        {
+          type: "Email",
+          value: "hello@overturesystems.com",
+          description: "Send us an email anytime",
+          availability: "24/7 email monitoring"
+        },
+        {
+          type: "Phone",
+          value: "+1 (555) 123-4567",
+          description: "Call us during business hours",
+          availability: "Mon-Fri, 9am-6pm EST"
+        },
+        {
+          type: "Live Chat",
+          description: "Available 24/7 for instant support",
+          availability: "24/7"
+        }
+      ],
+      offices: [
+        {
+          city: "San Francisco",
+          address: "123 Innovation Drive, Suite 100",
+          state: "California",
+          zip: "94105",
+          isPrimary: true,
+          label: "Headquarters"
+        },
+        {
+          city: "New York",
+          address: "456 Tech Avenue, Floor 15",
+          state: "New York",
+          zip: "10001",
+          isPrimary: false
+        },
+        {
+          city: "Austin",
+          address: "789 Startup Lane, Building C",
+          state: "Texas",
+          zip: "78701",
+          isPrimary: false
+        }
+      ],
+      businessHours: {
+        mondayToFriday: "9:00 AM - 6:00 PM EST",
+        saturday: "10:00 AM - 4:00 PM EST",
+        sunday: "Closed",
+        currentlyOpen: true
+      },
+      responseTime: "We respond to all inquiries within 24 hours during business days",
+      freeConsultation: {
+        available: true,
+        duration: "30 minutes",
+        description: "Free initial consultation to discuss your needs"
+      },
+      socialMedia: {
+        linkedin: "https://linkedin.com",
+        twitter: "https://twitter.com",
+        github: "https://github.com"
+      },
+      faqs: [
+        {
+          question: "What's your typical response time?",
+          answer: "We respond to all inquiries within 24 hours during business days."
+        },
+        {
+          question: "Do you offer free consultations?",
+          answer: "Yes! We offer a free 30-minute initial consultation to discuss your needs."
+        },
+        {
+          question: "What industries do you serve?",
+          answer: "We specialize in healthcare, non-profits, finance, and technology sectors."
+        }
+      ]
+    }
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
       {/* Home Button */}
