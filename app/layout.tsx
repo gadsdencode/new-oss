@@ -8,6 +8,7 @@ import { CopilotKit } from "@copilotkit/react-core";
 import { ThemeProvider } from "next-themes";
 import { CopilotSidebarWrapper } from "./components/copilot-sidebar-wrapper";
 import { ThemeToggleWrapper } from "./components/theme-toggle-wrapper";
+import { GlobalAITools } from "@/components/global-ai-tools";
 
 // Fallback: Inter ≈ Geist Sans, JetBrains Mono ≈ Geist Mono
 const inter = Inter({
@@ -42,6 +43,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <CopilotKit runtimeUrl="/api/copilotkit">
+            {/* Global AI Tools - Available on ALL pages */}
+            <GlobalAITools />
             <ThemeToggleWrapper />
             {children}
             <CopilotSidebarWrapper />
