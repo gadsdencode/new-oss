@@ -27,70 +27,78 @@ export function GlobalAITools() {
     parameters: [],
     available: "enabled",
     // renderAndWaitForResponse replaces both render and handler for HITL patterns
+    // IMPORTANT: Must ALWAYS return a ReactElement, never null
     renderAndWaitForResponse: ({ status, respond }) => {
-      if (status === "inProgress" || status === "executing") {
+      // Show completion message when status is "complete"
+      if (status === "complete") {
         return (
-          <ConsultationForm
-            onSubmit={async (formData) => {
-              console.log('[Global AI Tools] Form submitted with data:', {
+          <div className="p-4 border rounded-lg bg-green-50 border-green-200">
+            <p className="text-sm text-green-700">✅ Consultation request submitted successfully!</p>
+          </div>
+        );
+      }
+
+      // Show the form when status is "inProgress" or "executing"
+      return (
+        <ConsultationForm
+          onSubmit={async (formData) => {
+            console.log('[Global AI Tools] Form submitted with data:', {
+              name: formData.name,
+              email: formData.email,
+              hasCompany: !!formData.company,
+              hasPhone: !!formData.phone,
+              messageLength: formData.message?.length || 0
+            });
+
+            try {
+              // Call the existing, secure Server Action with the data
+              // This will validate, rate-limit, and save to NeonDB
+              const result = await submitConsultationRequest({
                 name: formData.name,
                 email: formData.email,
-                hasCompany: !!formData.company,
-                hasPhone: !!formData.phone,
-                messageLength: formData.message?.length || 0
+                company: formData.company,
+                phone: formData.phone,
+                message: formData.message,
               });
 
-              try {
-                // Call the existing, secure Server Action with the data
-                // This will validate, rate-limit, and save to NeonDB
-                const result = await submitConsultationRequest({
-                  name: formData.name,
-                  email: formData.email,
-                  company: formData.company,
-                  phone: formData.phone,
-                  message: formData.message,
+              console.log('[Global AI Tools] Server action result:', result);
+
+              // Inform the user of the result
+              if (result.success) {
+                toast.success(result.message || "Consultation request submitted successfully!");
+                // Respond to CopilotKit with success message for the AI
+                respond?.({
+                  success: true,
+                  message: "✅ Thanks! Your consultation request has been submitted. We'll be in touch soon via email."
                 });
-
-                console.log('[Global AI Tools] Server action result:', result);
-
-                // Inform the user of the result
-                if (result.success) {
-                  toast.success(result.message || "Consultation request submitted successfully!");
-                  // Respond to CopilotKit with success message for the AI
-                  respond?.({
-                    success: true,
-                    message: "✅ Thanks! Your consultation request has been submitted. We'll be in touch soon via email."
-                  });
-                } else {
-                  toast.error(result.error || "Failed to submit consultation request");
-                  // Respond to CopilotKit with error message for the AI
-                  respond?.({
-                    success: false,
-                    message: `❌ Sorry, there was an error: ${result.error}. Please try our contact page at /contact.`
-                  });
-                }
-              } catch (error) {
-                console.error("Error submitting consultation:", error);
-                const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-                toast.error(`Failed to schedule consultation: ${errorMessage}`);
+              } else {
+                toast.error(result.error || "Failed to submit consultation request");
                 // Respond to CopilotKit with error message for the AI
                 respond?.({
                   success: false,
-                  message: `❌ Sorry, there was an unexpected error: ${errorMessage}. Please try contacting us directly through our contact page.`
+                  message: `❌ Sorry, there was an error: ${result.error}. Please try our contact page at /contact.`
                 });
               }
-            }}
-            onCancel={() => {
-              // User cancelled the form
+            } catch (error) {
+              console.error("Error submitting consultation:", error);
+              const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+              toast.error(`Failed to schedule consultation: ${errorMessage}`);
+              // Respond to CopilotKit with error message for the AI
               respond?.({
                 success: false,
-                message: "Consultation request was cancelled. Feel free to ask if you'd like to try again or visit our contact page at /contact."
+                message: `❌ Sorry, there was an unexpected error: ${errorMessage}. Please try contacting us directly through our contact page.`
               });
-            }}
-          />
-        );
-      }
-      return null;
+            }
+          }}
+          onCancel={() => {
+            // User cancelled the form
+            respond?.({
+              success: false,
+              message: "Consultation request was cancelled. Feel free to ask if you'd like to try again or visit our contact page at /contact."
+            });
+          }}
+        />
+      );
     },
   });
 
