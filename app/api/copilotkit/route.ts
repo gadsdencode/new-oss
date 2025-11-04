@@ -1,16 +1,17 @@
 import { NextRequest } from "next/server";
 import {
   CopilotRuntime,
-  GoogleGenerativeAIAdapter,
+  LangChainAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { handleApiError, createErrorResponse } from "@/lib/errors";
 
 /**
- * CopilotKit API Route - Direct-to-LLM Pattern
+ * CopilotKit API Route - Direct-to-LLM Pattern with LangChain
  * 
- * This endpoint connects directly to Google Gemini without requiring a separate agent server.
- * It uses the Direct-to-LLM pattern for simple, straightforward AI chat functionality.
+ * This endpoint connects directly to Google Gemini using LangChain adapter.
+ * This approach is more stable and reliable than using GoogleGenerativeAIAdapter directly.
  * 
  * Environment Variables Required:
  * - GEMINI_API_KEY: Your Google Gemini API key (or GOOGLE_API_KEY as alternative)
@@ -31,10 +32,11 @@ function getApiKey(): string | null {
 }
 
 /**
- * Create and initialize the Google Gemini adapter
+ * Create and initialize the LangChain adapter with Google Gemini
  * This is called per-request to avoid serverless environment issues
+ * Using LangChain adapter is more stable than GoogleGenerativeAIAdapter
  */
-function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
+function createServiceAdapter(): LangChainAdapter | null {
   const apiKey = getApiKey();
 
   if (!apiKey) {
@@ -49,19 +51,57 @@ function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
       return null;
     }
 
-    const modelName = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+    const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
     
-    const adapter = new GoogleGenerativeAIAdapter({
+    console.log(`✅ Initializing Gemini model: ${modelName}`);
+    
+    // Create the Google Gemini model instance
+    const model = new ChatGoogleGenerativeAI({
       model: modelName,
       apiKey: apiKey,
+      temperature: 0.7,
+      maxOutputTokens: 2048,
     });
 
+    // Create LangChain adapter with the model
+    const adapter = new LangChainAdapter({
+      chainFn: async ({ messages, tools }) => {
+        try {
+          console.log(`📨 Received ${messages.length} messages, ${tools?.length || 0} tools`);
+          const userMessage = messages.find(m => m._getType?.() === 'human');
+          const content = userMessage?.content;
+          const contentPreview = typeof content === 'string' ? content.substring(0, 100) : '[complex content]';
+          console.log("📝 First user message:", contentPreview);
+          
+          if (tools && tools.length > 0) {
+            console.log("🔧 Binding tools to model...");
+            return model.bindTools(tools).stream(messages);
+          }
+          
+          console.log("🚀 Starting model stream without tools...");
+          const stream = await model.stream(messages);
+          console.log("✅ Stream created successfully");
+          return stream;
+        } catch (chainError) {
+          console.error("❌ ERROR in chainFn:", chainError);
+          if (chainError instanceof Error) {
+            console.error("   - Error name:", chainError.name);
+            console.error("   - Error message:", chainError.message);
+            console.error("   - Error stack:", chainError.stack);
+          }
+          throw chainError;
+        }
+      },
+    });
+
+    console.log("✅ LangChain adapter created successfully");
     return adapter;
   } catch (error) {
-    console.error("❌ Failed to create Google Gemini adapter:", error);
+    console.error("❌ Failed to create LangChain adapter:", error);
     if (error instanceof Error) {
       console.error("   - Error name:", error.name);
       console.error("   - Error message:", error.message);
+      console.error("   - Error stack:", error.stack);
     }
     return null;
   }
@@ -72,6 +112,11 @@ function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
  * Handles chat requests and communicates directly with Google Gemini
  */
 export const POST = async (req: NextRequest) => {
+  console.log("\n========== NEW COPILOTKIT REQUEST ==========");
+  console.log("Timestamp:", new Date().toISOString());
+  console.log("Request URL:", req.url);
+  console.log("Request method:", req.method);
+  
   try {
     // Validate API key
     const apiKey = getApiKey();
@@ -106,12 +151,15 @@ export const POST = async (req: NextRequest) => {
     // Create runtime per-request
     const copilotRuntime = new CopilotRuntime();
 
-    // Get the request handler
+    // Get the request handler with debug logging enabled
+    console.log("✅ Creating CopilotKit endpoint handler...");
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
       runtime: copilotRuntime,
       serviceAdapter,
       endpoint: "/api/copilotkit",
+      logLevel: "debug",  // Enable debug logging to see detailed errors
     });
+    console.log("✅ Endpoint handler created successfully");
 
     // Handle the request with error catching
     try {
@@ -122,7 +170,12 @@ export const POST = async (req: NextRequest) => {
       if (handlerError instanceof Error) {
         console.error("Error message:", handlerError.message);
         console.error("Error stack:", handlerError.stack);
+        console.error("Error name:", handlerError.name);
+        console.error("Full error object:", JSON.stringify(handlerError, Object.getOwnPropertyNames(handlerError), 2));
       }
+      // Log any additional properties on the error
+      console.error("Error type:", typeof handlerError);
+      console.error("Error constructor:", handlerError?.constructor?.name);
       return handleApiError(handlerError);
     }
   } catch (error) {

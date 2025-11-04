@@ -41,7 +41,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <CopilotKit runtimeUrl="/api/copilotkit" publicLicenseKey="ck_pub_079278b2bd4b959809f2a4767c5fa899">
+          <CopilotKit runtimeUrl="/api/copilotkit">
             <ThemeToggleWrapper />
             {children}
             <CopilotSidebarWrapper />
