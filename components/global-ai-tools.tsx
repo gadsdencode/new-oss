@@ -25,39 +25,72 @@ export function GlobalAITools() {
     description:
       "Schedules a consultation call with the user. Use this if they ask to book a meeting, schedule time, talk to someone, or request a consultation. This tool is available on ALL pages.",
     parameters: [],
-    render: ({ status, args }) => {
-      if (status === "executing" || status === "complete") {
-        return <ConsultationForm />;
+    available: "enabled",
+    // renderAndWaitForResponse replaces both render and handler for HITL patterns
+    renderAndWaitForResponse: ({ status, respond }) => {
+      if (status === "inProgress" || status === "executing") {
+        return (
+          <ConsultationForm
+            onSubmit={async (formData) => {
+              console.log('[Global AI Tools] Form submitted with data:', {
+                name: formData.name,
+                email: formData.email,
+                hasCompany: !!formData.company,
+                hasPhone: !!formData.phone,
+                messageLength: formData.message?.length || 0
+              });
+
+              try {
+                // Call the existing, secure Server Action with the data
+                // This will validate, rate-limit, and save to NeonDB
+                const result = await submitConsultationRequest({
+                  name: formData.name,
+                  email: formData.email,
+                  company: formData.company,
+                  phone: formData.phone,
+                  message: formData.message,
+                });
+
+                console.log('[Global AI Tools] Server action result:', result);
+
+                // Inform the user of the result
+                if (result.success) {
+                  toast.success(result.message || "Consultation request submitted successfully!");
+                  // Respond to CopilotKit with success message for the AI
+                  respond?.({
+                    success: true,
+                    message: "✅ Thanks! Your consultation request has been submitted. We'll be in touch soon via email."
+                  });
+                } else {
+                  toast.error(result.error || "Failed to submit consultation request");
+                  // Respond to CopilotKit with error message for the AI
+                  respond?.({
+                    success: false,
+                    message: `❌ Sorry, there was an error: ${result.error}. Please try our contact page at /contact.`
+                  });
+                }
+              } catch (error) {
+                console.error("Error submitting consultation:", error);
+                const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+                toast.error(`Failed to schedule consultation: ${errorMessage}`);
+                // Respond to CopilotKit with error message for the AI
+                respond?.({
+                  success: false,
+                  message: `❌ Sorry, there was an unexpected error: ${errorMessage}. Please try contacting us directly through our contact page.`
+                });
+              }
+            }}
+            onCancel={() => {
+              // User cancelled the form
+              respond?.({
+                success: false,
+                message: "Consultation request was cancelled. Feel free to ask if you'd like to try again or visit our contact page at /contact."
+              });
+            }}
+          />
+        );
       }
       return null;
-    },
-    handler: async (args, { renderAndWaitForResponse }) => {
-      try {
-        // 1. Render the form and wait for the user to fill it out
-        const formData = await renderAndWaitForResponse(ConsultationForm);
-
-        // 2. Call the existing, secure Server Action with the data
-        const result = await submitConsultationRequest({
-          name: formData.name,
-          email: formData.email,
-          company: formData.company,
-          message: formData.message,
-        });
-
-        // 3. Inform the user of the result
-        if (result.success) {
-          toast.success(result.message || "Consultation request submitted successfully!");
-          return "✅ Thanks! Your consultation request has been submitted. We'll be in touch soon via email.";
-        } else {
-          toast.error(result.error || "Failed to submit consultation request");
-          return `❌ Sorry, there was an error: ${result.error}. Please try our contact page at /contact.`;
-        }
-      } catch (error) {
-        console.error("Error in scheduleConsultation handler:", error);
-        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-        toast.error(`Failed to schedule consultation: ${errorMessage}`);
-        return `❌ Sorry, there was an unexpected error: ${errorMessage}. Please try contacting us directly through our contact page.`;
-      }
     },
   });
 
