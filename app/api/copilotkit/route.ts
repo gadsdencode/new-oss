@@ -1,21 +1,20 @@
 import { NextRequest } from "next/server";
 import {
   CopilotRuntime,
-  LangChainAdapter,
+  GoogleGenerativeAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { handleApiError, createErrorResponse } from "@/lib/errors";
 
 /**
- * CopilotKit API Route - Direct-to-LLM Pattern with LangChain
+ * CopilotKit API Route - Direct-to-LLM Pattern with Native Gemini Adapter
  * 
- * This endpoint connects directly to Google Gemini using LangChain adapter.
- * This approach is more stable and reliable than using GoogleGenerativeAIAdapter directly.
+ * This endpoint connects directly to Google Gemini using CopilotKit's native GoogleGenerativeAIAdapter.
+ * This is the CORRECT and RECOMMENDED approach for Gemini integration.
  * 
  * Environment Variables Required:
  * - GEMINI_API_KEY: Your Google Gemini API key (or GOOGLE_API_KEY as alternative)
- * - GEMINI_MODEL: (Optional) Model name, defaults to "gemini-1.5-flash"
+ * - GEMINI_MODEL: (Optional) Model name, defaults to "gemini-2.5-flash"
  * 
  * Get your API key from: https://aistudio.google.com/app/apikey
  */
@@ -32,11 +31,11 @@ function getApiKey(): string | null {
 }
 
 /**
- * Create and initialize the LangChain adapter with Google Gemini
+ * Create and initialize the native Google Generative AI adapter
  * This is called per-request to avoid serverless environment issues
- * Using LangChain adapter is more stable than GoogleGenerativeAIAdapter
+ * Using GoogleGenerativeAIAdapter is the RECOMMENDED approach for Gemini
  */
-function createServiceAdapter(): LangChainAdapter | null {
+function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
   const apiKey = getApiKey();
 
   if (!apiKey) {
@@ -55,49 +54,17 @@ function createServiceAdapter(): LangChainAdapter | null {
     
     console.log(`✅ Initializing Gemini model: ${modelName}`);
     
-    // Create the Google Gemini model instance
-    const model = new ChatGoogleGenerativeAI({
+    // Create the native Google Generative AI adapter
+    // This is the CORRECT way to integrate Gemini with CopilotKit
+    const adapter = new GoogleGenerativeAIAdapter({
       model: modelName,
       apiKey: apiKey,
-      temperature: 0.7,
-      maxOutputTokens: 2048,
     });
 
-    // Create LangChain adapter with the model
-    const adapter = new LangChainAdapter({
-      chainFn: async ({ messages, tools }) => {
-        try {
-          console.log(`📨 Received ${messages.length} messages, ${tools?.length || 0} tools`);
-          const userMessage = messages.find(m => m._getType?.() === 'human');
-          const content = userMessage?.content;
-          const contentPreview = typeof content === 'string' ? content.substring(0, 100) : '[complex content]';
-          console.log("📝 First user message:", contentPreview);
-          
-          if (tools && tools.length > 0) {
-            console.log("🔧 Binding tools to model...");
-            return model.bindTools(tools).stream(messages);
-          }
-          
-          console.log("🚀 Starting model stream without tools...");
-          const stream = await model.stream(messages);
-          console.log("✅ Stream created successfully");
-          return stream;
-        } catch (chainError) {
-          console.error("❌ ERROR in chainFn:", chainError);
-          if (chainError instanceof Error) {
-            console.error("   - Error name:", chainError.name);
-            console.error("   - Error message:", chainError.message);
-            console.error("   - Error stack:", chainError.stack);
-          }
-          throw chainError;
-        }
-      },
-    });
-
-    console.log("✅ LangChain adapter created successfully");
+    console.log("✅ GoogleGenerativeAIAdapter created successfully");
     return adapter;
   } catch (error) {
-    console.error("❌ Failed to create LangChain adapter:", error);
+    console.error("❌ Failed to create GoogleGenerativeAIAdapter:", error);
     if (error instanceof Error) {
       console.error("   - Error name:", error.name);
       console.error("   - Error message:", error.message);
