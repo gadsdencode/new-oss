@@ -109,11 +109,13 @@ export function GlobalAITools() {
       "Displays a summary of the company's core AI consulting services. Use this when the user asks what we do, what our services are, or for a summary. This tool is available on ALL pages.",
     parameters: [],
     // The render function is called automatically by CopilotKit
+    // IMPORTANT: Must ALWAYS return a ReactElement, never null
     render: ({ status }) => {
       if (status === "executing" || status === "complete") {
         return <ServicesSummaryCard />;
       }
-      return null;
+      // Return empty fragment instead of null to satisfy TypeScript
+      return <></>;
     },
     handler: async () => {
       // Return a message that the LLM will use in its response
@@ -127,6 +129,7 @@ export function GlobalAITools() {
     description: "Fetches and displays the current system status including database and AI endpoint health. Use this when the user asks about system status, uptime, or service health. This tool is available on ALL pages.",
     parameters: [],
     // The render function is called automatically by CopilotKit with status and result
+    // IMPORTANT: Must ALWAYS return a ReactElement, never null
     render: ({ status, result }) => {
       if (status === "executing") {
         // Show loading state while fetching
@@ -142,7 +145,8 @@ export function GlobalAITools() {
         return <StatusCard {...result} />;
       }
       
-      return null;
+      // Return empty fragment instead of null to satisfy TypeScript
+      return <></>;
     },
     handler: async () => {
       try {
