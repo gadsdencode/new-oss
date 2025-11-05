@@ -32,11 +32,12 @@ function getApiKey(): string | null {
 }
 
 /**
- * Create and initialize the native Google Generative AI adapter
- * This is called per-request to avoid serverless environment issues
- * Using GoogleGenerativeAIAdapter is the RECOMMENDED approach for Gemini
+ * Initialize and return the Google Generative AI adapter as a module-level singleton
+ * This reduces per-request overhead by reusing the same adapter instance across requests
+ * 
+ * Using lazy initialization to handle cases where API key might not be available at module load time
  */
-function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
+function getServiceAdapter(): GoogleGenerativeAIAdapter | null {
   const apiKey = getApiKey();
 
   if (!apiKey) {
@@ -53,8 +54,6 @@ function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
 
     const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
     
-    console.log(`✅ Initializing Gemini model: ${modelName}`);
-    
     // Create the native Google Generative AI adapter
     // This is the CORRECT way to integrate Gemini with CopilotKit
     const adapter = new GoogleGenerativeAIAdapter({
@@ -62,7 +61,6 @@ function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
       apiKey: apiKey,
     });
 
-    console.log("✅ GoogleGenerativeAIAdapter created successfully");
     return adapter;
   } catch (error) {
     console.error("❌ Failed to create GoogleGenerativeAIAdapter:", error);
@@ -74,6 +72,30 @@ function createServiceAdapter(): GoogleGenerativeAIAdapter | null {
     return null;
   }
 }
+
+// Module-level singleton adapter - initialized lazily on first request
+let serviceAdapter: GoogleGenerativeAIAdapter | null = null;
+let adapterInitialized = false;
+
+/**
+ * Get or initialize the service adapter singleton
+ * Initializes once and reuses the same instance for subsequent requests
+ */
+function getOrCreateServiceAdapter(): GoogleGenerativeAIAdapter | null {
+  if (!adapterInitialized) {
+    serviceAdapter = getServiceAdapter();
+    adapterInitialized = true;
+    if (serviceAdapter) {
+      const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+      console.log(`✅ GoogleGenerativeAIAdapter singleton initialized (model: ${modelName})`);
+    }
+  }
+  return serviceAdapter;
+}
+
+// Module-level singleton runtime - initialized once at module load
+// This reduces per-request overhead by reusing the same runtime instance
+const copilotRuntime = new CopilotRuntime();
 
 /**
  * POST handler for CopilotKit requests
@@ -101,8 +123,9 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    // Create adapter per-request for serverless compatibility
-    const serviceAdapter = createServiceAdapter();
+    // Get or create the module-level singleton adapter
+    // This reuses the same adapter instance across requests for better performance
+    const serviceAdapter = getOrCreateServiceAdapter();
     if (!serviceAdapter) {
       console.error("❌ POST request failed: Service adapter initialization failed");
       return createErrorResponse(
@@ -116,18 +139,14 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    // Create runtime per-request
-    const copilotRuntime = new CopilotRuntime();
-
     // Get the request handler with debug logging enabled
-    console.log("✅ Creating CopilotKit endpoint handler...");
+    // Uses module-level singleton runtime and adapter for better performance
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
       runtime: copilotRuntime,
       serviceAdapter,
       endpoint: "/api/copilotkit",
       logLevel: "debug",  // Enable debug logging to see detailed errors
     });
-    console.log("✅ Endpoint handler created successfully");
 
     // Handle the request with error catching
     try {
