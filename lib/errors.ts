@@ -2,6 +2,7 @@
 // Utility functions for standardized error handling across the application
 
 import { NextResponse } from "next/server";
+import { logError, ErrorContext, ErrorSeverity } from "./monitoring";
 
 /**
  * Standard error response structure
@@ -40,8 +41,16 @@ export function createErrorResponse(
 
 /**
  * Handle API errors and return appropriate response
+ * Logs to monitoring service and returns structured JSON response
  */
-export function handleApiError(error: unknown): NextResponse<ErrorResponse> {
+export function handleApiError(
+  error: unknown,
+  context?: ErrorContext,
+  severity: ErrorSeverity = "high"
+): NextResponse<ErrorResponse> {
+  // Log to monitoring service
+  logError(error, context, severity);
+  
   console.error("API Error:", error);
 
   // Handle known error types
@@ -141,5 +150,56 @@ export class ServiceUnavailableError extends Error {
     super(message);
     this.name = "ServiceUnavailableError";
   }
+}
+
+/**
+ * LLM Adapter Error - Specific error for LLM adapter failures
+ */
+export class LLMAdapterError extends Error {
+  constructor(message: string, public readonly adapterName?: string, public readonly cause?: Error) {
+    super(message);
+    this.name = "LLMAdapterError";
+  }
+}
+
+/**
+ * Handle LLM adapter errors specifically
+ * Returns structured JSON response with LLM_ADAPTER_ERROR code
+ */
+export function handleLLMAdapterError(
+  error: unknown,
+  context?: ErrorContext
+): NextResponse<ErrorResponse> {
+  // Log to monitoring service with high severity
+  logError(error, {
+    ...context,
+    errorCode: "LLM_ADAPTER_ERROR",
+    source: "copilotkit-route",
+  }, "high");
+
+  if (error instanceof Error) {
+    return createErrorResponse(
+      "LLM_ADAPTER_ERROR",
+      error.message || "LLM adapter encountered an error",
+      500,
+      {
+        errorCode: "LLM_ADAPTER_ERROR",
+        errorName: error.name,
+        adapterName: context?.adapterName,
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      }
+    );
+  }
+
+  // Unknown error type
+  return createErrorResponse(
+    "LLM_ADAPTER_ERROR",
+    "An unexpected error occurred in the LLM adapter",
+    500,
+    {
+      errorCode: "LLM_ADAPTER_ERROR",
+      error: String(error),
+    }
+  );
 }
 
