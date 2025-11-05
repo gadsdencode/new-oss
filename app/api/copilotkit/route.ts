@@ -4,7 +4,8 @@ import {
   GoogleGenerativeAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
-import { handleApiError, createErrorResponse } from "@/lib/errors";
+import { handleApiError, createErrorResponse, handleLLMAdapterError } from "@/lib/errors";
+import { logError, ErrorContext } from "@/lib/monitoring";
 
 /**
  * CopilotKit API Route - Direct-to-LLM Pattern with Native Gemini Adapter
@@ -133,21 +134,71 @@ export const POST = async (req: NextRequest) => {
       const response = await handleRequest(req);
       return response;
     } catch (handlerError) {
-      console.error("❌ Error in CopilotKit POST handler:", handlerError);
+      // Prepare error context for monitoring
+      const errorContext: ErrorContext = {
+        errorCode: "LLM_ADAPTER_ERROR",
+        source: "copilotkit-route",
+        endpoint: "/api/copilotkit",
+        method: "POST",
+        adapterName: "GoogleGenerativeAIAdapter",
+        model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+        environment: process.env.NODE_ENV || process.env.VERCEL_ENV || "unknown",
+      };
+
+      // Extract error details for logging
       if (handlerError instanceof Error) {
-        console.error("Error message:", handlerError.message);
-        console.error("Error stack:", handlerError.stack);
-        console.error("Error name:", handlerError.name);
-        console.error("Full error object:", JSON.stringify(handlerError, Object.getOwnPropertyNames(handlerError), 2));
+        errorContext.errorName = handlerError.name;
+        errorContext.errorMessage = handlerError.message;
+        errorContext.errorStack = process.env.NODE_ENV === "development" ? handlerError.stack : undefined;
+        
+        console.error("❌ Error in CopilotKit POST handler:", {
+          name: handlerError.name,
+          message: handlerError.message,
+          stack: handlerError.stack,
+        });
+      } else {
+        errorContext.errorType = typeof handlerError;
+        errorContext.errorConstructor = handlerError?.constructor?.name;
+        console.error("❌ Error in CopilotKit POST handler (non-Error type):", handlerError);
       }
-      // Log any additional properties on the error
-      console.error("Error type:", typeof handlerError);
-      console.error("Error constructor:", handlerError?.constructor?.name);
-      return handleApiError(handlerError);
+
+      // Log to monitoring service with full context
+      logError(handlerError, errorContext, "high");
+
+      // Return structured JSON response for LLM adapter errors
+      return handleLLMAdapterError(handlerError, errorContext);
     }
   } catch (error) {
     // Catch any unexpected errors in the route handler
-    console.error("❌ Unexpected error in CopilotKit POST route:", error);
-    return handleApiError(error);
+    const errorContext: ErrorContext = {
+      errorCode: "COPILOTKIT_ROUTE_ERROR",
+      source: "copilotkit-route",
+      endpoint: "/api/copilotkit",
+      method: "POST",
+      environment: process.env.NODE_ENV || process.env.VERCEL_ENV || "unknown",
+    };
+
+    // Extract error details
+    if (error instanceof Error) {
+      errorContext.errorName = error.name;
+      errorContext.errorMessage = error.message;
+      errorContext.errorStack = process.env.NODE_ENV === "development" ? error.stack : undefined;
+      
+      console.error("❌ Unexpected error in CopilotKit POST route:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      });
+    } else {
+      errorContext.errorType = typeof error;
+      errorContext.errorConstructor = error?.constructor?.name;
+      console.error("❌ Unexpected error in CopilotKit POST route (non-Error type):", error);
+    }
+
+    // Log to monitoring service with full context
+    logError(error, errorContext, "critical");
+
+    // Return structured error response
+    return handleApiError(error, errorContext, "critical");
   }
 };
