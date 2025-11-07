@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
 import Link from "next/link";
 import { PageAiContext } from "@/components/page-ai-context";
+import { ConsultingPageTools } from "./ConsultingPageTools";
 import {
   BrainCircuitIcon,
   RocketIcon,
@@ -220,6 +221,10 @@ export default function AIConsultingPage() {
         content={pageContent}
         pageTitle="AI Strategy & Consulting"
       />
+      
+      {/* Register page-specific AI tools for consulting page */}
+      {/* These tools are ONLY available on this page */}
+      <ConsultingPageTools />
       
       {/* Main page content - Server-rendered for optimal performance! */}
       <div className="flex min-h-screen flex-col bg-background font-sans">
