@@ -9,6 +9,7 @@ import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
+import { ResearchPageTools } from "./ResearchPageTools";
 import {
   BrainCircuitIcon,
   HeartPulseIcon,
@@ -198,6 +199,10 @@ export default function B2BResearchPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
+      {/* Register page-specific AI tools for research page */}
+      {/* These tools are ONLY available on this page */}
+      <ResearchPageTools />
+      
       {/* Home Button */}
       <HomeButton />
       
