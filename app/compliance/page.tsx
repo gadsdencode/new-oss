@@ -9,6 +9,7 @@ import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
+import { CompliancePageTools } from "./CompliancePageTools";
 import {
   ShieldCheckIcon,
   LockIcon,
@@ -313,6 +314,10 @@ export default function CompliancePage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
+      {/* Register page-specific AI tools for compliance page */}
+      {/* These tools are ONLY available on this page */}
+      <CompliancePageTools />
+      
       {/* Home Button */}
       <HomeButton />
       
