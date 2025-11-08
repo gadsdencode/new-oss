@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { AIPageTools } from "./AIPageTools";
 import {
   BrainCircuitIcon,
   SparklesIcon,
@@ -366,6 +367,10 @@ const comparisonCategories = [
 export default function AIPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
+      {/* Register page-specific AI tools for AI models page */}
+      {/* These tools are ONLY available on this page */}
+      <AIPageTools />
+      
       {/* Home Button */}
       <HomeButton />
 
