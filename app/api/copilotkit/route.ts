@@ -88,6 +88,7 @@ try {
       ],
     });
   }
+
 } catch (error) {
   console.error("Failed to initialize CopilotKit runtime:", error);
   // We'll handle this in the POST handler
