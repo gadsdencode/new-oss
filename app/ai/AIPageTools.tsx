@@ -613,7 +613,7 @@ export function AIPageTools() {
                 <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />
                 <CardTitle className="text-lg">Finding Best Model</CardTitle>
               </div>
-              <CardDescription>Task: "{args?.task || '...'}"</CardDescription>
+              <CardDescription>Task: &quot;{args?.task || '...'}&quot;</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">Analyzing models and matching to your requirements...</p>
@@ -630,7 +630,7 @@ export function AIPageTools() {
                 <ZapIcon className="h-5 w-5 text-blue-600" />
                 <CardTitle className="text-lg">Best Model Recommendation</CardTitle>
               </div>
-              <CardDescription>For: "{result.task}"</CardDescription>
+              <CardDescription>For: &quot;{result.task}&quot;</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Primary Recommendation */}
@@ -688,7 +688,7 @@ export function AIPageTools() {
                   <Separator className="my-3" />
                   <p className="text-xs font-medium text-muted-foreground mb-3">Alternative Options</p>
                   <div className="space-y-2">
-                    {result.alternatives.map((alt: any, idx: number) => (
+                    {result.alternatives.map((alt: { name: string; developer: string; reason: string }, idx: number) => (
                       <div key={idx} className="p-3 bg-background rounded-lg border">
                         <div className="flex items-center justify-between mb-1">
                           <p className="font-medium text-sm text-foreground">{alt.name}</p>
@@ -723,7 +723,7 @@ export function AIPageTools() {
     handler: async ({ task, priority }) => {
       try {
         const taskLower = task.toLowerCase();
-        let recommendations: { model: AIModel; score: number; reason: string }[] = [];
+        const recommendations: { model: AIModel; score: number; reason: string }[] = [];
 
         // Score each model based on the task
         aiModels.forEach((model) => {
@@ -893,7 +893,7 @@ export function AIPageTools() {
                 <Loader2 className="h-5 w-5 text-green-600 animate-spin" />
                 <CardTitle className="text-lg">Retrieving Model Details</CardTitle>
               </div>
-              <CardDescription>Model: "{args?.modelName || '...'}"</CardDescription>
+              <CardDescription>Model: &quot;{args?.modelName || '...'}&quot;</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">Fetching comprehensive model information...</p>
@@ -1079,7 +1079,7 @@ export function AIPageTools() {
             </CardHeader>
             <CardContent className="space-y-3">
               {result.models && result.models.length > 0 ? (
-                result.models.map((model: any, idx: number) => (
+                result.models.map((model: { name: string; developer: string; highlight: string; contextWindow: string; inputPrice: string }, idx: number) => (
                   <div key={idx} className="p-3 bg-background rounded-lg border">
                     <div className="flex items-center justify-between mb-2">
                       <p className="font-medium text-sm text-foreground">{model.name}</p>
@@ -1116,7 +1116,7 @@ export function AIPageTools() {
     },
     handler: async ({ category }) => {
       try {
-        let filteredModels: any[] = [];
+        let filteredModels: { name: string; developer: string; highlight: string; contextWindow: string; inputPrice: string | undefined }[] = [];
         let description = "";
 
         switch (category) {
