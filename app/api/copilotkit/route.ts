@@ -1,171 +1,223 @@
+import { NextRequest } from "next/server";
 import {
   CopilotRuntime,
   GoogleGenerativeAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
-  langGraphPlatformEndpoint,
-  copilotKitEndpoint,
 } from "@copilotkit/runtime";
-import { NextRequest } from "next/server";
-import { handleApiError, createErrorResponse, validateEnvVars } from "@/lib/errors";
-
-// Validate optional environment variables (warn-only; follow CopilotKit docs behavior)
-const envValidation = validateEnvVars([
-  "GEMINI_API_KEY",
-  "GOOGLE_API_KEY",
-  "NEXT_PUBLIC_LANGGRAPH_URL",
-  "LANGGRAPH_DEPLOYMENT_URL",
-]);
-if (!envValidation.valid && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_API_KEY) {
-  console.warn(
-    "Warning: Neither GEMINI_API_KEY nor GOOGLE_API_KEY is set. API functionality may be limited."
-  );
-}
-
-// Critical security check for LangGraph URL
-const langGraphUrl = 
-  process.env.NEXT_PUBLIC_LANGGRAPH_URL ||
-  process.env.LANGGRAPH_DEPLOYMENT_URL ||
-  "http://localhost:8123";
-
-if (!process.env.LANGGRAPH_DEPLOYMENT_URL && !process.env.NEXT_PUBLIC_LANGGRAPH_URL) {
-  console.warn(
-    "⚠️  WARNING: LANGGRAPH_DEPLOYMENT_URL or NEXT_PUBLIC_LANGGRAPH_URL is not set! " +
-    "Falling back to http://localhost:8123. Set this environment variable for production."
-  );
-}
-
-// Service adapter is required even when using LangGraph agents
-// It handles multi-agent coordination and fallback scenarios
-let serviceAdapter: GoogleGenerativeAIAdapter;
-let runtime: CopilotRuntime;
-
-try {
-  // Initialize the Google Gemini adapter (per CopilotKit docs; uses env for keys)
-  serviceAdapter = new GoogleGenerativeAIAdapter();
-
-  // Create the CopilotRuntime with remoteEndpoints (official CopilotKit method for self-hosted agents)
-  // Reference: https://www.copilotkit.ai/blog/heres-how-to-build-fullstack-agent-apps-gemini-copilotkit-langgraph
-  // For self-hosted LangGraph deployments, use langGraphPlatformEndpoint with agent configuration
-  // The agent name "starterAgent" comes from agent/langgraph.json
-  
-  // Check if we have authentication key for LangGraph
-  const langGraphApiKey = process.env.LANGGRAPH_API_KEY;
-  
-  // Build remote endpoints configuration
-  // For self-hosted LangGraph deployments, use copilotKitEndpoint with onBeforeRequest for auth
-  // This handles the /info endpoint with authentication headers
-  // For LangGraph Platform Cloud deployments, use langGraphPlatformEndpoint
-  if (langGraphUrl.includes("localhost") || langGraphUrl.includes("127.0.0.1") || !langGraphUrl.includes("platform.langchain.com")) {
-    // Self-hosted LangGraph: use copilotKitEndpoint with authentication
-    runtime = new CopilotRuntime({
-      remoteEndpoints: [
-        copilotKitEndpoint({
-          url: langGraphUrl,
-          onBeforeRequest: () => {
-            const headers: Record<string, string> = {};
-            if (langGraphApiKey) {
-              headers["x-langgraph-api-key"] = langGraphApiKey;
-            }
-            return { headers };
-          },
-        }),
-      ],
-    });
-  } else {
-    // LangGraph Platform Cloud: use langGraphPlatformEndpoint with agent configuration
-    runtime = new CopilotRuntime({
-      remoteEndpoints: [
-        langGraphPlatformEndpoint({
-          deploymentUrl: langGraphUrl,
-          langsmithApiKey: process.env.LANGSMITH_API_KEY || undefined,
-          agents: [
-            {
-              name: "starterAgent",
-              description: "A helpful LLM agent that can assist with various tasks.",
-            },
-          ],
-        }),
-      ],
-    });
-  }
-
-} catch (error) {
-  console.error("Failed to initialize CopilotKit runtime:", error);
-  // We'll handle this in the POST handler
-}
+import { handleApiError, createErrorResponse, handleLLMAdapterError } from "@/lib/errors";
+import { logError, ErrorContext } from "@/lib/monitoring";
 
 /**
- * GET handler for CopilotKit info endpoint
- * Returns information about available agents and actions
+ * CopilotKit API Route - Direct-to-LLM Pattern with Native Gemini Adapter
+ * 
+ * This endpoint connects directly to Google Gemini using CopilotKit's native GoogleGenerativeAIAdapter.
+ * This is the CORRECT and RECOMMENDED approach for Gemini integration.
+ * 
+ * Environment Variables Required:
+ * - GEMINI_API_KEY: Your Google Gemini API key (or GOOGLE_API_KEY as alternative)
+ * - GEMINI_MODEL: (Optional) Model name, defaults to "gemini-2.5-flash"
+ * 
+ * Get your API key from: https://aistudio.google.com/app/apikey
  */
-export const GET = async (req: NextRequest) => {
-  try {
-    // Check if runtime and serviceAdapter were initialized successfully
-    if (!runtime || !serviceAdapter) {
-      return createErrorResponse(
-        "Service Unavailable",
-        "CopilotKit runtime failed to initialize. Please check server configuration.",
-        503,
-        { reason: "Runtime initialization failed" }
-      );
-    }
 
-    // Get the request handler with both runtime and serviceAdapter
-    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-      runtime,
-      serviceAdapter,
-      endpoint: "/api/copilotkit",
-    });
-
-    // Handle the GET request
-    try {
-      const response = await handleRequest(req);
-      return response;
-    } catch (handlerError) {
-      console.error("Error in CopilotKit GET handler:", handlerError);
-      return handleApiError(handlerError);
-    }
-  } catch (error) {
-    console.error("Unexpected error in CopilotKit GET route:", error);
-    return handleApiError(error);
-  }
-};
+// Force Node.js runtime to ensure process.env is available
+export const runtime = "nodejs";
 
 /**
- * POST handler for CopilotKit runtime requests
- * Handles all errors gracefully and returns structured error responses
+ * Get API key from environment variables
+ * Supports both GEMINI_API_KEY and GOOGLE_API_KEY for compatibility
+ */
+function getApiKey(): string | null {
+  return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || null;
+}
+
+/**
+ * Initialize and return the Google Generative AI adapter as a module-level singleton
+ * This reduces per-request overhead by reusing the same adapter instance across requests
+ * 
+ * Using lazy initialization to handle cases where API key might not be available at module load time
+ */
+function getServiceAdapter(): GoogleGenerativeAIAdapter | null {
+  const apiKey = getApiKey();
+
+  if (!apiKey) {
+    console.error("❌ ERROR: Neither GEMINI_API_KEY nor GOOGLE_API_KEY is set.");
+    return null;
+  }
+
+  try {
+    // Validate API key format (should be non-empty string)
+    if (typeof apiKey !== "string" || apiKey.trim().length === 0) {
+      console.error("❌ Invalid API key format: API key must be a non-empty string");
+      return null;
+    }
+
+    const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+    
+    // Create the native Google Generative AI adapter
+    // This is the CORRECT way to integrate Gemini with CopilotKit
+    const adapter = new GoogleGenerativeAIAdapter({
+      model: modelName,
+      apiKey: apiKey,
+    });
+
+    return adapter;
+  } catch (error) {
+    console.error("❌ Failed to create GoogleGenerativeAIAdapter:", error);
+    if (error instanceof Error) {
+      console.error("   - Error name:", error.name);
+      console.error("   - Error message:", error.message);
+      console.error("   - Error stack:", error.stack);
+    }
+    return null;
+  }
+}
+
+// Module-level singleton adapter - initialized lazily on first request
+let serviceAdapter: GoogleGenerativeAIAdapter | null = null;
+let adapterInitialized = false;
+
+/**
+ * Get or initialize the service adapter singleton
+ * Initializes once and reuses the same instance for subsequent requests
+ */
+function getOrCreateServiceAdapter(): GoogleGenerativeAIAdapter | null {
+  if (!adapterInitialized) {
+    serviceAdapter = getServiceAdapter();
+    adapterInitialized = true;
+    if (serviceAdapter) {
+      const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+      console.log(`✅ GoogleGenerativeAIAdapter singleton initialized (model: ${modelName})`);
+    }
+  }
+  return serviceAdapter;
+}
+
+// Module-level singleton runtime - initialized once at module load
+// This reduces per-request overhead by reusing the same runtime instance
+const copilotRuntime = new CopilotRuntime();
+
+/**
+ * POST handler for CopilotKit requests
+ * Handles chat requests and communicates directly with Google Gemini
  */
 export const POST = async (req: NextRequest) => {
+  console.log("\n========== NEW COPILOTKIT REQUEST ==========");
+  console.log("Timestamp:", new Date().toISOString());
+  console.log("Request URL:", req.url);
+  console.log("Request method:", req.method);
+  
   try {
-    // Check if runtime and serviceAdapter were initialized successfully
-    if (!runtime || !serviceAdapter) {
+    // Validate API key
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      console.error("❌ POST request failed: API key not configured");
       return createErrorResponse(
         "Service Unavailable",
-        "CopilotKit runtime failed to initialize. Please check server configuration.",
+        "GEMINI_API_KEY or GOOGLE_API_KEY is not set in environment variables. Please configure it in Vercel project settings.",
         503,
-        { reason: "Runtime initialization failed" }
+        {
+          reason: "API key not configured",
+          hasApiKey: false,
+        }
       );
     }
 
-    // Get the request handler with both runtime and serviceAdapter
+    // Get or create the module-level singleton adapter
+    // This reuses the same adapter instance across requests for better performance
+    const serviceAdapter = getOrCreateServiceAdapter();
+    if (!serviceAdapter) {
+      console.error("❌ POST request failed: Service adapter initialization failed");
+      return createErrorResponse(
+        "Service Unavailable",
+        "Failed to initialize Google Gemini adapter. Please check API key validity and server logs.",
+        503,
+        {
+          reason: "Adapter initialization failed",
+          hasApiKey: true,
+        }
+      );
+    }
+
+    // Get the request handler with debug logging enabled
+    // Uses module-level singleton runtime and adapter for better performance
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-      runtime,
+      runtime: copilotRuntime,
       serviceAdapter,
       endpoint: "/api/copilotkit",
+      logLevel: "debug",  // Enable debug logging to see detailed errors
     });
 
-    // Handle the request with additional error catching
+    // Handle the request with error catching
     try {
       const response = await handleRequest(req);
       return response;
     } catch (handlerError) {
-      console.error("Error in CopilotKit request handler:", handlerError);
-      return handleApiError(handlerError);
+      // Prepare error context for monitoring
+      const errorContext: ErrorContext = {
+        errorCode: "LLM_ADAPTER_ERROR",
+        source: "copilotkit-route",
+        endpoint: "/api/copilotkit",
+        method: "POST",
+        adapterName: "GoogleGenerativeAIAdapter",
+        model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+        environment: process.env.NODE_ENV || process.env.VERCEL_ENV || "unknown",
+      };
+
+      // Extract error details for logging
+      if (handlerError instanceof Error) {
+        errorContext.errorName = handlerError.name;
+        errorContext.errorMessage = handlerError.message;
+        errorContext.errorStack = process.env.NODE_ENV === "development" ? handlerError.stack : undefined;
+        
+        console.error("❌ Error in CopilotKit POST handler:", {
+          name: handlerError.name,
+          message: handlerError.message,
+          stack: handlerError.stack,
+        });
+      } else {
+        errorContext.errorType = typeof handlerError;
+        errorContext.errorConstructor = handlerError?.constructor?.name;
+        console.error("❌ Error in CopilotKit POST handler (non-Error type):", handlerError);
+      }
+
+      // Log to monitoring service with full context
+      logError(handlerError, errorContext, "high");
+
+      // Return structured JSON response for LLM adapter errors
+      return handleLLMAdapterError(handlerError, errorContext);
     }
   } catch (error) {
     // Catch any unexpected errors in the route handler
-    console.error("Unexpected error in CopilotKit POST route:", error);
-    return handleApiError(error);
+    const errorContext: ErrorContext = {
+      errorCode: "COPILOTKIT_ROUTE_ERROR",
+      source: "copilotkit-route",
+      endpoint: "/api/copilotkit",
+      method: "POST",
+      environment: process.env.NODE_ENV || process.env.VERCEL_ENV || "unknown",
+    };
+
+    // Extract error details
+    if (error instanceof Error) {
+      errorContext.errorName = error.name;
+      errorContext.errorMessage = error.message;
+      errorContext.errorStack = process.env.NODE_ENV === "development" ? error.stack : undefined;
+      
+      console.error("❌ Unexpected error in CopilotKit POST route:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      });
+    } else {
+      errorContext.errorType = typeof error;
+      errorContext.errorConstructor = error?.constructor?.name;
+      console.error("❌ Unexpected error in CopilotKit POST route (non-Error type):", error);
+    }
+
+    // Log to monitoring service with full context
+    logError(error, errorContext, "critical");
+
+    // Return structured error response
+    return handleApiError(error, errorContext, "critical");
   }
 };
-

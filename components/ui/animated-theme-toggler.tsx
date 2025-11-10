@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
 import { flushSync } from "react-dom"
 
 import { cn } from "@/lib/utils"
@@ -16,46 +17,27 @@ export const AnimatedThemeToggler = ({
   duration = 400,
   ...props
 }: AnimatedThemeTogglerProps) => {
-  const [isDark, setIsDark] = useState(false)
+  const { setTheme, resolvedTheme } = useTheme()
   const buttonRef = useRef<HTMLButtonElement>(null)
+  const [mounted, setMounted] = useState(false)
 
+  // Prevent hydration mismatch by ensuring consistent initial render
   useEffect(() => {
-    // Load theme from localStorage on mount
-    const storedTheme = localStorage.getItem("theme")
-    const isDarkMode = storedTheme === "dark" || 
-      (!storedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-    
-    setIsDark(isDarkMode)
-    
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-
-    // Watch for changes to theme
-    const updateTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"))
-    }
-
-    const observer = new MutationObserver(updateTheme)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    })
-
-    return () => observer.disconnect()
+    setMounted(true)
   }, [])
+
+  // Determine if dark mode is active
+  // Only check resolvedTheme after component has mounted to avoid hydration mismatch
+  const isDark = mounted && resolvedTheme === "dark"
 
   const toggleTheme = useCallback(async () => {
     if (!buttonRef.current) return
 
+    const newTheme = isDark ? "light" : "dark"
+
     await document.startViewTransition(() => {
       flushSync(() => {
-        const newTheme = !isDark
-        setIsDark(newTheme)
-        document.documentElement.classList.toggle("dark")
-        localStorage.setItem("theme", newTheme ? "dark" : "light")
+        setTheme(newTheme)
       })
     }).ready
 
@@ -81,7 +63,24 @@ export const AnimatedThemeToggler = ({
         pseudoElement: "::view-transition-new(root)",
       }
     )
-  }, [isDark, duration])
+  }, [isDark, setTheme, duration])
+
+  // Render consistent placeholder during SSR and initial client render
+  // This ensures server and client HTML match during hydration
+  if (!mounted) {
+    return (
+      <button
+        ref={buttonRef}
+        onClick={toggleTheme}
+        className={cn(className)}
+        {...props}
+        aria-label="Toggle theme"
+      >
+        <Moon />
+        <span className="sr-only">Toggle theme</span>
+      </button>
+    )
+  }
 
   return (
     <button

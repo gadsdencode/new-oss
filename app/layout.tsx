@@ -5,8 +5,10 @@ import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
 
 import { CopilotKit } from "@copilotkit/react-core";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { ThemeProvider } from "next-themes";
 import { CopilotSidebarWrapper } from "./components/copilot-sidebar-wrapper";
+import { ThemeToggleWrapper } from "./components/theme-toggle-wrapper";
+import { GlobalAITools } from "@/components/global-ai-tools";
 
 // Fallback: Inter ≈ Geist Sans, JetBrains Mono ≈ Geist Mono
 const inter = Inter({
@@ -33,30 +35,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const theme = localStorage.getItem('theme');
-                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              } catch (e) {}
-            `,
-          }}
-        />
-      </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-sans`}>
-        <CopilotKit runtimeUrl="/api/copilotkit" publicLicenseKey="ck_pub_079278b2bd4b959809f2a4767c5fa899">
-          <div className="fixed top-4 right-4 z-50">
-            <AnimatedThemeToggler />
-          </div>
-          {children}
-          <CopilotSidebarWrapper />
-        </CopilotKit>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <CopilotKit runtimeUrl="/api/copilotkit">
+            {/* Global AI Tools - Available on ALL pages */}
+            <GlobalAITools />
+            <ThemeToggleWrapper />
+            {children}
+            <CopilotSidebarWrapper />
+          </CopilotKit>
+        </ThemeProvider>
       </body>
     </html>
   );

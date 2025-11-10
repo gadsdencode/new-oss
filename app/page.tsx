@@ -1,206 +1,431 @@
 // page.tsx
+"use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid"
-import { Marquee } from "@/components/ui/marquee"
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
-import { BotIcon, BrainCircuitIcon, ChartBarIcon, ZapIcon, ShieldCheckIcon, Users2Icon, SearchCheckIcon, HeartPulseIcon, MailIcon } from "lucide-react";
+import { useCopilotReadable } from "@copilotkit/react-core";
+import { 
+  BrainCircuitIcon, 
+  ChartBarIcon, 
+  ShieldCheckIcon, 
+  Users2Icon, 
+  SearchCheckIcon, 
+  MailIcon,
+  CheckCircle2,
+  ArrowRight,
+  SparklesIcon,
+  TrendingUpIcon,
+  ClockIcon,
+  AwardIcon,
+  RocketIcon,
+  TargetIcon,
+  ZapIcon,
+  LayersIcon,
+  GlobeIcon,
+  LockIcon,
+} from "lucide-react";
 
-const TechCard = ({
-  name,
-  description,
-  category,
-}: {
-  name: string
-  description: string
-  category: string
-}) => {
-  return (
-    <figure
-      className={cn(
-        "relative w-64 cursor-pointer overflow-hidden rounded-xl border p-4",
-        // light styles
-        "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-        // dark styles
-        "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
-        "transition-colors"
-      )}
-    >
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <figcaption className="text-sm font-medium dark:text-white">
-            {name}
-          </figcaption>
-          <Badge variant="secondary" className="text-xs">
-            {category}
-          </Badge>
-        </div>
-        <blockquote className="text-xs text-muted-foreground">{description}</blockquote>
-      </div>
-    </figure>
-  )
-}
+// Trust Stats for Social Proof
+const trustStats = [
+  {
+    icon: TrendingUpIcon,
+    stat: "3.5x",
+    label: "Average ROI",
+    description: "Return on AI investments within 18 months",
+  },
+  {
+    icon: ClockIcon,
+    stat: "60%",
+    label: "Time Savings",
+    description: "Operational efficiency improvement",
+  },
+  {
+    icon: AwardIcon,
+    stat: "95%",
+    label: "Success Rate",
+    description: "Projects with measurable impact",
+  },
+  {
+    icon: Users2Icon,
+    stat: "200+",
+    label: "Clients Served",
+    description: "Organizations transformed",
+  },
+];
+
+// Core Services (Curated - replaces cheap marquee)
+const coreServices = [
+  {
+    icon: BrainCircuitIcon,
+    title: "AI Strategy & Implementation",
+    description: "End-to-end AI consulting from strategy development to production deployment. We help you identify opportunities, build roadmaps, and deliver measurable results.",
+    href: "/consulting",
+    features: ["Strategic Planning", "Custom Solutions", "ROI Optimization"],
+  },
+  {
+    icon: SearchCheckIcon,
+    title: "B2B Research Platform",
+    description: "AI-powered research solutions for healthcare and non-profit organizations. HIPAA-compliant, secure, and designed for impact.",
+    href: "/research",
+    features: ["HIPAA Compliant", "Advanced Analytics", "Impact Measurement"],
+  },
+  {
+    icon: LayersIcon,
+    title: "Uterpi",
+    description: "Modern AI platform for businesses. Streamline workflows, automate processes, and unlock productivity with cutting-edge AI technology.",
+    href: "https://uterpi.com",
+    features: ["Advanced AI Models", "Team Collaboration", "SOC 2 Compliant"],
+  },
+];
 
 export default function Home() {
+  // Provide context to the AI agent about this page
+  useCopilotReadable({
+    description: "Homepage of Overture Systems Solutions",
+    value: {
+      companyName: "Overture Systems Solutions",
+      tagline: "Transform Your Business With AI Solutions",
+      description: "Strategic AI consulting, implementation, and platforms built for Fortune 500 companies and innovative enterprises. We deliver measurable results, not promises.",
+      mainServices: [
+        {
+          name: "AI Strategy & Implementation",
+          description: "End-to-end AI consulting from strategy development to production deployment. We help identify opportunities, build roadmaps, and deliver measurable results.",
+          link: "/consulting",
+          features: ["Strategic Planning", "Custom Solutions", "ROI Optimization"]
+        },
+        {
+          name: "B2B Research Platform",
+          description: "AI-powered research solutions for healthcare and non-profit organizations. HIPAA-compliant, secure, and designed for impact.",
+          link: "/research",
+          features: ["HIPAA Compliant", "Advanced Analytics", "Impact Measurement"]
+        },
+        {
+          name: "Uterpi",
+          description: "Modern AI platform for businesses. Streamline workflows, automate processes, and unlock productivity with cutting-edge AI technology.",
+          link: "https://uterpi.com",
+          features: ["Advanced AI Models", "Team Collaboration", "SOC 2 Compliant"]
+        }
+      ],
+      keyStats: {
+        averageROI: "3.5x return on AI investments within 18 months",
+        timeSavings: "60% operational efficiency improvement",
+        successRate: "95% projects with measurable impact",
+        clientsServed: "200+ organizations transformed"
+      },
+      certifications: ["SOC 2 Type II Certified", "HIPAA Compliant", "Enterprise-Grade Security"],
+      contactInfo: {
+        freeConsultation: true,
+        contactPage: "/contact"
+      }
+    }
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
-      {/* Hero Section */}
-      <header className="relative flex min-h-[50vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20 dark:from-primary/10 dark:to-accent/10">
-        <div className="absolute inset-0 ai-gradient opacity-50" />
-        <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 pt-16 pb-8">
-          <Badge variant="outline" className="mb-3 border-primary text-primary">Beta Launch</Badge>
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl whitespace-nowrap">
-            Overture Systems Solutions
+      {/* Premium Hero Section - Enterprise Value Proposition */}
+      <header className="relative flex min-h-[75vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
+        {/* Premium Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        
+        {/* Animated Gradient Orbs */}
+        <div className="absolute top-20 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow opacity-50" />
+        <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />
+        
+        <div className="relative z-10 mx-auto max-w-7xl text-center px-4 sm:px-6 lg:px-8 py-20">
+          <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
+            AI Solutions for Business Intelligence
+          </Badge>
+          
+          {/* Hero Headline - Clear Value Proposition */}
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
+            Transform Your Business
+            <span className="block mt-3 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+              With AI Solutions
+            </span>
           </h1>
-          <p className="mt-4 text-lg sm:text-xl leading-7 text-muted-foreground">
-            AI-powered solutions for your business.
+          
+          {/* Clear Supporting Copy */}
+          <p className="mt-8 text-xl sm:text-2xl leading-relaxed text-muted-foreground max-w-4xl mx-auto">
+            Strategic AI consulting, implementation, and platforms built for Fortune 500 companies and innovative enterprises. 
+            <span className="block mt-2 font-medium">We deliver measurable results, not promises.</span>
           </p>
-          <div className="mt-6 flex justify-center gap-4">
-            <Button size="lg" asChild>
-              <Link href="/signup">Get Started</Link>
+          
+          {/* Clear CTAs - Primary & Secondary */}
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+            <Button size="lg" className="text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
+              <Link href="/contact">
+                Schedule Consultation
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
+            <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
+              <Link href="/consulting">Explore Services</Link>
+            </Button>
+          </div>
+          
+          {/* Trust Indicators */}
+          <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span>SOC 2 Certified</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span>95% Success Rate</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span>200+ Clients</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span>Free Consultation</span>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Bento Grid Section */}
-      <section className="pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <BentoGrid>
+      {/* Trust Stats Section - Social Proof First */}
+      <section className="py-16 border-y bg-muted/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
+              Proven Results That Drive Growth
+            </h2>
+            <p className="mt-3 text-lg text-muted-foreground">
+              Our track record speaks for itself
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+            {trustStats.map((stat, idx) => (
+              <div key={idx} className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                    <stat.icon className="h-7 w-7 text-primary" />
+                  </div>
+                </div>
+                <div className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{stat.stat}</div>
+                <div className="mt-2 text-base font-semibold text-foreground">{stat.label}</div>
+                <div className="mt-1 text-sm text-muted-foreground">{stat.description}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Core Solutions - Focused BentoGrid (3 key offerings) */}
+      <section className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <Badge variant="secondary" className="mb-4">Our Solutions</Badge>
+            <h2 className="text-4xl font-bold tracking-tight text-foreground">
+              The Right Solutions for Your Business
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              Four core offerings designed to transform your enterprise with AI
+            </p>
+          </div>
+          <BentoGrid className="auto-rows-[28rem]">
             <BentoCard 
-              name="Uterpi" 
+              name="AI Strategy & Implementation" 
               className="col-span-1 md:col-span-2 lg:col-span-2" 
               background={
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 dark:from-primary/10 dark:to-accent/10" />
-              } 
-              Icon={BrainCircuitIcon} 
-              description="Advanced AI platform for modern businesses and workflows." 
-              href="https://uterpi.com" 
-              cta="Visit Uterpi" 
-              title="Uterpi - AI-powered platform for modern businesses and workflows."
-            />
-            <BentoCard 
-              name="AI Consulting" 
-              className="col-span-1 md:col-span-2 lg:col-span-1" 
-              background={
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 dark:from-blue-500/10 dark:to-cyan-500/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-secondary/10 to-primary/5" />
               } 
               Icon={ChartBarIcon} 
-              description="Expert AI strategy and implementation consulting for your business." 
+              description="Expert AI consulting from strategy development to production deployment. We deliver measurable ROI and transform your operations." 
               href="/consulting" 
-              cta="Get Consultation" 
+              cta="Explore Consulting" 
             />
             <BentoCard 
-              name="Contact Us" 
+              name="B2B Research Platform" 
+              className="col-span-1 md:col-span-2 lg:col-span-1" 
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/15 via-accent/10 to-accent/5" />
+              } 
+              Icon={SearchCheckIcon} 
+              description="HIPAA-compliant AI research solutions for healthcare and non-profits. Secure, powerful, and purpose-built." 
+              href="/research" 
+              cta="Learn More" 
+            />
+            <BentoCard 
+              name="Uterpi" 
               className="col-span-1 md:col-span-1 lg:col-span-1" 
               background={
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 dark:from-yellow-500/10 dark:to-orange-500/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-secondary/10 to-secondary/5" />
               } 
-              Icon={MailIcon} 
-              description="Get in touch with our team for personalized support and solutions." 
-              href="/contact" 
-              cta="Get In Touch" 
-            />
-            <BentoCard 
-              name="Advanced AI Models" 
-              className="col-span-1 md:col-span-1 lg:col-span-2" 
-              background={
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 dark:from-purple-500/10 dark:to-pink-500/10" />
-              } 
-              Icon={BrainCircuitIcon} 
-              description="Custom AI models tailored to your specific business needs." 
-              href="/features/ai-models" 
-              cta="Discover AI" 
+              Icon={LayersIcon} 
+              description="Modern AI platform for businesses. Advanced models, team collaboration, and SOC 2 compliant." 
+              href="https://uterpi.com" 
+              cta="Visit Uterpi" 
             />
             <BentoCard 
               name="Enterprise Compliance" 
-              className="col-span-1 md:col-span-1 lg:col-span-1" 
+              className="col-span-1 md:col-span-2 lg:col-span-2" 
               background={
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/5" />
               } 
               Icon={ShieldCheckIcon} 
-              description="Enterprise-level compliance with SOC 2." 
+              description="SOC 2 Type II certified. Enterprise-grade security, compliance, and data protection built into every solution." 
               href="/compliance" 
               cta="View Security" 
-            />
-            <BentoCard 
-              name="Team Collaboration" 
-              className="col-span-1 md:col-span-2 lg:col-span-1" 
-              background={
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-blue-500/20 dark:from-indigo-500/10 dark:to-blue-500/10" />
-              } 
-              Icon={Users2Icon} 
-              description="Work seamlessly with your team in real-time." 
-              href="/features/collaboration" 
-              cta="Get Started" 
-            />
-            <BentoCard 
-              name="B2B Research" 
-              className="col-span-1 md:col-span-2 lg:col-span-1" 
-              background={
-                <div className="absolute inset-0 bg-gradient-to-br from-rose-500/20 to-pink-500/20 dark:from-rose-500/10 dark:to-pink-500/10" />
-              } 
-              Icon={SearchCheckIcon} 
-              description="AI-powered research platform for healthcare and non-profit organizations." 
-              href="/research" 
-              cta="Explore Research" 
             />
           </BentoGrid>
         </div>
       </section>
 
-      {/* Tech Stack Section */}
-      <section className="py-24 bg-muted/50 dark:bg-muted/20">
-        <div className="w-full">
-          <div className="px-6">
-            <h2 className="text-center text-4xl font-semibold tracking-tight text-foreground">
-              Built with Modern Technologies
+      {/* Featured Services - Static, Curated (Replaces Cheap Marquee) */}
+      <section className="py-24 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <Badge variant="secondary" className="mb-4">What We Offer</Badge>
+            <h2 className="text-4xl font-bold tracking-tight text-foreground">
+              Comprehensive AI Services
             </h2>
-            <Separator className="my-12" />
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              From strategy to deployment, we provide end-to-end AI solutions tailored to your enterprise needs
+            </p>
           </div>
-          <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-            <Marquee pauseOnHover className="[--duration:30s]">
-              <TechCard name="Next.js" description="React Framework for Production" category="Framework" />
-              <TechCard name="React" description="UI Component Library" category="Library" />
-              <TechCard name="TypeScript" description="Type-Safe JavaScript" category="Language" />
-              <TechCard name="Tailwind CSS" description="Utility-First CSS Framework" category="Styling" />
-              <TechCard name="shadcn/ui" description="Re-usable Components" category="Components" />
-              <TechCard name="Radix UI" description="Accessible Primitives" category="Primitives" />
-            </Marquee>
-            <Marquee reverse pauseOnHover className="[--duration:30s] mt-4">
-              <TechCard name="Lucide Icons" description="Beautiful Icon Set" category="Icons" />
-              <TechCard name="Framer Motion" description="Animation Library" category="Animation" />
-              <TechCard name="Zod" description="Schema Validation" category="Validation" />
-              <TechCard name="React Hook Form" description="Form Management" category="Forms" />
-              <TechCard name="Recharts" description="Chart Components" category="Charts" />
-              <TechCard name="date-fns" description="Date Utilities" category="Utilities" />
-            </Marquee>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-muted/50 dark:from-muted/20"></div>
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-muted/50 dark:from-muted/20"></div>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {coreServices.map((service, idx) => (
+              <Card key={idx} className="border-2 hover:border-primary/50 transition-all hover:shadow-brand-lg group">
+                <CardHeader>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20 group-hover:bg-primary/20 group-hover:ring-primary/30 group-hover:shadow-glow transition-all duration-300">
+                      <service.icon className="h-8 w-8 text-primary" />
+                    </div>
+                  </div>
+                  <CardTitle className="text-2xl mb-2">{service.title}</CardTitle>
+                  <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 mb-6">
+                    {service.features.map((feature, featureIdx) => (
+                      <div key={featureIdx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Button asChild className="w-full shadow-brand hover:shadow-brand-lg transition-all">
+                    <Link href={service.href}>
+                      Learn More
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 text-center">
-        <div className="mx-auto max-w-4xl px-6">
-          <h2 className="text-4xl font-semibold tracking-tight text-foreground">
-            Ready to Revolutionize Your Business?
+      {/* Why Choose Us */}
+      <section className="py-20 border-y bg-muted/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold tracking-tight text-foreground">
+              Why Leading Enterprises Choose Us
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              We combine deep technical expertise with business acumen to deliver AI solutions that drive real results
+            </p>
+          </div>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                  <RocketIcon className="h-8 w-8 text-primary" />
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Rapid Deployment</h3>
+              <p className="text-muted-foreground">From strategy to production in weeks, not years</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                  <TargetIcon className="h-8 w-8 text-primary" />
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Business-Focused</h3>
+              <p className="text-muted-foreground">Technology aligned with your strategic goals</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                  <LockIcon className="h-8 w-8 text-primary" />
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Enterprise Security</h3>
+              <p className="text-muted-foreground">SOC 2 certified with enterprise-grade compliance</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                  <ZapIcon className="h-8 w-8 text-primary" />
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Proven Results</h3>
+              <p className="text-muted-foreground">95% success rate with measurable ROI</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section - Strong, Clear Call-to-Action */}
+      <section className="relative py-32 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
+        {/* Premium Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+        
+        <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
+          <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <SparklesIcon className="w-3 h-3 mr-2 inline" />
+            Free Consultation Available
+          </Badge>
+          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            Ready to Transform Your Business?
           </h2>
-          <p className="mt-6 text-lg text-muted-foreground">
-            Join thousands of innovators using our AI-powered solutions.
+          <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
+            Schedule a free consultation with our AI experts. Let's discuss how we can help you achieve measurable results and competitive advantage through AI.
           </p>
-          <Button size="lg" className="mt-8">Sign Up Free</Button>
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+            <Button size="lg" className="text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
+              <Link href="/contact">
+                Schedule Free Consultation
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
+              <Link href="/consulting">View All Services</Link>
+            </Button>
+          </div>
+          <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span>No obligation</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span>Custom proposals</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span>Flexible engagement</span>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-        © 2025 Overture Systems Solutions. All rights reserved.
+      <footer className="border-t py-8 text-center text-sm text-muted-foreground bg-muted/20">
+        <p>© 2025 Overture Systems Solutions. All rights reserved.</p>
+        <p className="mt-2 text-xs">
+          SOC 2 Type II Certified • HIPAA Compliant • Enterprise-Grade Security
+        </p>
       </footer>
     </div>
   );

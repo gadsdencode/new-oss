@@ -1,4 +1,5 @@
 // app/compliance/page.tsx
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,8 @@ import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useCopilotReadable } from "@copilotkit/react-core";
+import { CompliancePageTools } from "./CompliancePageTools";
 import {
   ShieldCheckIcon,
   LockIcon,
@@ -27,6 +30,9 @@ import {
   GlobeIcon,
   NetworkIcon,
   LayersIcon,
+  TrophyIcon,
+  HeartPulseIcon,
+  CreditCardIcon,
 } from "lucide-react";
 
 const complianceStandards = [
@@ -144,28 +150,28 @@ const certifications = [
     issuer: "AICPA",
     status: "Active",
     year: "2025",
-    icon: "🏆",
+    icon: TrophyIcon,
   },
   {
     name: "HIPAA",
     issuer: "HHS",
     status: "Compliant",
     year: "2025",
-    icon: "🏥",
+    icon: HeartPulseIcon,
   },
   {
     name: "ISO 27001",
     issuer: "ISO",
     status: "Certified",
     year: "2024",
-    icon: "🌐",
+    icon: GlobeIcon,
   },
   {
     name: "PCI DSS",
     issuer: "PCI SSC",
     status: "Level 1",
     year: "2025",
-    icon: "💳",
+    icon: CreditCardIcon,
   },
 ];
 
@@ -221,8 +227,97 @@ const testimonials = [
 ];
 
 export default function CompliancePage() {
+  // Provide context to the AI agent about security and compliance
+  useCopilotReadable({
+    description: "Security and Compliance page with certifications and standards",
+    value: {
+      pageTitle: "Security & Compliance",
+      overview: "Industry-leading security standards and compliance certifications. Enterprise-grade infrastructure trusted by leading organizations.",
+      certifications: [
+        {
+          name: "SOC 2 Type II",
+          description: "Comprehensive security, availability, and confidentiality controls independently audited and certified annually.",
+          features: ["Annual audits", "Continuous monitoring", "Independent validation", "Public reports available"],
+          status: "Active",
+          issuer: "AICPA",
+          year: "2025"
+        },
+        {
+          name: "HIPAA Compliance",
+          description: "Full compliance with Health Insurance Portability and Accountability Act for handling protected health information.",
+          features: ["BAA agreements", "PHI encryption", "Access controls", "Audit logging"],
+          status: "Compliant",
+          issuer: "HHS",
+          year: "2025"
+        },
+        {
+          name: "GDPR Ready",
+          description: "General Data Protection Regulation compliance for processing EU citizen data with privacy-by-design principles.",
+          features: ["Data portability", "Right to deletion", "Consent management", "Privacy controls"]
+        },
+        {
+          name: "ISO 27001",
+          description: "International standard for information security management systems ensuring systematic risk management.",
+          features: ["Risk assessment", "Security policies", "Incident response", "Business continuity"],
+          status: "Certified",
+          issuer: "ISO",
+          year: "2024"
+        },
+        {
+          name: "CCPA Compliant",
+          description: "California Consumer Privacy Act compliance protecting consumer privacy rights and data transparency.",
+          features: ["Data disclosure", "Opt-out rights", "Non-discrimination", "Consumer requests"]
+        },
+        {
+          name: "FedRAMP Ready",
+          description: "Federal Risk and Authorization Management Program readiness for government cloud services.",
+          features: ["Security controls", "Continuous monitoring", "Government standards", "Authorization package"]
+        },
+        {
+          name: "PCI DSS",
+          description: "Payment Card Industry Data Security Standard Level 1 compliance",
+          status: "Level 1",
+          issuer: "PCI SSC",
+          year: "2025"
+        }
+      ],
+      securityFeatures: [
+        "End-to-End Encryption - AES-256 encryption for data at rest and TLS 1.3 for data in transit",
+        "Multi-Factor Authentication - Mandatory MFA with support for TOTP, SMS, and hardware security keys",
+        "Real-Time Monitoring - 24/7 security monitoring with automated threat detection and response",
+        "Infrastructure Security - Enterprise-grade infrastructure with redundancy and DDoS protection",
+        "Compliance Audits - Regular third-party security audits and penetration testing",
+        "Access Controls - Role-based access control with principle of least privilege"
+      ],
+      statistics: {
+        uptimeSLA: "99.99% uptime with multi-region redundancy",
+        encryption: "256-bit AES encryption (military-grade)",
+        monitoring: "24/7 security monitoring and incident response",
+        certificationsCount: "4+ major compliance frameworks independently verified"
+      },
+      complianceProcess: [
+        "Security Assessment (1 week) - Comprehensive evaluation of security requirements and compliance needs",
+        "Implementation Planning (1-2 weeks) - Develop detailed compliance roadmap with timelines and milestones",
+        "Controls Deployment (4-8 weeks) - Implement security controls, policies, and procedures",
+        "Continuous Compliance (Ongoing) - Ongoing monitoring, documentation, and updates"
+      ],
+      documentation: {
+        available: true,
+        includes: ["Full audit reports", "BAA agreements", "Security whitepapers", "Dedicated security support"]
+      },
+      contactInfo: {
+        securityTeam: true,
+        contactPage: "/contact"
+      }
+    }
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
+      {/* Register page-specific AI tools for compliance page */}
+      {/* These tools are ONLY available on this page */}
+      <CompliancePageTools />
+      
       {/* Home Button */}
       <HomeButton />
       
@@ -416,23 +511,28 @@ export default function CompliancePage() {
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {certifications.map((cert, idx) => (
-              <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="text-4xl">{cert.icon}</div>
-                    <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
-                      {cert.status}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-lg">{cert.name}</CardTitle>
-                  <CardDescription>Issued by {cert.issuer}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Valid through {cert.year}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {certifications.map((cert, idx) => {
+              const IconComponent = cert.icon;
+              return (
+                <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20">
+                        <IconComponent className="h-6 w-6 text-primary" />
+                      </div>
+                      <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
+                        {cert.status}
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-lg">{cert.name}</CardTitle>
+                    <CardDescription>Issued by {cert.issuer}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">Valid through {cert.year}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
