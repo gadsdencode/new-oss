@@ -494,7 +494,7 @@ export default function AIConsultingPage() {
                     </Badge>
                   </div>
                   <blockquote className="text-base text-muted-foreground italic mb-6">
-                    "{testimonial.quote}"
+                    &quot;{testimonial.quote}&quot;
                   </blockquote>
                   <div className="border-t pt-4">
                     <p className="font-semibold text-foreground">{testimonial.author}</p>
@@ -522,7 +522,7 @@ export default function AIConsultingPage() {
             Ready to Start Your AI Journey?
           </h2>
           <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
-            Schedule a free consultation with our AI experts. Let's discuss your challenges, explore opportunities, and create a roadmap to measurable business impact.
+            Schedule a free consultation with our AI experts. Let&apos;s discuss your challenges, explore opportunities, and create a roadmap to measurable business impact.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" className="text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
