@@ -198,7 +198,7 @@ export default function ContactPage() {
         description: "Free initial consultation to discuss your needs"
       },
       socialMedia: {
-        linkedin: "https://linkedin.com",
+        linkedin: "https://www.linkedin.com/company/overture-systems-solutions",
         twitter: "https://twitter.com",
         github: "https://github.com"
       },
@@ -321,7 +321,7 @@ export default function ContactPage() {
                     <span className="text-sm font-medium">Global, all time zones</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Live response</span>
+                    <span className="text-sm text-muted-foreground">Live response with AI</span>
                     <span className="text-sm font-medium">Available round-the-clock</span>
                   </div>
                   <div className="pt-3 border-t">
