@@ -40,16 +40,8 @@ const contactMethods = [
     color: "from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10",
   },
   {
-    icon: MapPinIcon,
-    title: "Visit Us",
-    detail: "123 Innovation Drive, Suite 100",
-    description: "San Francisco, CA 94105",
-    href: "https://maps.google.com",
-    color: "from-purple-500/20 to-pink-500/20 dark:from-purple-500/10 dark:to-pink-500/10",
-  },
-  {
     icon: MessageSquareIcon,
-    title: "Live Chat",
+    title: "AI Chat",
     detail: "Available 24/7",
     description: "Get instant support",
     href: "#chat",
@@ -244,13 +236,13 @@ export default function ContactPage() {
             Get In Touch
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Let's Start a
+            Let&apos;s Start a
             <span className="block mt-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Conversation
             </span>
           </h1>
           <p className="mt-6 text-xl leading-8 text-muted-foreground max-w-2xl mx-auto">
-            Have a question or ready to transform your business with AI? We're here to help. Reach out and let's discuss how we can work together.
+            Have a question or ready to transform your business with AI? We&apos;re here to help. Reach out and let&apos;s discuss how we can work together.
           </p>
         </div>
       </header>
@@ -300,7 +292,7 @@ export default function ContactPage() {
                   Get in Touch
                 </h2>
                 <p className="mt-2 text-muted-foreground">
-                  Fill out the form below and we'll get back to you within 24 hours.
+                  Fill out the form below and we&apos;ll get back to you within 24 hours.
                 </p>
               </div>
 
