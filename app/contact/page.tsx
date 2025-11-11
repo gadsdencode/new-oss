@@ -313,49 +313,25 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Monday - Friday</span>
-                    <span className="text-sm font-medium">9:00 AM - 6:00 PM EST</span>
+                    <span className="text-sm text-muted-foreground">Availability</span>
+                    <span className="text-sm font-medium">24/7</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Saturday</span>
-                    <span className="text-sm font-medium">10:00 AM - 4:00 PM EST</span>
+                    <span className="text-sm text-muted-foreground">Support Type</span>
+                    <span className="text-sm font-medium">Global, all time zones</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Sunday</span>
-                    <span className="text-sm font-medium">Closed</span>
+                    <span className="text-sm text-muted-foreground">Live response</span>
+                    <span className="text-sm font-medium">Available round-the-clock</span>
                   </div>
                   <div className="pt-3 border-t">
-                    <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
-                      • Currently Open
+                    <Badge
+                      variant="secondary"
+                      className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20"
+                    >
+                      • Always Open
                     </Badge>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Our Offices */}
-              <Card className="border-2">
-                <CardHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <MapPinIcon className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle>Our Offices</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {offices.map((office, idx) => (
-                    <div key={idx} className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-semibold text-foreground">{office.city}</h4>
-                        {office.isPrimary && (
-                          <Badge variant="secondary" className="text-xs">HQ</Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground">{office.address}</p>
-                      <p className="text-sm text-muted-foreground">{office.state}</p>
-                      {idx < offices.length - 1 && <div className="pt-4 border-b" />}
-                    </div>
-                  ))}
                 </CardContent>
               </Card>
 
