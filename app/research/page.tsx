@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
 import { ResearchPageTools } from "./ResearchPageTools";
+import { StructuredData } from "@/components/structured-data";
 import {
   BrainCircuitIcon,
   HeartPulseIcon,
@@ -128,6 +129,67 @@ const testimonials = [
   },
 ];
 
+// Service Schema for Research Page - Bing loves structured data!
+const researchServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "B2B Research Platform",
+  "name": "B2B Research Platform for Healthcare & Non-Profits",
+  "description": "HIPAA-compliant AI-powered research solutions for healthcare and non-profit organizations. AI-driven data collection, analysis, and insights with 80% time savings, 95% accuracy, and 70% cost reduction.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Overture Systems Solutions",
+    "url": "https://new-oss.vercel.app"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "United States"
+    }
+  ],
+  "serviceOutput": [
+    "Market analysis and competitive intelligence",
+    "Partnership opportunity identification",
+    "Grant funding research",
+    "Donor prospect research",
+    "Clinical trial site identification",
+    "Predictive analytics and insights"
+  ],
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Healthcare organizations, Non-profit organizations, B2B research teams"
+  },
+  "offers": {
+    "@type": "Offer",
+    "description": "14-day free trial available, no credit card required",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "500",
+    "bestRating": "5"
+  },
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "HIPAA Compliant",
+      "value": "Yes"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Time Savings",
+      "value": "80%"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Accuracy Rate",
+      "value": "95%"
+    }
+  ]
+};
+
 export default function B2BResearchPage() {
   // Provide context to the AI agent about B2B research platform
   useCopilotReadable({
@@ -199,6 +261,9 @@ export default function B2BResearchPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
+      {/* Service Schema for SEO - Bing and Google recognition */}
+      <StructuredData data={researchServiceSchema} />
+      
       {/* Register page-specific AI tools for research page */}
       {/* These tools are ONLY available on this page */}
       <ResearchPageTools />

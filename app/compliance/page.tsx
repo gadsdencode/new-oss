@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
 import { CompliancePageTools } from "./CompliancePageTools";
+import { StructuredData } from "@/components/structured-data";
 import {
   ShieldCheckIcon,
   LockIcon,
@@ -226,6 +227,64 @@ const testimonials = [
   },
 ];
 
+// Service Schema for Compliance Page - Bing loves structured data!
+const complianceServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Enterprise Security & Compliance Services",
+  "name": "Enterprise Security & Compliance Solutions",
+  "description": "Industry-leading security standards and compliance certifications including SOC 2 Type II, HIPAA, GDPR, ISO 27001, CCPA, FedRAMP-ready, and PCI DSS Level 1. Enterprise-grade infrastructure trusted by Fortune 500 companies.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Overture Systems Solutions",
+    "url": "https://new-oss.vercel.app"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "United States"
+  },
+  "serviceOutput": [
+    "SOC 2 Type II certification",
+    "HIPAA compliance and BAA agreements",
+    "GDPR compliance and privacy controls",
+    "ISO 27001 security management",
+    "CCPA compliance",
+    "FedRAMP-ready infrastructure",
+    "PCI DSS Level 1 certification"
+  ],
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Enterprise organizations, Healthcare providers, Financial services, Government agencies"
+  },
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "SOC 2 Type II",
+      "value": "Certified (2025)"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "HIPAA",
+      "value": "Compliant (2025)"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "ISO 27001",
+      "value": "Certified (2024)"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "PCI DSS",
+      "value": "Level 1 (2025)"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Encryption",
+      "value": "AES-256 at rest, TLS 1.3 in transit"
+    }
+  ]
+};
+
 export default function CompliancePage() {
   // Provide context to the AI agent about security and compliance
   useCopilotReadable({
@@ -314,6 +373,9 @@ export default function CompliancePage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
+      {/* Service Schema for SEO - Bing and Google recognition */}
+      <StructuredData data={complianceServiceSchema} />
+      
       {/* Register page-specific AI tools for compliance page */}
       {/* These tools are ONLY available on this page */}
       <CompliancePageTools />

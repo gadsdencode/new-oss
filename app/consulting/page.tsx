@@ -7,6 +7,7 @@ import { HomeButton } from "@/components/ui/home-button";
 import Link from "next/link";
 import { PageAiContext } from "@/components/page-ai-context";
 import { ConsultingPageTools } from "./ConsultingPageTools";
+import { StructuredData } from "@/components/structured-data";
 import {
   BrainCircuitIcon,
   RocketIcon,
@@ -212,9 +213,55 @@ Results: 3.5x average ROI within 18 months, 60% reduction in operational costs, 
 Contact: Free consultation available at /contact page.
 `;
 
+// Service Schema for Consulting Page - Bing loves structured data!
+const consultingServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "AI Strategy & Implementation Consulting",
+  "name": "AI Strategy & Implementation Consulting",
+  "description": "End-to-end AI consulting services from strategy development to production deployment. We help Fortune 500 companies and innovative enterprises identify opportunities, build roadmaps, and deliver measurable results with 3.5x average ROI within 18 months.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Overture Systems Solutions",
+    "url": "https://new-oss.vercel.app"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "United States"
+  },
+  "serviceOutput": [
+    "Strategic AI roadmaps",
+    "Custom AI solutions",
+    "ROI analysis and projections",
+    "AI implementation and integration",
+    "Model optimization and tuning",
+    "Team training and enablement",
+    "AI governance frameworks"
+  ],
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Fortune 500 companies, Enterprise organizations, Technology companies"
+  },
+  "offers": {
+    "@type": "Offer",
+    "description": "Free 30-minute consultation available",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "200",
+    "bestRating": "5"
+  }
+};
+
 export default function AIConsultingPage() {
   return (
     <>
+      {/* Service Schema for SEO - Bing and Google recognition */}
+      <StructuredData data={consultingServiceSchema} />
+      
       {/* AI Context - Provides page-specific information to the AI */}
       {/* Note: Global AI tools (consultation form, services, status) are available from the layout */}
       <PageAiContext 

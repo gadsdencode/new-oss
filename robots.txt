@@ -30,5 +30,5 @@ Allow: /
 # Add more AI user-agents as needed (e.g., from momenticmarketing.com/blog/ai-search-crawlers-bots)
 # If privacy concerns arise, change to Disallow: / for specific bots
 
-# Sitemap Directive: Omit until created; suggested: Sitemap: https://new-oss.vercel.app/sitemap.xml
-# For full optimization, generate sitemap.xml listing all pages, including .md and llms.txt
+# Sitemap Directive: Points crawlers to the sitemap location
+Sitemap: https://new-oss.vercel.app/sitemap.xml

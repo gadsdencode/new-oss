@@ -7,6 +7,7 @@ import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
+import { StructuredData } from "@/components/structured-data";
 import {
   MailIcon,
   PhoneIcon,
@@ -110,6 +111,38 @@ const faqs = [
   },
 ];
 
+// FAQPage Schema for Contact Page - Bing loves structured data for rich snippets!
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What's your typical response time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We respond to all inquiries within 24 hours during business days."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you offer free consultations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! We offer a free 30-minute initial consultation to discuss your needs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What industries do you serve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We specialize in healthcare, non-profits, finance, and technology sectors."
+      }
+    }
+  ]
+};
+
 export default function ContactPage() {
   // Provide context to the AI agent about contact information
   useCopilotReadable({
@@ -196,6 +229,9 @@ export default function ContactPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
+      {/* FAQPage Schema for SEO - Bing and Google rich snippets */}
+      <StructuredData data={faqPageSchema} />
+      
       {/* Home Button */}
       <HomeButton />
 
