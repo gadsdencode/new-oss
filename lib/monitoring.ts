@@ -63,20 +63,35 @@ class ConsoleMonitoring implements MonitoringService {
  * To use: npm install @sentry/nextjs
  */
 class SentryMonitoring implements MonitoringService {
-  private sentry: any;
+  private _sentry: any | null = null;
 
-  constructor() {
-    try {
-      // Dynamic import to avoid errors if Sentry is not installed
-      this.sentry = require("@sentry/nextjs");
-    } catch {
-      // Fallback to console if Sentry is not installed
-      this.sentry = null;
+  private get sentry(): any | null {
+    if (this._sentry !== undefined) {
+      return this._sentry;
     }
+    
+    // Lazy load Sentry only when needed and only on server-side
+    if (typeof window === "undefined") {
+      try {
+        // Use dynamic import pattern that webpack can't statically analyze
+        // Split the module name to prevent static analysis
+        const parts = ["@sentry", "/nextjs"];
+        const moduleName = parts.join("");
+        // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+        this._sentry = require(moduleName);
+      } catch {
+        this._sentry = null;
+      }
+    } else {
+      this._sentry = null;
+    }
+    
+    return this._sentry;
   }
 
   logError(error: Error | unknown, context?: ErrorContext, severity: ErrorSeverity = "high"): void {
-    if (!this.sentry) {
+    const sentryInstance = this.sentry;
+    if (!sentryInstance) {
       // Fallback to console
       new ConsoleMonitoring().logError(error, context, severity);
       return;
@@ -85,7 +100,7 @@ class SentryMonitoring implements MonitoringService {
     const errorObj = error instanceof Error ? error : new Error(String(error));
     const sentrySeverity = this.mapSeverity(severity);
 
-    this.sentry.captureException(errorObj, {
+    sentryInstance.captureException(errorObj, {
       level: sentrySeverity,
       tags: {
         errorCode: context?.errorCode,
@@ -104,13 +119,14 @@ class SentryMonitoring implements MonitoringService {
   }
 
   logMessage(message: string, context?: ErrorContext, level: "info" | "warn" | "error" = "info"): void {
-    if (!this.sentry) {
+    const sentryInstance = this.sentry;
+    if (!sentryInstance) {
       new ConsoleMonitoring().logMessage(message, context, level);
       return;
     }
 
     const sentryLevel = level === "error" ? "error" : level === "warn" ? "warning" : "info";
-    this.sentry.captureMessage(message, {
+    sentryInstance.captureMessage(message, {
       level: sentryLevel,
       extra: context,
     });
