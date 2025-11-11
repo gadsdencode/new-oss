@@ -53,7 +53,7 @@ const socialLinks = [
   {
     icon: LinkedinIcon,
     label: "LinkedIn",
-    href: "https://linkedin.com",
+    href: "https://www.linkedin.com/company/overture-systems-solutions",
   },
   {
     icon: TwitterIcon,
