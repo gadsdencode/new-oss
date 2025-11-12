@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { amount, currency } = body;
+    const { amount, currency, metadata, customer_email } = body;
 
     // Validate amount
     if (typeof amount !== "number" || amount <= 0) {
@@ -75,20 +75,33 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create payment intent
-    logMessage(
-      "Creating payment intent",
-      { ...context, amount, currency },
-      "info"
-    );
-
-    const paymentIntent = await stripe.paymentIntents.create({
+    // Build payment intent parameters
+    const paymentIntentParams: Stripe.PaymentIntentCreateParams = {
       amount: Math.round(amount),
       currency: currency.toLowerCase(),
       automatic_payment_methods: {
         enabled: true,
       },
-    });
+    };
+
+    // Add metadata if provided (useful for linking payments to users)
+    if (metadata && typeof metadata === "object") {
+      paymentIntentParams.metadata = metadata;
+    }
+
+    // Add customer email if provided (helps with webhook processing)
+    if (customer_email && typeof customer_email === "string") {
+      paymentIntentParams.receipt_email = customer_email;
+    }
+
+    // Create payment intent
+    logMessage(
+      "Creating payment intent",
+      { ...context, amount, currency, hasMetadata: !!metadata, hasCustomerEmail: !!customer_email },
+      "info"
+    );
+
+    const paymentIntent = await stripe.paymentIntents.create(paymentIntentParams);
 
     logMessage(
       "Payment intent created successfully",
