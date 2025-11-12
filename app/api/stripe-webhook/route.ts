@@ -70,23 +70,33 @@ async function handlePaymentIntentSucceeded(
   );
 
   // Extract customer information
-  const customerEmail =
-    paymentIntent.customer && typeof paymentIntent.customer === "string"
-      ? null // We'll need to fetch the customer to get email
-      : paymentIntent.customer && typeof paymentIntent.customer === "object"
-      ? paymentIntent.customer.email || null
-      : null;
+  // paymentIntent.customer can be: string (customer ID), Customer object, DeletedCustomer object, or null
+  let customerId: string | null = null;
+  let customerEmailInitial: string | null = null;
 
-  const customerId =
-    typeof paymentIntent.customer === "string"
-      ? paymentIntent.customer
-      : paymentIntent.customer?.id || null;
+  if (typeof paymentIntent.customer === "string") {
+    // Customer is just an ID string
+    customerId = paymentIntent.customer;
+  } else if (paymentIntent.customer && typeof paymentIntent.customer === "object") {
+    // Customer is an object - check if it's deleted
+    const customerObj = paymentIntent.customer;
+    if ("deleted" in customerObj && customerObj.deleted) {
+      // It's a DeletedCustomer - we can't access email
+      customerId = customerObj.id;
+    } else {
+      // It's a Customer object - TypeScript now knows it's not deleted
+      // We can safely access email property
+      const customer = customerObj as Stripe.Customer;
+      customerId = customer.id;
+      customerEmailInitial = customer.email || null;
+    }
+  }
 
-  // Fetch customer details if we have a customer ID
-  let customerEmailFinal = customerEmail;
+  // Fetch customer details if we have a customer ID but no email
+  let customerEmailFinal = customerEmailInitial;
   let customerName: string | null = null;
 
-  if (customerId && stripe) {
+  if (customerId && stripe && !customerEmailFinal) {
     try {
       const customer = await stripe.customers.retrieve(customerId);
       if (!customer.deleted && "email" in customer) {
