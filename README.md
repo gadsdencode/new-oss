@@ -50,6 +50,13 @@ npm run dev
 - ✅ Context-aware responses using `useCopilotReadable`
 - ✅ Powered by Google Gemini
 
+### **API-as-a-Service (NEW!)**
+- 🔌 **RESTful API** - Discoverable by other AI assistants
+- 📋 **OpenAPI Specification** - Ready for GPT Actions & Copilot Connectors
+- 🔐 **Secure Authentication** - API key-based access control
+- 📊 **Service Discovery** - Programmatic access to services and information
+- 📅 **Consultation Booking** - AI assistants can book consultations on behalf of users
+
 ### **Pages with AI Context**
 - 🏠 **Homepage** - Company overview and services
 - 💼 **Consulting** - AI consulting services and expertise
@@ -75,11 +82,20 @@ GEMINI_API_KEY=your_gemini_api_key_here
 # Alternative (if not using GEMINI_API_KEY)
 GOOGLE_API_KEY=your_google_api_key_here
 
+# Required for API endpoints: API Key for external AI integrations
+# Generate with: openssl rand -hex 32
+API_KEY=your_secure_api_key_here
+
 # Optional: CopilotKit License
 NEXT_PUBLIC_COPILOT_LICENSE_KEY=your_copilotkit_license_key
 ```
 
-**Get your API key:** https://aistudio.google.com/app/apikey
+**Get your Gemini API key:** https://aistudio.google.com/app/apikey
+
+**Generate API key for external integrations:**
+```bash
+openssl rand -hex 32
+```
 
 ## 📦 Scripts
 
@@ -117,6 +133,7 @@ npm run lint         # Run ESLint
 |----------|----------|-------------|
 | `GEMINI_API_KEY` | ✅ Yes | Google Gemini API key |
 | `GOOGLE_API_KEY` | Alternative | Alternative to GEMINI_API_KEY |
+| `API_KEY` | ✅ Yes (for API) | API key for external AI integrations (GPT Actions, Copilot Connectors) |
 
 ## 🧪 Testing
 
@@ -153,15 +170,24 @@ new-oss/
 │   ├── research/              # Research page
 │   ├── compliance/            # Compliance page
 │   ├── contact/               # Contact page
-│   ├── api/copilotkit/        # CopilotKit API route
+│   ├── api/
+│   │   ├── copilotkit/        # CopilotKit API route
+│   │   └── v1/                # RESTful API v1
+│   │       ├── services/      # Service discovery endpoints
+│   │       ├── consultations/ # Consultation booking
+│   │       └── status/        # System status
 │   ├── layout.tsx             # Root layout
 │   └── globals.css            # Global styles
 ├── components/                 # React components
 │   ├── ui/                    # shadcn/ui components
 │   └── ...
 ├── lib/                       # Utility functions
+│   ├── api-auth.ts            # API authentication
 │   ├── errors.ts              # Error handling
 │   └── utils.ts               # General utilities
+├── docs/                      # Documentation
+│   └── API_REGISTRATION_GUIDE.md  # GPT Actions & Copilot registration
+├── openapi.yaml               # OpenAPI specification (Rosetta Stone)
 ├── public/                    # Static assets
 ├── .env.local                 # Environment variables (git-ignored)
 └── package.json               # Dependencies
@@ -214,8 +240,38 @@ export default function Page() {
 
 ## 📚 Documentation
 
+- `docs/API_REGISTRATION_GUIDE.md` - **NEW!** Guide to register API as GPT Action or Copilot Connector
+- `openapi.yaml` - OpenAPI 3.1.0 specification for AI integrations
 - `VERCEL_DEPLOYMENT.md` - Detailed deployment guide
 - `VERCEL_CHECKLIST.md` - Pre-deployment checklist
+
+## 🔌 API Endpoints
+
+The project now exposes a RESTful API that can be discovered by AI assistants:
+
+### **Available Endpoints**
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/services` | GET | List all available services |
+| `/api/v1/services/{serviceId}` | GET | Get detailed service information |
+| `/api/v1/consultations` | POST | Book a consultation |
+| `/api/v1/status` | GET | Check system health |
+
+### **Authentication**
+
+All API endpoints require an `X-API-Key` header:
+```bash
+curl -H "X-API-Key: your-api-key" \
+  https://your-domain.vercel.app/api/v1/services
+```
+
+### **Register as AI Tool**
+
+See `docs/API_REGISTRATION_GUIDE.md` for instructions on:
+- Registering as an OpenAI GPT Action
+- Registering as a Microsoft Copilot Connector
+- Testing and verification steps
 
 ## 🐛 Troubleshooting
 

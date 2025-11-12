@@ -1,0 +1,547 @@
+openapi: 3.1.0
+info:
+  title: Overture Systems API
+  description: |
+    API for Overture Systems - AI Strategy & Implementation, B2B Research Platform, and Compliance Services.
+    
+    This API enables AI assistants (GPT Actions, Microsoft Copilot Connectors) to:
+    - Discover available services
+    - Get detailed service information
+    - Book consultations
+    - Check system status
+    
+    **Authentication**: All endpoints require an API key provided in the `X-API-Key` header.
+    
+    **Base URL**: The base URL for all API requests. In production, this will be your deployed domain (e.g., `https://new-oss.vercel.app`).
+  version: 1.0.0
+  contact:
+    name: Overture Systems Support
+    url: https://new-oss.vercel.app/contact
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://new-oss.vercel.app
+    description: Production server
+  - url: http://localhost:3000
+    description: Local development server
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: Services
+    description: Service discovery and information endpoints
+  - name: Consultations
+    description: Consultation booking endpoints
+  - name: System
+    description: System health and status endpoints
+
+paths:
+  /api/v1/services:
+    get:
+      tags:
+        - Services
+      summary: List all services
+      description: |
+        Returns a list of all available Overture Systems services including:
+        - AI Strategy & Implementation (Consulting)
+        - B2B Research Platform
+        - Compliance & Security
+        
+        Each service includes details about features, industries served, and results.
+      operationId: listServices
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServicesResponse'
+              example:
+                success: true
+                data:
+                  - id: consulting
+                    name: AI Strategy & Implementation
+                    description: End-to-end AI consulting from strategy development to production deployment.
+                    category: Consulting
+                    features:
+                      - Strategic Planning
+                      - Custom Solutions
+                      - ROI Optimization
+                meta:
+                  total: 3
+                  timestamp: "2024-01-15T10:30:00Z"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/services/{serviceId}:
+    get:
+      tags:
+        - Services
+      summary: Get service details
+      description: |
+        Returns detailed information about a specific service.
+        
+        Available service IDs:
+        - `consulting` - AI Strategy & Implementation
+        - `research` - B2B Research Platform
+        - `compliance` - Compliance & Security
+      operationId: getServiceDetails
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          description: The ID of the service to retrieve
+          schema:
+            type: string
+            enum: [consulting, research, compliance]
+          example: consulting
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+              example:
+                success: true
+                data:
+                  id: consulting
+                  name: AI Strategy & Implementation
+                  description: End-to-end AI consulting from strategy development to production deployment.
+                  category: Consulting
+                  subServices:
+                    - id: strategy-roadmap
+                      name: AI Strategy & Roadmap
+                      description: Develop comprehensive AI strategies aligned with your business objectives.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/consultations:
+    post:
+      tags:
+        - Consultations
+      summary: Book a consultation
+      description: |
+        Books a consultation with Overture Systems. This endpoint allows AI assistants to
+        book consultations on behalf of users.
+        
+        The consultation request will be stored in the system and the Overture team will
+        follow up via email.
+      operationId: bookConsultation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsultationRequest'
+            example:
+              name: John Doe
+              email: john.doe@example.com
+              company: Acme Corporation
+              phone: "+1-555-123-4567"
+              message: I'm interested in learning more about your AI consulting services for my healthcare organization.
+      responses:
+        '201':
+          description: Consultation request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsultationResponse'
+              example:
+                success: true
+                message: Consultation request submitted successfully
+                data:
+                  submittedAt: "2024-01-15T10:30:00Z"
+                  name: John Doe
+                  email: john.doe@example.com
+        '400':
+          description: Validation error or invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: Validation Error
+                message: Missing required fields. Required: name, email, message
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: Rate Limit Exceeded
+                message: Too many requests. Please try again later.
+                retryAfter: 60
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/status:
+    get:
+      tags:
+        - System
+      summary: Get system status
+      description: |
+        Returns system health and status information. Useful for AI integrations to
+        verify service availability before making requests.
+      operationId: getSystemStatus
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+              example:
+                success: true
+                data:
+                  status: operational
+                  timestamp: "2024-01-15T10:30:00Z"
+                  services:
+                    database:
+                      status: healthy
+                      configured: true
+                    ai_endpoint:
+                      status: healthy
+                      configured: true
+                    api_auth:
+                      status: healthy
+                      configured: true
+                  version: "1.0.0"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: |
+        API key for authentication. Get your API key from Overture Systems.
+        
+        Include this header in all requests:
+        ```
+        X-API-Key: your-api-key-here
+        ```
+
+  schemas:
+    ServicesResponse:
+      type: object
+      required:
+        - success
+        - data
+        - meta
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    ServiceResponse:
+      type: object
+      required:
+        - success
+        - data
+        - meta
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/Service'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    Service:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - category
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the service
+          example: consulting
+        name:
+          type: string
+          description: Service name
+          example: AI Strategy & Implementation
+        description:
+          type: string
+          description: Detailed service description
+          example: End-to-end AI consulting from strategy development to production deployment.
+        category:
+          type: string
+          description: Service category
+          example: Consulting
+        href:
+          type: string
+          description: URL path to the service page
+          example: /consulting
+        features:
+          type: array
+          items:
+            type: string
+          description: List of key features
+          example:
+            - Strategic Planning
+            - Custom Solutions
+            - ROI Optimization
+        subServices:
+          type: array
+          items:
+            type: object
+          description: Sub-services or service offerings (for consulting service)
+        industries:
+          type: array
+          items:
+            type: string
+          description: Industries served by this service
+          example:
+            - Healthcare
+            - Financial Services
+        results:
+          type: object
+          description: Service results and metrics
+        useCases:
+          type: object
+          description: Use cases by industry (for research service)
+        standards:
+          type: array
+          items:
+            type: object
+          description: Compliance standards (for compliance service)
+
+    ConsultationRequest:
+      type: object
+      required:
+        - name
+        - email
+        - message
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 255
+          description: Contact person's full name
+          example: John Doe
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          description: Contact person's email address
+          example: john.doe@example.com
+        company:
+          type: string
+          maxLength: 255
+          description: Company name (optional)
+          example: Acme Corporation
+        phone:
+          type: string
+          maxLength: 50
+          description: Phone number (optional, supports international formats)
+          example: "+1-555-123-4567"
+        subject:
+          type: string
+          maxLength: 255
+          description: Subject line (optional, defaults to "AI Consultation Request")
+          example: AI Strategy Consultation
+        message:
+          type: string
+          minLength: 10
+          maxLength: 5000
+          description: Consultation request message
+          example: I'm interested in learning more about your AI consulting services.
+
+    ConsultationResponse:
+      type: object
+      required:
+        - success
+        - message
+        - data
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Consultation request submitted successfully
+        data:
+          type: object
+          required:
+            - submittedAt
+            - name
+            - email
+          properties:
+            submittedAt:
+              type: string
+              format: date-time
+              description: ISO 8601 timestamp of submission
+              example: "2024-01-15T10:30:00Z"
+            name:
+              type: string
+              example: John Doe
+            email:
+              type: string
+              format: email
+              example: john.doe@example.com
+
+    StatusResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          required:
+            - status
+            - timestamp
+            - services
+            - version
+          properties:
+            status:
+              type: string
+              enum: [operational, degraded, down]
+              description: Overall system status
+              example: operational
+            timestamp:
+              type: string
+              format: date-time
+              description: ISO 8601 timestamp of status check
+              example: "2024-01-15T10:30:00Z"
+            services:
+              type: object
+              properties:
+                database:
+                  $ref: '#/components/schemas/ServiceStatus'
+                ai_endpoint:
+                  $ref: '#/components/schemas/ServiceStatus'
+                api_auth:
+                  $ref: '#/components/schemas/ServiceStatus'
+            version:
+              type: string
+              description: API version
+              example: "1.0.0"
+
+    ServiceStatus:
+      type: object
+      required:
+        - status
+        - configured
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, down]
+          description: Service health status
+          example: healthy
+        configured:
+          type: boolean
+          description: Whether the service is configured
+          example: true
+
+    ResponseMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of items (for list responses)
+          example: 3
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of response
+          example: "2024-01-15T10:30:00Z"
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+        - message
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: Error type or code
+          example: Validation Error
+        message:
+          type: string
+          description: Human-readable error message
+          example: Missing required fields. Required: name, email, message
+        details:
+          oneOf:
+            - type: array
+              items:
+                type: string
+            - type: object
+          description: Additional error details
+          example:
+            name: missing
+            email: missing
+        retryAfter:
+          type: integer
+          description: Seconds to wait before retrying (for rate limit errors)
+          example: 60
+
+  responses:
+    Unauthorized:
+      description: Authentication failed - invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Unauthorized
+            message: Invalid or missing API key. Please provide a valid API key in the X-API-Key header.
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Not Found
+            message: Service with ID "invalid-id" not found. Available services: consulting, research, compliance
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Internal Server Error
+            message: Failed to process request. Please try again later.
+
