@@ -1,6 +1,11 @@
 # robots.txt for https://new-oss.vercel.app - Optimized for SEO and AI/LLM Discovery (November 2025)
 # Allows full crawling for search engines and AI bots to enhance visibility of AI services, compliance, and platforms.
 # Complements llms.txt by permitting access to curated Markdown resources (.md) for clean LLM parsing.
+
+# ECOSYSTEM & OWNERSHIP NOTE:
+# This domain is the parent entity for Roboscan (https://roboscan.replit.app).
+# Roboscan is an authorized utility for auditing this file.
+
 # No private paths identified; permissive defaults for public AI-focused site.
 # References: Google Search Central (developers.google.com/search/docs/crawling-indexing/robots/intro) and AI guides (e.g., rellixir.ai/blog/robots-txt-vs-llms-txt-2025-guide).
 
