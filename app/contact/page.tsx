@@ -247,41 +247,8 @@ export default function ContactPage() {
         </div>
       </header>
 
-      {/* Contact Methods Grid */}
-      <section className="py-16 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {contactMethods.map((method, idx) => (
-              <Link key={idx} href={method.href}>
-                <Card className={cn(
-                  "h-full border-2 hover:border-primary/50 transition-all hover:shadow-lg cursor-pointer group",
-                  "hover:scale-105 duration-200"
-                )}>
-                  <div className={cn("h-2 bg-gradient-to-r", method.color)} />
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <method.icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                    </div>
-                    <CardTitle className="text-lg">{method.title}</CardTitle>
-                    <CardDescription className="font-medium text-foreground mt-1">
-                      {method.detail}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">{method.description}</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Main Contact Form + Info Section */}
-      <section className="py-20">
+      {/* Main Contact Form + Info Section - Moved to top for visibility */}
+      <section className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Contact Form */}
@@ -359,6 +326,45 @@ export default function ContactPage() {
                 </CardContent>
               </Card>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Methods Grid */}
+      <section className="py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <Badge variant="secondary" className="mb-4">Other Ways to Reach Us</Badge>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
+              Additional Contact Options
+            </h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {contactMethods.map((method, idx) => (
+              <Link key={idx} href={method.href}>
+                <Card className={cn(
+                  "h-full border-2 hover:border-primary/50 transition-all hover:shadow-lg cursor-pointer group",
+                  "hover:scale-105 duration-200"
+                )}>
+                  <div className={cn("h-2 bg-gradient-to-r", method.color)} />
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                        <method.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                    </div>
+                    <CardTitle className="text-lg">{method.title}</CardTitle>
+                    <CardDescription className="font-medium text-foreground mt-1">
+                      {method.detail}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">{method.description}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

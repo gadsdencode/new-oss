@@ -378,48 +378,48 @@ export default function AIPage() {
 
       {/* Hero Section */}
       <header className="relative flex min-h-[65vh] items-center justify-center overflow-hidden bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-cyan-500/20 dark:from-purple-500/10 dark:via-pink-500/5 dark:to-cyan-500/10">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear_gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-20">
           <Badge variant="outline" className="mb-4 border-primary text-primary px-4 py-1.5">
             <BrainCircuitIcon className="w-3 h-3 mr-2 inline" />
-            Leading AI Models 2025
+            Custom LLM Solutions
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
-            Discover the
+            Build Your
             <span className="block mt-2 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 dark:from-purple-400 dark:via-pink-400 dark:to-cyan-400 bg-clip-text text-transparent">
-              Leading AI Models
+              Custom AI Solution
             </span>
           </h1>
           <p className="mt-6 text-xl sm:text-2xl leading-8 text-muted-foreground max-w-3xl mx-auto">
-            Explore the cutting-edge AI models shaping the industry in 2025. From Claude 4's coding excellence to Gemini 2.5's reasoning dominance, discover which model fits your needs.
+            Create tailored LLM solutions powered by the latest foundation models. From Mistral Large 3 to Llama 4, we fine-tune and deploy custom AI systems built for your specific business needs.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" className="text-lg px-8" asChild>
-              <Link href="#models">Explore Models</Link>
+              <Link href="#calculator">Get Your Estimate</Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-8" asChild>
-              <Link href="/consulting">Get AI Consulting</Link>
+              <Link href="/contact">Schedule Consultation</Link>
             </Button>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              <span>10+ Leading Models</span>
+              <span>14+ Foundation Models</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              <span>Updated 2025 Information</span>
+              <span>Custom Fine-Tuning</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              <span>Performance Benchmarks</span>
+              <span>Enterprise Deployment</span>
             </div>
           </div>
         </div>
       </header>
 
       {/* LLM Cost Estimator Section */}
-      <section className="py-20 bg-gradient-to-b from-background to-primary/5">
+      <section id="calculator" className="py-20 bg-gradient-to-b from-background to-primary/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge variant="secondary" className="mb-4">
