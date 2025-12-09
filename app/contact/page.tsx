@@ -34,7 +34,7 @@ const contactMethods = [
   {
     icon: PhoneIcon,
     title: "Call Us",
-    detail: "+1 (555) 123-4567",
+    detail: "+1 (804) 256-3735",
     description: "Mon-Fri from 9am to 6pm EST",
     href: "tel:+15551234567",
     color: "from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10",
@@ -151,7 +151,7 @@ export default function ContactPage() {
         },
         {
           type: "Phone",
-          value: "+1 (555) 123-4567",
+          value: "+1 (804) 256-3735",
           description: "Call us during business hours",
           availability: "Mon-Fri, 9am-6pm EST"
         },
