@@ -42,7 +42,7 @@ const organizationSchema = {
     "@type": "ContactPoint",
     "telephone": "+1-555-123-4567",
     "contactType": "Customer Service",
-    "email": "hello@overturesystems.com",
+    "email": "jordan.martens@osscontact.com",
     "areaServed": "US",
     "availableLanguage": ["English"]
   },

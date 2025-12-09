@@ -26,9 +26,9 @@ const contactMethods = [
   {
     icon: MailIcon,
     title: "Email Us",
-    detail: "hello@overturesystems.com",
+    detail: "jordan.martens@osscontact.com",
     description: "Send us an email anytime",
-    href: "mailto:hello@overturesystems.com",
+    href: "mailto:jordan.martens@osscontact.com",
     color: "from-blue-500/20 to-cyan-500/20 dark:from-blue-500/10 dark:to-cyan-500/10",
   },
   {
@@ -145,9 +145,9 @@ export default function ContactPage() {
       contactMethods: [
         {
           type: "Email",
-          value: "hello@overturesystems.com",
+          value: "jordan.martens@osscontact.com",
           description: "Send us an email anytime",
-          availability: "24/7 email monitoring"
+          availability: "Responds within 24 hours during business days"
         },
         {
           type: "Phone",
