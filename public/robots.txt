@@ -16,20 +16,51 @@ Disallow: /_next/  # Block Next.js build artifacts
 
 Crawl-delay: 2
 
-# AI-Specific Allowances: Permit major LLM crawlers for ethical data inclusion
+# --- AI & LLM CRAWLERS (Explicit Allow List) ---
+
+# OpenAI (ChatGPT / SearchGPT)
 User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: OAI-SearchBot
 Allow: /
 
+# Anthropic (Claude)
 User-agent: ClaudeBot
+User-agent: anthropic-ai
 Allow: /
 
+# Google (Gemini / Vertex AI)
 User-agent: Google-Extended
+User-agent: Google-CloudVertexBot
 Allow: /
 
+# Perplexity (AI Search)
 User-agent: PerplexityBot
 Allow: /
 
-User-agent: ChatGPT-User
+# Meta / Facebook (Llama training)
+User-agent: FacebookBot
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Apple (Apple Intelligence)
+User-agent: Applebot-Extended
+Allow: /
+
+# Amazon (Alexa / Bedrock)
+User-agent: Amazonbot
+Allow: /
+
+# Common Crawl (Foundation Model Training Data)
+User-agent: CCBot
+Allow: /
+
+# Other AI & Research Bots (Cohere, ByteDance, You.com, Diffbot)
+User-agent: cohere-ai
+User-agent: Bytespider
+User-agent: YouBot
+User-agent: Diffbot
+User-agent: AI2Bot
 Allow: /
 
 # Sitemap Directive
