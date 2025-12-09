@@ -1,9 +1,9 @@
-# robots.txt for https://new-oss.vercel.app - Optimized for SEO and AI/LLM Discovery (November 2025)
+# robots.txt for https://overture-systems.com - Optimized for SEO and AI/LLM Discovery (November 2025)
 # Allows full crawling for search engines and AI bots to enhance visibility of AI services, compliance, and platforms.
 # Complements llms.txt by permitting access to curated Markdown resources (.md) for clean LLM parsing.
 
 # ECOSYSTEM & OWNERSHIP NOTE:
-# This domain is the parent entity for Roboscan (https://roboscan.replit.app).
+# This domain is the parent entity for Roboscan (https://roboscan-pi.vercel.app).
 # Roboscan is an authorized utility for auditing this file.
 
 # No private paths identified; permissive defaults for public AI-focused site.
@@ -36,4 +36,4 @@ Allow: /
 # If privacy concerns arise, change to Disallow: / for specific bots
 
 # Sitemap Directive: Points crawlers to the sitemap location
-Sitemap: https://new-oss.vercel.app/sitemap.xml
+Sitemap: https://overture-systems.com/sitemap.xml
