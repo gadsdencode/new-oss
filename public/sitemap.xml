@@ -4,134 +4,60 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   
-  <!-- Main Site Pages -->
   <url>
-    <loc>https://new-oss.vercel.app/</loc>
-    <lastmod>2025-01-27</lastmod>
+    <loc>https://overture-systems.com/</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
-    <loc>https://new-oss.vercel.app/ai</loc>
-    <lastmod>2025-01-27</lastmod>
+    <loc>https://overture-systems.com/ai</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://new-oss.vercel.app/consulting</loc>
-    <lastmod>2025-01-27</lastmod>
+    <loc>https://overture-systems.com/consulting</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://new-oss.vercel.app/research</loc>
-    <lastmod>2025-01-27</lastmod>
+    <loc>https://overture-systems.com/research</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://new-oss.vercel.app/compliance</loc>
-    <lastmod>2025-01-27</lastmod>
+    <loc>https://overture-systems.com/compliance</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://new-oss.vercel.app/contact</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Markdown Files Referenced in llms.txt -->
-  <url>
-    <loc>https://new-oss.vercel.app/about.md</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://new-oss.vercel.app/consulting.md</loc>
-    <lastmod>2025-01-27</lastmod>
+    <loc>https://overture-systems.com/contact</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://new-oss.vercel.app/research.md</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://new-oss.vercel.app/compliance.md</loc>
-    <lastmod>2025-01-27</lastmod>
+    <loc>https://overture-systems.com/llms.txt</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://new-oss.vercel.app/results.md</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://new-oss.vercel.app/contact.md</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://new-oss.vercel.app/case-studies.md</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://new-oss.vercel.app/blog.md</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://new-oss.vercel.app/privacy.md</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://new-oss.vercel.app/faqs.md</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <!-- AI Discovery Files -->
-  <url>
-    <loc>https://new-oss.vercel.app/llms.txt</loc>
-    <lastmod>2025-01-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://new-oss.vercel.app/robots.txt</loc>
-    <lastmod>2025-01-27</lastmod>
+    <loc>https://overture-systems.com/robots.txt</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   
 </urlset>
-

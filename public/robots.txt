@@ -1,39 +1,36 @@
-# robots.txt for https://overture-systems.com - Optimized for SEO and AI/LLM Discovery (November 2025)
-# Allows full crawling for search engines and AI bots to enhance visibility of AI services, compliance, and platforms.
-# Complements llms.txt by permitting access to curated Markdown resources (.md) for clean LLM parsing.
+# robots.txt for https://overture-systems.com - Optimized for SEO and AI/LLM Discovery
+# Allows full crawling for search engines and AI bots to enhance visibility of AI services.
 
 # ECOSYSTEM & OWNERSHIP NOTE:
 # This domain is the parent entity for Roboscan (https://roboscan-pi.vercel.app).
 # Roboscan is an authorized utility for auditing this file.
 
-# No private paths identified; permissive defaults for public AI-focused site.
-# References: Google Search Central (developers.google.com/search/docs/crawling-indexing/robots/intro) and AI guides (e.g., rellixir.ai/blog/robots-txt-vs-llms-txt-2025-guide).
-
 User-agent: *
 Allow: /
 Allow: /llms.txt  # Explicitly allow LLM context file for AI discovery
-Allow: /*.md  # Allow Markdown variants of pages (e.g., /about.md, /consulting.md) for token-efficient LLM consumption
-Disallow: /admin/  # Placeholder: Block any future admin paths (none currently)
-Crawl-delay: 2  # Throttle to 2 seconds per request to respect Vercel resources
 
-# AI-Specific Allowances: Permit major LLM crawlers for ethical data inclusion in training/indexing
-User-agent: GPTBot  # OpenAI's crawler
+# BLOCKED PATHS
+Disallow: /admin/  # Block admin paths
+Disallow: /api/    # Block Next.js API routes
+Disallow: /_next/  # Block Next.js build artifacts
+
+Crawl-delay: 2
+
+# AI-Specific Allowances: Permit major LLM crawlers for ethical data inclusion
+User-agent: GPTBot
 Allow: /
 
-User-agent: ClaudeBot  # Anthropic's crawler
+User-agent: ClaudeBot
 Allow: /
 
-User-agent: Google-Extended  # Google's AI/LLM crawler
+User-agent: Google-Extended
 Allow: /
 
-User-agent: PerplexityBot  # Perplexity AI crawler
+User-agent: PerplexityBot
 Allow: /
 
-User-agent: ChatGPT-User  # OpenAI user-agent for ChatGPT interactions
+User-agent: ChatGPT-User
 Allow: /
 
-# Add more AI user-agents as needed (e.g., from momenticmarketing.com/blog/ai-search-crawlers-bots)
-# If privacy concerns arise, change to Disallow: / for specific bots
-
-# Sitemap Directive: Points crawlers to the sitemap location
+# Sitemap Directive
 Sitemap: https://overture-systems.com/sitemap.xml
