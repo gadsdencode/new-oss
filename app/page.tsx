@@ -157,13 +157,19 @@ export default function Home() {
           {/* Clear CTAs - Primary & Secondary */}
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" className="text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
-              <Link href="/contact">
-                Schedule Consultation
-                <ArrowRight className="ml-2 h-5 w-5" />
+              <Link href="/ai">
+                Order Your Custom AI
+                <BrainCircuitIcon className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
               <Link href="/consulting">Explore Services</Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
+              <Link href="/contact">
+                Schedule Consultation
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
           </div>
           

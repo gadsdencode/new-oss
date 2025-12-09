@@ -7,6 +7,7 @@ import { HomeButton } from "@/components/ui/home-button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { AIPageTools } from "./AIPageTools";
+import { LLMCostEstimator } from "@/components/ai/llm-cost-estimator";
 import {
   BrainCircuitIcon,
   SparklesIcon,
@@ -22,6 +23,7 @@ import {
   CpuIcon,
   DatabaseIcon,
   BarChart3Icon,
+  Calculator,
 } from "lucide-react";
 
 interface AIModel {
@@ -415,6 +417,25 @@ export default function AIPage() {
           </div>
         </div>
       </header>
+
+      {/* LLM Cost Estimator Section */}
+      <section className="py-20 bg-gradient-to-b from-background to-primary/5">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <Badge variant="secondary" className="mb-4">
+              <Calculator className="w-3 h-3 mr-2 inline" />
+              Cost Calculator
+            </Badge>
+            <h2 className="text-4xl font-bold tracking-tight text-foreground">
+              Estimate Your Custom LLM Solution
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              Configure your requirements to get an instant ballpark estimate for your project.
+            </p>
+          </div>
+          <LLMCostEstimator />
+        </div>
+      </section>
 
       {/* Models Overview Section */}
       <section id="models" className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
