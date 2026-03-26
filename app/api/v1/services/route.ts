@@ -106,6 +106,56 @@ export async function GET(request: NextRequest) {
         },
       },
       {
+        id: "web-development",
+        name: "AI-Powered Web Development",
+        description:
+          "Custom website development with integrated AI capabilities including intelligent chatbots, predictive analytics, and smart content management.",
+        category: "Web Development",
+        href: "/web-development",
+        features: ["AI Integration", "Custom Design", "Performance Optimization"],
+        subServices: [
+          {
+            id: "starter-package",
+            name: "Starter Package",
+            description:
+              "Professional website with AI chatbot for small businesses and startups.",
+            features: [
+              "Up to 5 pages",
+              "AI chatbot",
+              "Responsive design",
+              "Basic SEO",
+              "CMS integration",
+            ],
+          },
+          {
+            id: "business-package",
+            name: "Business Package",
+            description:
+              "Advanced website with full AI integration suite for growing companies.",
+            features: [
+              "Up to 15 pages",
+              "Full AI suite",
+              "Custom design system",
+              "Advanced SEO",
+              "Analytics dashboard",
+            ],
+          },
+          {
+            id: "enterprise-package",
+            name: "Enterprise Package",
+            description:
+              "Fully custom enterprise platform with dedicated AI systems and compliance.",
+            features: [
+              "Unlimited pages",
+              "Custom AI systems",
+              "Headless architecture",
+              "SSO/RBAC",
+              "SLA guarantees",
+            ],
+          },
+        ],
+      },
+      {
         id: "compliance",
         name: "Compliance & Security",
         description: "Enterprise-grade security and compliance services. SOC 2 Type II, HIPAA, GDPR, ISO 27001, CCPA, and FedRAMP ready.",

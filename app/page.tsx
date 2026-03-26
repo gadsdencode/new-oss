@@ -79,6 +79,14 @@ const coreServices = [
     href: "https://uterpi.com",
     features: ["Advanced AI Models", "Team Collaboration", "SOC 2 Compliant"],
   },
+  {
+    icon: GlobeIcon,
+    title: "AI-Powered Web Development",
+    description: "Custom websites with built-in AI capabilities. Intelligent chatbots, semantic search, and predictive UX — bundled into every build.",
+    href: "/web-development",
+    features: ["AI Integration", "Custom Design", "Performance Optimization"],
+    badge: "New",
+  },
 ];
 
 export default function Home() {
@@ -107,6 +115,12 @@ export default function Home() {
           description: "Modern AI platform for businesses. Streamline workflows, automate processes, and unlock productivity with cutting-edge AI technology.",
           link: "https://uterpi.com",
           features: ["Advanced AI Models", "Team Collaboration", "SOC 2 Compliant"]
+        },
+        {
+          name: "AI-Powered Web Development",
+          description: "Custom websites with built-in AI capabilities. Intelligent chatbots, semantic search, and predictive UX — bundled into every build.",
+          link: "/web-development",
+          features: ["AI Integration", "Custom Design", "Performance Optimization"]
         }
       ],
       keyStats: {
@@ -232,7 +246,7 @@ export default function Home() {
               The Right Solutions for Your Business
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Four core offerings designed to transform your enterprise with AI
+              Five core offerings designed to transform your enterprise with AI
             </p>
           </div>
           <BentoGrid className="auto-rows-[28rem]">
@@ -270,8 +284,19 @@ export default function Home() {
               cta="Visit Uterpi" 
             />
             <BentoCard 
+              name="AI-Powered Web Development" 
+              className="col-span-1 md:col-span-1 lg:col-span-1" 
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/15 via-primary/10 to-accent/5" />
+              } 
+              Icon={GlobeIcon} 
+              description="Custom websites with built-in AI — chatbots, semantic search, and predictive UX in every build." 
+              href="/web-development" 
+              cta="Explore Web Dev" 
+            />
+            <BentoCard 
               name="Enterprise Compliance" 
-              className="col-span-1 md:col-span-2 lg:col-span-2" 
+              className="col-span-1 md:col-span-2 lg:col-span-1" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/5" />
               } 
@@ -305,7 +330,14 @@ export default function Home() {
                       <service.icon className="h-8 w-8 text-primary" />
                     </div>
                   </div>
-                  <CardTitle className="text-2xl mb-2">{service.title}</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-2xl mb-2">{service.title}</CardTitle>
+                    {"badge" in service && (service as any).badge && (
+                      <Badge className="bg-primary text-primary-foreground text-xs">
+                        {(service as any).badge}
+                      </Badge>
+                    )}
+                  </div>
                   <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
