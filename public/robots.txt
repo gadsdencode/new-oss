@@ -7,7 +7,8 @@
 
 User-agent: *
 Allow: /
-Allow: /llms.txt  # Explicitly allow LLM context file for AI discovery
+Allow: /llms.txt           # Explicitly allow LLM context file for AI discovery
+Allow: /web-development    # AI-Powered Web Development service page
 
 # BLOCKED PATHS
 Disallow: /admin/  # Block admin paths
