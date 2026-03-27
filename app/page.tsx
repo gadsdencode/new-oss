@@ -176,10 +176,13 @@ export default function Home() {
                 <BrainCircuitIcon className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
-              <Link href="/consulting">Explore Services</Link>
+            <Button size="lg" className="text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
+              <Link href="/web-development">
+                Order Your Custom Website
+                <GlobeIcon className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
+            <Button size="lg" className="text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
               <Link href="/contact">
                 Schedule Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />
