@@ -10,6 +10,7 @@ import { CopilotSidebarWrapper } from "./components/copilot-sidebar-wrapper";
 import { ThemeToggleWrapper } from "./components/theme-toggle-wrapper";
 import { GlobalAITools } from "@/components/global-ai-tools";
 import { StructuredData } from "@/components/structured-data";
+import { Analytics } from '@vercel/analytics/next';
 
 // Fallback: Inter ≈ Geist Sans, JetBrains Mono ≈ Geist Mono
 const inter = Inter({
@@ -111,6 +112,7 @@ export default function RootLayout({
             <GlobalAITools />
             <ThemeToggleWrapper />
             {children}
+            <Analytics />
             <CopilotSidebarWrapper />
           </CopilotKit>
         </ThemeProvider>
