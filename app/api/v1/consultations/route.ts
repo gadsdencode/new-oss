@@ -18,7 +18,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
  * {
  *   "name": "John Doe",
  *   "email": "john@example.com",
- *   "company": "Acme Corp" (optional),
+ *   "company": "Example Corp" (optional),
  *   "phone": "+1234567890" (optional),
  *   "message": "I'm interested in AI consulting services"
  * }

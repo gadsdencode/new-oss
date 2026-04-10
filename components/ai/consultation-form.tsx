@@ -109,7 +109,7 @@ export function ConsultationForm({ onSubmit, onCancel }: ConsultationFormProps) 
             <FormItem>
               <FormLabel>Company (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="Acme Inc." {...field} />
+                <Input placeholder="Your Company Name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

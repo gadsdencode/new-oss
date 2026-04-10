@@ -41,7 +41,7 @@ const organizationSchema = {
   "foundingDate": "2020",
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+1-555-123-4567",
+    "telephone": "+1-888-716-3360",
     "contactType": "Customer Service",
     "email": "jordan.martens@osscontact.com",
     "areaServed": "US",

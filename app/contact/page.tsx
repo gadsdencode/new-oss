@@ -19,6 +19,8 @@ import {
   MessageSquareIcon,
   SparklesIcon,
   ArrowRight,
+  HashIcon,
+  UserIcon,
 } from "lucide-react";
 import { ContactForm } from "./contact-form";
 
@@ -34,9 +36,9 @@ const contactMethods = [
   {
     icon: PhoneIcon,
     title: "Call Us",
-    detail: "+1 (804) 256-3735",
-    description: "Mon-Fri from 9am to 6pm EST",
-    href: "tel:+15551234567",
+    detail: "+1 (888) 716-3360",
+    description: "Mon-Fri from 9am to 6pm EST | Extensions available",
+    href: "tel:+18887163360",
     color: "from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10",
   },
   {
@@ -47,6 +49,16 @@ const contactMethods = [
     href: "#chat",
     color: "from-orange-500/20 to-red-500/20 dark:from-orange-500/10 dark:to-red-500/10",
   },
+];
+
+const phoneExtensions = [
+  { ext: "1", department: "Sales", contact: "Brian Frerichs" },
+  { ext: "2", department: "HR", contact: "Brian Frerichs" },
+  { ext: "4", department: "Legal", contact: "Brian Frerichs" },
+  { ext: "5", department: "Consulting Services", contact: "Brian Frerichs" },
+  { ext: "8", department: "All Other Services", contact: "Jordan Martens" },
+  { ext: "103", department: "AI Research", contact: "Samuel Conrad" },
+  { ext: "300", department: "Technical Services", contact: "Jordan Martens" },
 ];
 
 const socialLinks = [
@@ -151,9 +163,15 @@ export default function ContactPage() {
         },
         {
           type: "Phone",
-          value: "+1 (804) 256-3735",
-          description: "Call us during business hours",
-          availability: "Mon-Fri, 9am-6pm EST"
+          value: "+1 (888) 716-3360",
+          description: "Call us during business hours. Extensions available for direct department routing.",
+          availability: "Mon-Fri, 9am-6pm EST",
+          extensions: phoneExtensions.map(e => ({
+            extension: e.ext,
+            department: e.department,
+            contact: e.contact,
+          })),
+          routingInstructions: "When a user asks to speak to a specific department, provide the main number +1 (888) 716-3360 and the relevant extension number."
         },
         {
           type: "Live Chat",
@@ -366,6 +384,49 @@ export default function ContactPage() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Phone Extension Directory */}
+      <section className="pb-16 -mt-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Card className="border-2 overflow-hidden">
+            <div className="h-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10" />
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/10">
+                  <PhoneIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Phone Extension Directory</CardTitle>
+                  <CardDescription>
+                    Call <span className="font-medium text-foreground">+1 (888) 716-3360</span> and dial the extension
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {phoneExtensions.map((item) => (
+                  <div
+                    key={item.ext}
+                    className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
+                  >
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-xs font-bold text-primary">
+                      <HashIcon className="h-3 w-3 mr-0.5" />{item.ext}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium leading-tight truncate">{item.department}</p>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <UserIcon className="h-3 w-3 text-muted-foreground shrink-0" />
+                        <p className="text-xs text-muted-foreground truncate">{item.contact}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

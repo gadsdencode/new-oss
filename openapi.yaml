@@ -145,8 +145,8 @@ paths:
             example:
               name: John Doe
               email: john.doe@example.com
-              company: Acme Corporation
-              phone: "+1-555-123-4567"
+              company: Example Healthcare Inc.
+              phone: "+1-888-716-3360"
               message: I'm interested in learning more about your AI consulting services for my healthcare organization.
       responses:
         '201':
@@ -357,12 +357,12 @@ components:
           type: string
           maxLength: 255
           description: Company name (optional)
-          example: Acme Corporation
+          example: Example Healthcare Inc.
         phone:
           type: string
           maxLength: 50
           description: Phone number (optional, supports international formats)
-          example: "+1-555-123-4567"
+          example: "+1-888-716-3360"
         subject:
           type: string
           maxLength: 255
