@@ -352,10 +352,10 @@ export function AIPageTools() {
     render: ({ status, result, args }) => {
       if (status === "executing") {
         return (
-          <Card className="border-2 border-purple-200 bg-purple-50/50 dark:bg-purple-950/20">
+          <Card className="border-2 border-primary-200 bg-primary-50/50 dark:bg-primary-950/20">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <Loader2 className="h-5 w-5 text-purple-600 animate-spin" />
+                <Loader2 className="h-5 w-5 text-primary-600 animate-spin" />
                 <CardTitle className="text-lg">Comparing AI Models</CardTitle>
               </div>
               <CardDescription>
@@ -371,10 +371,10 @@ export function AIPageTools() {
 
       if (status === "complete" && result) {
         return (
-          <Card className="border-2 border-purple-200 bg-purple-50/50 dark:bg-purple-950/20">
+          <Card className="border-2 border-primary-200 bg-primary-50/50 dark:bg-primary-950/20">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <BarChart3Icon className="h-5 w-5 text-purple-600" />
+                <BarChart3Icon className="h-5 w-5 text-primary-600" />
                 <CardTitle className="text-lg">Model Comparison</CardTitle>
               </div>
               <CardDescription>
@@ -386,7 +386,7 @@ export function AIPageTools() {
               {result.summary && (
                 <div className="p-3 bg-background rounded-lg border">
                   <p className="text-sm font-medium mb-2 flex items-center gap-2">
-                    <SparklesIcon className="h-4 w-4 text-purple-500" />
+                    <SparklesIcon className="h-4 w-4 text-primary-500" />
                     Comparison Summary
                   </p>
                   <p className="text-sm text-muted-foreground">{result.summary}</p>
@@ -474,7 +474,7 @@ export function AIPageTools() {
                   <ul className="space-y-2">
                     {result.keyDifferences.map((diff: string, idx: number) => (
                       <li key={idx} className="flex items-start gap-2 text-xs">
-                        <ArrowRightIcon className="h-3 w-3 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <ArrowRightIcon className="h-3 w-3 text-primary-500 mt-0.5 flex-shrink-0" />
                         <span className="text-muted-foreground">{diff}</span>
                       </li>
                     ))}

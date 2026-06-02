@@ -77,7 +77,7 @@ const AI_FEATURE_META: Record<
   keyof AiFeatures,
   { label: string; icon: React.ElementType; color: string }
 > = {
-  chatbot: { label: "AI Chatbot", icon: MessageSquare, color: "text-purple-500" },
+  chatbot: { label: "AI Chatbot", icon: MessageSquare, color: "text-primary-500" },
   search: { label: "Intelligent Search", icon: Search, color: "text-cyan-500" },
   recommendations: { label: "Content Recommendations", icon: Sparkles, color: "text-orange-500" },
   analytics: { label: "Predictive Analytics", icon: BarChart3, color: "text-green-500" },
@@ -148,7 +148,7 @@ export function WebDevCostEstimator() {
         <Card className="overflow-hidden">
           <CardHeader className="pb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-cyan-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500/20 to-cyan-500/20">
                 <Globe className="h-5 w-5 text-primary" />
               </div>
               <CardTitle className="text-lg">Site Type</CardTitle>
@@ -184,7 +184,7 @@ export function WebDevCostEstimator() {
         <Card className="overflow-hidden">
           <CardHeader className="pb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-pink-500/20 to-purple-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-accent-500/20 to-primary-500/20">
                 <FileText className="h-5 w-5 text-primary" />
               </div>
               <CardTitle className="text-lg">Page Count</CardTitle>
@@ -219,7 +219,7 @@ export function WebDevCostEstimator() {
         <Card className="overflow-hidden">
           <CardHeader className="pb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500/20 to-pink-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500/20 to-accent-500/20">
                 <Sparkles className="h-5 w-5 text-primary" />
               </div>
               <CardTitle className="text-lg">AI Features</CardTitle>
@@ -263,7 +263,7 @@ export function WebDevCostEstimator() {
         <Card className="overflow-hidden">
           <CardHeader className="pb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-primary-500/20">
                 <Paintbrush className="h-5 w-5 text-primary" />
               </div>
               <CardTitle className="text-lg">Add-ons</CardTitle>
@@ -288,9 +288,9 @@ export function WebDevCostEstimator() {
             </div>
 
             {/* Custom Design */}
-            <div className="flex items-center justify-between space-x-4 p-4 rounded-lg bg-gradient-to-r from-pink-500/5 to-transparent border border-primary/10">
+            <div className="flex items-center justify-between space-x-4 p-4 rounded-lg bg-gradient-to-r from-accent-500/5 to-transparent border border-primary/10">
               <div className="flex items-start gap-3">
-                <Paintbrush className="h-5 w-5 text-pink-500 mt-0.5" />
+                <Paintbrush className="h-5 w-5 text-accent-500 mt-0.5" />
                 <div className="space-y-1">
                   <Label htmlFor="design-switch" className="text-sm font-medium cursor-pointer">
                     Fully Custom Design
@@ -330,10 +330,10 @@ export function WebDevCostEstimator() {
       {/* Right Column — Sticky Summary */}
       <div className="lg:col-span-2">
         <div className="sticky top-24 space-y-6">
-          <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-purple-500/5 via-card to-cyan-500/5">
+          <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-primary-500/5 via-card to-secondary-500/5">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-cyan-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-600 to-secondary-600">
                   <Calculator className="h-5 w-5 text-white" />
                 </div>
                 <CardTitle className="text-lg">Cost Summary</CardTitle>
@@ -344,7 +344,7 @@ export function WebDevCostEstimator() {
               {/* Total */}
               <div className="text-center py-4">
                 <p className="text-sm text-muted-foreground mb-2">Estimated Project Cost</p>
-                <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 bg-clip-text text-transparent">
+                <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary-600 via-accent-600 to-secondary-600 bg-clip-text text-transparent">
                   {formatCurrency(totalSetupCost)}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">One-time implementation cost</p>
@@ -355,7 +355,7 @@ export function WebDevCostEstimator() {
               {/* Breakdown */}
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-purple-500" />
+                  <CheckCircle2 className="h-4 w-4 text-primary-500" />
                   Implementation Breakdown
                 </h4>
                 <div className="space-y-2 text-sm">

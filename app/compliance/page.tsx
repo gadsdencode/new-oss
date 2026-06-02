@@ -86,7 +86,7 @@ const securityFeatures = [
     icon: KeyIcon,
     title: "Multi-Factor Authentication",
     description: "Mandatory MFA with support for TOTP, SMS, and hardware security keys",
-    color: "from-purple-500/20 to-pink-500/20 dark:from-purple-500/10 dark:to-pink-500/10",
+    color: "from-primary-500/20 to-accent-500/20 dark:from-primary-500/10 dark:to-accent-500/10",
   },
   {
     icon: EyeIcon,
@@ -104,7 +104,7 @@ const securityFeatures = [
     icon: ClipboardCheckIcon,
     title: "Compliance Audits",
     description: "Regular third-party security audits and penetration testing",
-    color: "from-indigo-500/20 to-blue-500/20 dark:from-indigo-500/10 dark:to-blue-500/10",
+    color: "from-secondary-500/20 to-primary-500/20 dark:from-secondary-500/10 dark:to-primary-500/10",
   },
   {
     icon: UserCheckIcon,

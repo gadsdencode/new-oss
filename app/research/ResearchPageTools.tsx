@@ -405,10 +405,10 @@ export function ResearchPageTools() {
     render: ({ status, result, args }) => {
       if (status === "executing") {
         return (
-          <Card className="border-2 border-purple-200 bg-purple-50/50 dark:bg-purple-950/20">
+          <Card className="border-2 border-primary-200 bg-primary-50/50 dark:bg-primary-950/20">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <Loader2 className="h-5 w-5 text-purple-600 animate-spin" />
+                <Loader2 className="h-5 w-5 text-primary-600 animate-spin" />
                 <CardTitle className="text-lg">Generating Research Insights</CardTitle>
               </div>
               <CardDescription>
@@ -425,10 +425,10 @@ export function ResearchPageTools() {
 
       if (status === "complete" && result) {
         return (
-          <Card className="border-2 border-purple-200 bg-purple-50/50 dark:bg-purple-950/20">
+          <Card className="border-2 border-primary-200 bg-primary-50/50 dark:bg-primary-950/20">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <BarChart3Icon className="h-5 w-5 text-purple-600" />
+                <BarChart3Icon className="h-5 w-5 text-primary-600" />
                 <CardTitle className="text-lg">Research Insights</CardTitle>
               </div>
               <CardDescription>
@@ -449,7 +449,7 @@ export function ResearchPageTools() {
                   <ul className="space-y-2">
                     {result.keyInsights.map((insight: string, idx: number) => (
                       <li key={idx} className="flex items-start gap-2 text-sm">
-                        <TrendingUpIcon className="h-4 w-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <TrendingUpIcon className="h-4 w-4 text-primary-500 mt-0.5 flex-shrink-0" />
                         <span className="text-foreground">{insight}</span>
                       </li>
                     ))}

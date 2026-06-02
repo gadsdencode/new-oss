@@ -348,7 +348,7 @@ const aiFeatures = [
 ];
 
 const AI_COLOR_MAP: Record<string, string> = {
-  purple: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+  purple: "bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/20",
   cyan: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
   orange: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
   green: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20",

@@ -10,17 +10,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          // Light mode: Rich saturated brand color with crystal-clear readable text (WCAG AAA)
-          "bg-gradient-to-br from-primary-700 via-primary-600 to-primary-700 text-black tracking-wide " +
+          // Light mode: saturated brand gradient with white text (WCAG AA)
+          "bg-gradient-to-br from-primary-700 via-primary-600 to-primary-700 text-white tracking-wide " +
           "text-shadow-button-light shadow-2xl shadow-primary-600/40 border-2 border-primary-800/30 " +
-          "hover:from-primary-800 hover:via-primary-700 hover:to-primary-800 hover:shadow-[0_20px_40px_rgba(67,56,202,0.5)] hover:scale-[1.02] hover:border-primary-900/40 " +
+          "hover:from-primary-800 hover:via-primary-700 hover:to-primary-800 hover:shadow-[0_20px_40px_rgba(0,87,203,0.5)] hover:scale-[1.02] hover:border-primary-900/40 " +
           "active:scale-[0.98] transition-all duration-300 " +
           // Subtle shimmer that doesn't interfere with text readability
           "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-1000 before:pointer-events-none " +
-          // Dark mode: Bright, luminous button that clearly stands out (high visibility)
-          "dark:from-primary-400 dark:to-primary-500 dark:text-white dark:font-bold dark:text-shadow-button-dark " +
-          "dark:shadow-2xl dark:shadow-primary-500/50 dark:border-primary-300/30 " +
-          "dark:hover:from-primary-300 dark:hover:to-primary-400 dark:hover:shadow-[0_0_30px_rgba(99,102,241,0.6)] dark:hover:border-primary-200/40 dark:hover:scale-[1.02] " +
+          // Dark mode: pop on navy without dropping below AA on white text
+          "dark:from-primary-600 dark:via-primary-500 dark:to-primary-600 dark:text-white dark:font-bold dark:text-shadow-button-dark " +
+          "dark:shadow-2xl dark:shadow-primary-500/50 dark:border-primary-400/30 " +
+          "dark:hover:from-primary-500 dark:hover:via-primary-600 dark:hover:to-primary-500 dark:hover:shadow-[0_0_30px_rgba(11,124,255,0.6)] dark:hover:border-primary-300/40 dark:hover:scale-[1.02] " +
           // Dark mode shimmer with enhanced glow
           "dark:before:bg-gradient-to-r dark:before:from-transparent dark:before:via-white/20 dark:before:to-transparent",
         destructive:

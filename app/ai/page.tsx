@@ -161,7 +161,7 @@ const aiModels: AIModel[] = [
       "Academic applications",
     ],
     icon: CpuIcon,
-    color: "from-purple-500/20 to-pink-500/20 dark:from-purple-500/10 dark:to-pink-500/10",
+    color: "from-primary-500/20 to-accent-500/20 dark:from-primary-500/10 dark:to-accent-500/10",
     rating: {
       reasoning: 83.3,
     },
@@ -190,7 +190,7 @@ const aiModels: AIModel[] = [
       "Academic research",
     ],
     icon: DatabaseIcon,
-    color: "from-indigo-500/20 to-violet-500/20 dark:from-indigo-500/10 dark:to-violet-500/10",
+    color: "from-secondary-500/20 to-primary-500/20 dark:from-secondary-500/10 dark:to-primary-500/10",
   },
   {
     name: "Grok 3",
@@ -329,7 +329,7 @@ const aiModels: AIModel[] = [
       "International deployments",
     ],
     icon: BarChart3Icon,
-    color: "from-violet-500/20 to-purple-500/20 dark:from-violet-500/10 dark:to-purple-500/10",
+    color: "from-accent-500/20 to-secondary-500/20 dark:from-accent-500/10 dark:to-secondary-500/10",
   },
 ];
 
@@ -377,8 +377,8 @@ export default function AIPage() {
       <HomeButton />
 
       {/* Hero Section */}
-      <header className="relative flex min-h-[65vh] items-center justify-center overflow-hidden bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-cyan-500/20 dark:from-purple-500/10 dark:via-pink-500/5 dark:to-cyan-500/10">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear_gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+      <header className="relative flex min-h-[65vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary-500/20 via-accent-500/10 to-secondary-500/20 dark:from-primary-500/10 dark:via-accent-500/5 dark:to-secondary-500/10">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-20">
           <Badge variant="outline" className="mb-4 border-primary text-primary px-4 py-1.5">
             <BrainCircuitIcon className="w-3 h-3 mr-2 inline" />
@@ -386,7 +386,7 @@ export default function AIPage() {
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
             Build Your
-            <span className="block mt-2 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 dark:from-purple-400 dark:via-pink-400 dark:to-cyan-400 bg-clip-text text-transparent">
+            <span className="block mt-2 bg-gradient-to-r from-primary-600 via-accent-600 to-secondary-600 dark:from-primary-400 dark:via-accent-400 dark:to-secondary-400 bg-clip-text text-transparent">
               Custom AI Solution
             </span>
           </h1>
@@ -647,7 +647,7 @@ export default function AIPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-cyan-500/20 dark:from-purple-500/10 dark:via-pink-500/5 dark:to-cyan-500/10">
+      <section className="py-24 bg-gradient-to-br from-primary-500/20 via-accent-500/10 to-secondary-500/20 dark:from-primary-500/10 dark:via-accent-500/5 dark:to-secondary-500/10">
         <div className="mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             Need Help Choosing the Right AI Model?

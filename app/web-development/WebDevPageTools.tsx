@@ -398,10 +398,10 @@ export function WebDevPageTools() {
     render: ({ status, result, args }) => {
       if (status === "executing") {
         return (
-          <Card className="border-2 border-purple-200 bg-purple-50/50 dark:bg-purple-950/20">
+          <Card className="border-2 border-primary-200 bg-primary-50/50 dark:bg-primary-950/20">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <Loader2 className="h-5 w-5 text-purple-600 animate-spin" />
+                <Loader2 className="h-5 w-5 text-primary-600 animate-spin" />
                 <CardTitle className="text-lg">Retrieving Process Steps</CardTitle>
               </div>
               <CardDescription>
@@ -417,10 +417,10 @@ export function WebDevPageTools() {
 
       if (status === "complete" && result) {
         return (
-          <Card className="border-2 border-purple-200 bg-purple-50/50 dark:bg-purple-950/20">
+          <Card className="border-2 border-primary-200 bg-primary-50/50 dark:bg-primary-950/20">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <RocketIcon className="h-5 w-5 text-purple-600" />
+                <RocketIcon className="h-5 w-5 text-primary-600" />
                 <CardTitle className="text-lg">Development Process</CardTitle>
               </div>
             </CardHeader>
@@ -463,7 +463,7 @@ export function WebDevPageTools() {
               {result.totalDuration && (
                 <div className="pt-3 border-t">
                   <p className="text-sm text-muted-foreground">
-                    <SparklesIcon className="h-4 w-4 inline mr-1 text-purple-500" />
+                    <SparklesIcon className="h-4 w-4 inline mr-1 text-primary-500" />
                     <span className="font-medium">Total Timeline:</span> {result.totalDuration}
                   </p>
                 </div>

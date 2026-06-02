@@ -13,49 +13,48 @@ const config: Config = {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
-        // Premium Brand Palette: Deep Ocean Blues & Electric Purples
-        // Sophisticated gradient from deep navy to vibrant purple for tech/innovation
+        // Overture Brand Palette: Navy → Electric Blue → Aqua/Teal
         primary: {
-          50: '#f0f4ff',
-          100: '#e0e9ff',
-          200: '#c7d7fe',
-          300: '#a4b9fc',
-          400: '#8193f8',
-          500: '#6366f1', // Indigo-500 - Premium brand primary
-          600: '#4f46e5', // Indigo-600 - Deep brand accent
-          700: '#4338ca', // Indigo-700 - Rich brand depth
-          800: '#3730a3', // Indigo-800 - Professional depth
-          900: '#312e81', // Indigo-900 - Deep authority
-          950: '#1e1b4b', // Indigo-950 - Maximum depth
-          DEFAULT: '#6366f1',
+          50: '#e6f7ff',
+          100: '#daebff',
+          200: '#b7dbff',
+          300: '#a0c3f6',
+          400: '#63a4ff',
+          500: '#0B7CFF', // Electric Blue — brand primary
+          600: '#006cee',
+          700: '#0057cb',
+          800: '#0042b5',
+          900: '#003694',
+          950: '#001272',
+          DEFAULT: '#0B7CFF',
         },
         secondary: {
-          50: '#faf5ff',
-          100: '#f3e8ff',
-          200: '#e9d5ff',
-          300: '#d8b4fe',
-          400: '#c084fc',
-          500: '#a855f7', // Purple-500 - Premium secondary
-          600: '#9333ea', // Purple-600 - Rich secondary
-          700: '#7e22ce', // Purple-700 - Deep secondary
-          800: '#6b21a8', // Purple-800 - Professional secondary
-          900: '#581c87', // Purple-900 - Authority secondary
-          950: '#3b0764', // Purple-950 - Maximum secondary
-          DEFAULT: '#a855f7',
+          50: '#e4fbf8',
+          100: '#d8f0ec',
+          200: '#b2e4de',
+          300: '#9bcdc7',
+          400: '#50b7ad',
+          500: '#00D6C9', // Aqua/Teal — brand secondary
+          600: '#008d82',
+          700: '#00756b',
+          800: '#006159',
+          900: '#004f48',
+          950: '#00332d',
+          DEFAULT: '#00D6C9',
         },
         accent: {
-          50: '#fef3f2',
-          100: '#fee4e2',
-          200: '#fecdca',
-          300: '#fda4af',
-          400: '#fb7185',
-          500: '#f43f5e', // Rose-500 - Energetic accent
-          600: '#e11d48', // Rose-600 - Vibrant accent
-          700: '#be123c', // Rose-700 - Deep accent
-          800: '#9f1239', // Rose-800 - Rich accent
-          900: '#881337', // Rose-900 - Authority accent
-          950: '#4c0519', // Rose-950 - Maximum accent
-          DEFAULT: '#f43f5e',
+          50: '#e4f9ff',
+          100: '#d9edfb',
+          200: '#b3dffb',
+          300: '#9dc8e3',
+          400: '#57addf',
+          500: '#11B7FF', // Cyan — brand accent
+          600: '#007ec3',
+          700: '#0068a5',
+          800: '#005490',
+          900: '#004575',
+          950: '#002756',
+          DEFAULT: '#11B7FF',
         },
         success: {
           50: '#f0fdf4',
@@ -96,15 +95,15 @@ const config: Config = {
           900: '#7f1d1d',
           950: '#450a0a',
         },
-        // Premium brand gradients
+        // Overture brand gradients
         brand: {
-          gradient: 'linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #f43f5e 100%)',
-          gradientSoft: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 50%, rgba(244,63,94,0.1) 100%)',
-          glow: '0 0 20px rgba(99,102,241,0.3), 0 0 40px rgba(168,85,247,0.2)',
-          glowStrong: '0 0 30px rgba(99,102,241,0.5), 0 0 60px rgba(168,85,247,0.3)',
+          gradient: 'linear-gradient(135deg, #0B7CFF 0%, #11B7FF 50%, #00D6C9 100%)',
+          gradientSoft: 'linear-gradient(135deg, rgba(11,124,255,0.1) 0%, rgba(17,183,255,0.1) 50%, rgba(0,214,201,0.1) 100%)',
+          glow: '0 0 20px rgba(11,124,255,0.3), 0 0 40px rgba(0,214,201,0.2)',
+          glowStrong: '0 0 30px rgba(11,124,255,0.5), 0 0 60px rgba(0,214,201,0.3)',
         },
         // Legacy support
-        aiGradient: 'linear-gradient(135deg, #6366f1, #a855f7)',
+        aiGradient: 'linear-gradient(135deg, #0B7CFF, #00D6C9)',
       },
       fontFamily: {
         sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
@@ -151,14 +150,14 @@ const config: Config = {
         '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
         'inner': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
         'none': 'none',
-        // Premium brand shadows
-        'brand': '0 4px 14px rgba(99, 102, 241, 0.25), 0 2px 8px rgba(168, 85, 247, 0.15)',
-        'brand-lg': '0 10px 30px rgba(99, 102, 241, 0.3), 0 4px 12px rgba(168, 85, 247, 0.2)',
-        'brand-xl': '0 20px 50px rgba(99, 102, 241, 0.35), 0 8px 20px rgba(168, 85, 247, 0.25)',
-        'glow': '0 0 15px rgba(99, 102, 241, 0.3)',
-        'glow-lg': '0 0 25px rgba(99, 102, 241, 0.4), 0 0 50px rgba(168, 85, 247, 0.2)',
+        // Overture brand shadows
+        'brand': '0 4px 14px rgba(11, 124, 255, 0.25), 0 2px 8px rgba(0, 214, 201, 0.15)',
+        'brand-lg': '0 10px 30px rgba(11, 124, 255, 0.3), 0 4px 12px rgba(0, 214, 201, 0.2)',
+        'brand-xl': '0 20px 50px rgba(11, 124, 255, 0.35), 0 8px 20px rgba(0, 214, 201, 0.25)',
+        'glow': '0 0 15px rgba(11, 124, 255, 0.3)',
+        'glow-lg': '0 0 25px rgba(11, 124, 255, 0.4), 0 0 50px rgba(0, 214, 201, 0.2)',
         // Legacy support
-        'ai-glow': '0 0 15px rgba(99, 102, 241, 0.3)',
+        'ai-glow': '0 0 15px rgba(11, 124, 255, 0.3)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

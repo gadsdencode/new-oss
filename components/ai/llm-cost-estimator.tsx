@@ -86,7 +86,7 @@ const MODEL_CONFIGS: Record<BaseModel, ModelConfig> = {
     parameters: "70B",
     contextWindow: "128K",
     specialty: "General Purpose",
-    color: "text-indigo-500"
+    color: "text-primary-500"
   },
   "llama-4-scout": { 
     name: "Llama 4 Scout (109B)", 
@@ -98,7 +98,7 @@ const MODEL_CONFIGS: Record<BaseModel, ModelConfig> = {
     parameters: "109B (17B active)",
     contextWindow: "10M",
     specialty: "Long Context",
-    color: "text-violet-500"
+    color: "text-primary-500"
   },
   "llama-4-maverick": { 
     name: "Llama 4 Maverick (400B)", 
@@ -110,7 +110,7 @@ const MODEL_CONFIGS: Record<BaseModel, ModelConfig> = {
     parameters: "400B (17B active)",
     contextWindow: "1M",
     specialty: "Multimodal MoE",
-    color: "text-purple-500"
+    color: "text-primary-500"
   },
   
   // ============ MISTRAL MODELS (Latest 2024-2025) ============
@@ -325,7 +325,7 @@ export function LLMCostEstimator() {
         <Card className="overflow-hidden">
           <CardHeader className="pb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-cyan-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500/20 to-cyan-500/20">
                 <Database className="h-5 w-5 text-primary" />
               </div>
               <CardTitle className="text-lg">Dataset Configuration</CardTitle>
@@ -365,7 +365,7 @@ export function LLMCostEstimator() {
         <Card className="overflow-hidden">
           <CardHeader className="pb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500/20 to-accent-500/20">
                 <Cpu className="h-5 w-5 text-primary" />
               </div>
               <CardTitle className="text-lg">Base Model Selection</CardTitle>
@@ -395,7 +395,7 @@ export function LLMCostEstimator() {
                 
                 {/* Meta Llama Models Group */}
                 <SelectGroup>
-                  <SelectLabel className="flex items-center gap-2 text-indigo-500 mt-2">
+                  <SelectLabel className="flex items-center gap-2 text-primary-500 mt-2">
                     <Brain className="h-3 w-3" />
                     Meta Llama (Latest)
                   </SelectLabel>
@@ -470,7 +470,7 @@ export function LLMCostEstimator() {
         <Card className="overflow-hidden">
           <CardHeader className="pb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-primary-500/20">
                 <Zap className="h-5 w-5 text-primary" />
               </div>
               <CardTitle className="text-lg">Additional Features</CardTitle>
@@ -481,9 +481,9 @@ export function LLMCostEstimator() {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* RAG Toggle */}
-            <div className="flex items-center justify-between space-x-4 p-4 rounded-lg bg-gradient-to-r from-purple-500/5 to-transparent border border-primary/10">
+            <div className="flex items-center justify-between space-x-4 p-4 rounded-lg bg-gradient-to-r from-primary-500/5 to-transparent border border-primary/10">
               <div className="flex items-start gap-3">
-                <Database className="h-5 w-5 text-purple-500 mt-0.5" />
+                <Database className="h-5 w-5 text-primary-500 mt-0.5" />
                 <div className="space-y-1">
                   <Label htmlFor="rag-switch" className="text-sm font-medium cursor-pointer">
                     RAG / Vector Database Setup
@@ -501,9 +501,9 @@ export function LLMCostEstimator() {
             </div>
 
             {/* API Integration Toggle */}
-            <div className="flex items-center justify-between space-x-4 p-4 rounded-lg bg-gradient-to-r from-pink-500/5 to-transparent border border-primary/10">
+            <div className="flex items-center justify-between space-x-4 p-4 rounded-lg bg-gradient-to-r from-accent-500/5 to-transparent border border-primary/10">
               <div className="flex items-start gap-3">
-                <Zap className="h-5 w-5 text-pink-500 mt-0.5" />
+                <Zap className="h-5 w-5 text-accent-500 mt-0.5" />
                 <div className="space-y-1">
                   <Label htmlFor="api-switch" className="text-sm font-medium cursor-pointer">
                     Custom API Endpoint Development
@@ -552,10 +552,10 @@ export function LLMCostEstimator() {
       {/* Right Column - Sticky Summary */}
       <div className="lg:col-span-2">
         <div className="sticky top-24 space-y-6">
-          <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-purple-500/5 via-card to-cyan-500/5">
+          <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-primary-500/5 via-card to-secondary-500/5">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-cyan-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-600 to-secondary-600">
                   <Calculator className="h-5 w-5 text-white" />
                 </div>
                 <CardTitle className="text-lg">Cost Summary</CardTitle>
@@ -568,7 +568,7 @@ export function LLMCostEstimator() {
               {/* Total Price Display */}
               <div className="text-center py-4">
                 <p className="text-sm text-muted-foreground mb-2">Estimated Total Investment</p>
-                <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 bg-clip-text text-transparent">
+                <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary-600 via-accent-600 to-secondary-600 bg-clip-text text-transparent">
                   {formatCurrency(totalSetupCost)}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">One-time implementation cost</p>
@@ -579,7 +579,7 @@ export function LLMCostEstimator() {
               {/* Implementation Cost Breakdown */}
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-purple-500" />
+                  <CheckCircle2 className="h-4 w-4 text-primary-500" />
                   Implementation Cost
                 </h4>
                 <div className="space-y-2 text-sm">
