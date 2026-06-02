@@ -393,7 +393,7 @@ export default function CompliancePage() {
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
             Security & Compliance
-            <span className="block mt-2 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
+            <span className="block mt-2 text-primary">
               You Can Trust
             </span>
           </h1>

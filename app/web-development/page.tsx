@@ -377,7 +377,7 @@ export default function WebDevelopmentPage() {
             </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
               Websites That Think,
-              <span className="block mt-3 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+              <span className="block mt-3 text-primary">
                 Not Just Look Pretty
               </span>
             </h1>

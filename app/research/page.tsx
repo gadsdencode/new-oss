@@ -281,7 +281,7 @@ export default function B2BResearchPage() {
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
             B2B Research for
-            <span className="block mt-2 bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-400 dark:to-secondary-400 bg-clip-text text-transparent">
+            <span className="block mt-2 text-primary">
               Healthcare & Non-Profits
             </span>
           </h1>

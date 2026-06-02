@@ -35,7 +35,7 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("font-bold text-lg leading-tight tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent group-hover:from-primary-600 group-hover:to-secondary-600 dark:group-hover:from-primary-400 dark:group-hover:to-secondary-400 transition-all duration-300", className)}
+    className={cn("font-bold text-lg leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors duration-300", className)}
     {...props}
   />
 ))

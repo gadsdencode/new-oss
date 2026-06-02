@@ -157,7 +157,7 @@ export default function Home() {
           {/* Hero Headline - Clear Value Proposition */}
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
             Transform Your Business
-            <span className="block mt-3 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+            <span className="block mt-3 text-primary">
               With AI Solutions
             </span>
           </h1>
@@ -231,7 +231,7 @@ export default function Home() {
                     <stat.icon className="h-7 w-7 text-primary" />
                   </div>
                 </div>
-                <div className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{stat.stat}</div>
+                <div className="text-5xl font-bold text-primary">{stat.stat}</div>
                 <div className="mt-2 text-base font-semibold text-foreground">{stat.label}</div>
                 <div className="mt-1 text-sm text-muted-foreground">{stat.description}</div>
               </div>

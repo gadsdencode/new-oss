@@ -568,7 +568,7 @@ export function LLMCostEstimator() {
               {/* Total Price Display */}
               <div className="text-center py-4">
                 <p className="text-sm text-muted-foreground mb-2">Estimated Total Investment</p>
-                <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary-600 via-accent-600 to-secondary-600 bg-clip-text text-transparent">
+                <div className="text-4xl sm:text-5xl font-bold text-primary">
                   {formatCurrency(totalSetupCost)}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">One-time implementation cost</p>
