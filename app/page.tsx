@@ -66,6 +66,13 @@ const coreServices = [
     features: ["Strategic Planning", "Custom Solutions", "ROI Optimization"],
   },
   {
+    icon: TargetIcon,
+    title: "AI Center of Excellence",
+    description: "Stand up a centralized AI capability - strategy, talent, governance, and infrastructure - that turns scattered experiments into a repeatable, scalable function.",
+    href: "/ai-center-of-excellence",
+    features: ["Strategy & Roadmap", "Team & Governance", "Scalable Infrastructure"],
+  },
+  {
     icon: SearchCheckIcon,
     title: "B2B Research Platform",
     description: "AI-powered research solutions for healthcare and non-profit organizations. HIPAA-compliant, secure, and designed for impact.",
@@ -103,6 +110,12 @@ export default function Home() {
           description: "End-to-end AI consulting from strategy development to production deployment. We help identify opportunities, build roadmaps, and deliver measurable results.",
           link: "/consulting",
           features: ["Strategic Planning", "Custom Solutions", "ROI Optimization"]
+        },
+        {
+          name: "AI Center of Excellence",
+          description: "End-to-end advisory and build services for establishing a centralized AI Center of Excellence across an enterprise or portfolio.",
+          link: "/ai-center-of-excellence",
+          features: ["Strategy & Roadmap", "Team & Governance", "Scalable Infrastructure"]
         },
         {
           name: "B2B Research Platform",
@@ -168,24 +181,30 @@ export default function Home() {
             <span className="block mt-2 font-medium">We deliver measurable results, not promises.</span>
           </p>
           
-          {/* Clear CTAs - Primary & Secondary */}
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
+          {/* Clear CTAs - Primary & Secondary (single row) */}
+          <div className="mt-10 mx-auto flex w-full max-w-6xl flex-nowrap items-center justify-center gap-2 overflow-x-auto px-2 sm:gap-3 sm:overflow-visible sm:px-0">
+            <Button size="default" className="h-11 shrink-0 px-3 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 sm:px-4" asChild>
               <Link href="/ai">
                 Order Your Custom AI
-                <BrainCircuitIcon className="ml-2 h-5 w-5" />
+                <BrainCircuitIcon className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="lg" className="text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
+            <Button size="default" className="h-11 shrink-0 px-3 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 sm:px-4" asChild>
+              <Link href="/ai-center-of-excellence">
+                AI Center of Excellence
+                <TargetIcon className="ml-1.5 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button size="default" className="h-11 shrink-0 px-3 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 sm:px-4" asChild>
               <Link href="/web-development">
                 Order Your Custom Website
-                <GlobeIcon className="ml-2 h-5 w-5" />
+                <GlobeIcon className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="lg" className="text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
+            <Button size="default" className="h-11 shrink-0 px-3 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 sm:px-4" asChild>
               <Link href="/contact">
                 Schedule Consultation
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
           </div>
@@ -324,7 +343,7 @@ export default function Home() {
               From strategy to deployment, we provide end-to-end AI solutions tailored to your enterprise needs
             </p>
           </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {coreServices.map((service, idx) => (
               <Card key={idx} className="border-2 hover:border-primary/50 transition-all hover:shadow-brand-lg group">
                 <CardHeader>
