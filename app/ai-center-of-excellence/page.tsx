@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+import { CoEReadinessAssessment } from "@/components/coe/coe-readiness-assessment";
 import { HomeButton } from "@/components/ui/home-button";
 import Link from "next/link";
 import { PageAiContext } from "@/components/page-ai-context";
@@ -24,7 +26,6 @@ import {
   RocketIcon,
   TrendingUpIcon,
   ClockIcon,
-  CheckCircle2,
   ArrowRight,
   SparklesIcon,
   BrainCircuitIcon,
@@ -38,13 +39,17 @@ const coePillars = [
     description:
       "Define a forward-looking AI vision with measurable objectives, executive sponsorship, and tight alignment to business goals - the foundation every successful CoE is built on.",
     features: ["Forward-looking vision", "Measurable objectives", "Executive sponsorship", "Business-goal alignment"],
+    bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
+    gradient: "from-primary/15 via-accent/10 to-primary/5",
   },
   {
     icon: UsersIcon,
     title: "Centralized AI Expertise",
     description:
-      "Assemble a multidisciplinary team - data scientists, ML engineers, domain experts, and business analysts - that can be deployed across the organization for consistent, high-quality delivery.",
+      "Assemble a multidisciplinary team - data scientists, ML engineers, domain experts, and business analysts - deployable across the organization for consistent delivery.",
     features: ["Data scientists", "ML engineers", "Domain experts", "Business analysts"],
+    bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
+    gradient: "from-accent/15 via-accent/10 to-accent/5",
   },
   {
     icon: ServerIcon,
@@ -52,6 +57,8 @@ const coePillars = [
     description:
       "Stand up cloud-native, containerized infrastructure with distributed training, autoscaling, and full observability so AI models deploy and scale reliably as demand grows.",
     features: ["Cloud-native architecture", "Containerization & orchestration", "Autoscaling & load balancing", "Monitoring & observability"],
+    bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
+    gradient: "from-secondary/15 via-secondary/10 to-secondary/5",
   },
   {
     icon: DatabaseIcon,
@@ -59,6 +66,8 @@ const coePillars = [
     description:
       "Build a robust data ecosystem with cataloging, quality assurance, and secure storage - the high-quality, well-governed foundation effective AI depends on.",
     features: ["Data cataloging", "Quality assurance", "Privacy & security", "Compliance monitoring"],
+    bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
+    gradient: "from-primary/15 via-secondary/10 to-accent/5",
   },
   {
     icon: ShieldCheckIcon,
@@ -66,6 +75,8 @@ const coePillars = [
     description:
       "Establish a cross-functional governance board, structured risk assessment, model monitoring and auditing, incident response, and regulatory compliance for trustworthy AI.",
     features: ["AI governance board", "Risk assessment", "Model monitoring & auditing", "Incident response"],
+    bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
+    gradient: "from-accent/15 via-primary/10 to-secondary/5",
   },
   {
     icon: GraduationCapIcon,
@@ -73,6 +84,8 @@ const coePillars = [
     description:
       "Drive cross-functional collaboration, comprehensive training, and visible success stories so adoption spreads - paired with continuous learning to stay at the frontier.",
     features: ["Cross-functional collaboration", "Comprehensive training", "Showcase use cases", "Continuous upskilling"],
+    bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
+    gradient: "from-secondary/15 via-accent/10 to-primary/5",
   },
 ];
 
@@ -173,7 +186,7 @@ export default function AICenterOfExcellencePage() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="text-lg px-8" asChild>
-                <Link href="#framework">Explore the Framework</Link>
+                <Link href="#assessment">Assess Your Readiness</Link>
               </Button>
             </div>
           </div>
@@ -201,7 +214,7 @@ export default function AICenterOfExcellencePage() {
           </div>
         </section>
 
-        {/* Six pillars */}
+        {/* Six pillars - Bento */}
         <section id="framework" className="py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -211,29 +224,37 @@ export default function AICenterOfExcellencePage() {
                 We build each pillar to fit your organization, then connect them into one operating model.
               </p>
             </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <BentoGrid className="auto-rows-[24rem]">
               {coePillars.map((p, idx) => (
-                <Card key={idx} className="h-full border-2 hover:border-primary/50 transition-colors">
-                  <CardHeader>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 mb-4">
-                      <p.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <CardTitle className="text-xl">{p.title}</CardTitle>
-                    <CardDescription>{p.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {p.features.map((f, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm">
-                          <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-foreground">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                <BentoCard
+                  key={idx}
+                  name={p.title}
+                  className={p.bentoClassName}
+                  background={<div className={`absolute inset-0 bg-gradient-to-br ${p.gradient}`} />}
+                  Icon={p.icon}
+                  description={p.description}
+                  href="/contact"
+                  cta="Learn More"
+                />
               ))}
+            </BentoGrid>
+          </div>
+        </section>
+
+        {/* AI Readiness Assessment - signature interactive */}
+        <section id="assessment" className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <Badge variant="secondary" className="mb-4">
+                <SparklesIcon className="w-3 h-3 mr-2 inline" />
+                AI Readiness Assessment
+              </Badge>
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">How Ready Is Your Organization?</h2>
+              <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+                Rate yourself across the six pillars to see your AI maturity profile and where a Center of Excellence would move the needle first.
+              </p>
             </div>
+            <CoEReadinessAssessment />
           </div>
         </section>
 
