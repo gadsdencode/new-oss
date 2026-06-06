@@ -61,14 +61,14 @@ export default function DataGovernancePage() {
       <PageAiContext content={pageContent} pageTitle="Data Management & Governance" />
       <DataGovernancePageTools />
 
-      <div className="flex min-h-screen flex-col bg-background font-sans">
+      <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
         <HomeButton />
 
         {/* Hero */}
         <header className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-5xl text-center px-4 sm:px-6 lg:px-8 py-20">
-            <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline" />
               AI Center of Excellence &bull; Pillar 4 of 6
             </Badge>
@@ -82,13 +82,13 @@ export default function DataGovernancePage() {
               A robust, well-governed data ecosystem - the high-quality foundation effective AI depends on.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/contact">
                   Schedule a Consultation
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/ai-center-of-excellence">Back to the Framework</Link>
               </Button>
             </div>
@@ -150,7 +150,7 @@ export default function DataGovernancePage() {
                   <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-5xl font-bold text-primary/20">{step.step}</span>
+                        <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary/20">{step.step}</span>
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                           <step.icon className="h-6 w-6 text-primary" />
                         </div>
@@ -206,7 +206,7 @@ export default function DataGovernancePage() {
               Let&apos;s build the cataloging, quality management, and compliance foundation your AI initiatives depend on.
             </p>
             <div className="mt-8">
-              <Button size="lg" className="text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/contact">
                   Schedule a Consultation
                   <ArrowRight className="ml-2 h-5 w-5" />

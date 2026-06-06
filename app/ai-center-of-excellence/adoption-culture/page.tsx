@@ -61,14 +61,14 @@ export default function AdoptionCulturePage() {
       <PageAiContext content={pageContent} pageTitle="Culture of Adoption & Continuous Learning" />
       <AdoptionCulturePageTools />
 
-      <div className="flex min-h-screen flex-col bg-background font-sans">
+      <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
         <HomeButton />
 
         {/* Hero */}
         <header className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-gradient-to-br from-secondary/10 via-accent/5 to-primary/10 dark:from-secondary/5 dark:via-accent/5 dark:to-primary/5">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-5xl text-center px-4 sm:px-6 lg:px-8 py-20">
-            <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline" />
               AI Center of Excellence &bull; Pillar 6 of 6
             </Badge>
@@ -82,13 +82,13 @@ export default function AdoptionCulturePage() {
               Drive org-wide adoption and keep your team at the frontier through collaboration, training, and continuous improvement.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/contact">
                   Schedule a Consultation
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/ai-center-of-excellence">Back to the Framework</Link>
               </Button>
             </div>
@@ -142,7 +142,7 @@ export default function AdoptionCulturePage() {
                   <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-5xl font-bold text-primary/20">{step.step}</span>
+                        <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary/20">{step.step}</span>
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                           <step.icon className="h-6 w-6 text-primary" />
                         </div>
@@ -212,7 +212,7 @@ export default function AdoptionCulturePage() {
               Let&apos;s design the training, collaboration, and continuous-learning program that turns AI into everyone&apos;s competitive advantage.
             </p>
             <div className="mt-8">
-              <Button size="lg" className="text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/contact">
                   Schedule a Consultation
                   <ArrowRight className="ml-2 h-5 w-5" />

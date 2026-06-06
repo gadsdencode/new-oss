@@ -163,7 +163,7 @@ export default function AICenterOfExcellencePage() {
       <PageAiContext content={pageContent} pageTitle="AI Center of Excellence" />
       <CoEPageTools />
 
-      <div className="flex min-h-screen flex-col bg-background font-sans">
+      <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
         <HomeButton />
 
         {/* Hero */}
@@ -173,7 +173,7 @@ export default function AICenterOfExcellencePage() {
           <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />
 
           <div className="relative z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-24">
-            <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
               AI Center of Excellence &bull; Enterprise Capability Building
             </Badge>
@@ -187,13 +187,13 @@ export default function AICenterOfExcellencePage() {
               We help organizations stand up a centralized AI CoE that unites strategy, talent, governance, and infrastructure - turning AI from scattered experiments into a repeatable, scalable capability.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/contact">
                   Schedule a CoE Consultation
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="#assessment">Assess Your Readiness</Link>
               </Button>
             </div>
@@ -286,7 +286,7 @@ export default function AICenterOfExcellencePage() {
                 <div key={idx} className="relative">
                   <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                     <CardHeader>
-                      <span className="text-5xl font-bold text-primary/20">{step.step}</span>
+                      <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary/20">{step.step}</span>
                       <CardTitle className="text-lg mt-2">{step.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -343,7 +343,7 @@ export default function AICenterOfExcellencePage() {
                   <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-6xl font-bold text-primary/20">{step.step}</span>
+                        <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary/20">{step.step}</span>
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                           <step.icon className="h-6 w-6 text-primary" />
                         </div>
@@ -373,7 +373,7 @@ export default function AICenterOfExcellencePage() {
         <section className="relative py-32 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-            <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline" />
               Free Consultation Available
             </Badge>
@@ -384,13 +384,13 @@ export default function AICenterOfExcellencePage() {
               Let&apos;s assess your AI maturity, map a roadmap, and stand up a CoE that delivers measurable results across your organization.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/contact">
                   Schedule a Consultation
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="/consulting">See Our Consulting Services</Link>
               </Button>
             </div>

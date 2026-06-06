@@ -274,7 +274,7 @@ export default function AIConsultingPage() {
       <ConsultingPageTools />
       
       {/* Main page content - Server-rendered for optimal performance! */}
-      <div className="flex min-h-screen flex-col bg-background font-sans">
+      <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
         {/* Home Button */}
         <HomeButton />
       
@@ -288,7 +288,7 @@ export default function AIConsultingPage() {
         <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />
         
         <div className="relative z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-24">
-          <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+          <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
             Enterprise AI Consulting • Fortune 500 Trusted
           </Badge>
@@ -303,13 +303,13 @@ export default function AIConsultingPage() {
             <span className="block mt-3 font-medium text-foreground">From strategy to production. From vision to measurable ROI.</span>
           </p>
           <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
               <Link href="/contact">
                 Schedule Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8 border-2" asChild>
               <Link href="#services">View Services</Link>
             </Button>
           </div>
@@ -412,7 +412,7 @@ export default function AIConsultingPage() {
                 <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-6xl font-bold text-primary/20">{step.step}</span>
+                      <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary/20">{step.step}</span>
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                         <step.icon className="h-6 w-6 text-primary" />
                       </div>
@@ -514,7 +514,7 @@ export default function AIConsultingPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
         
         <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-          <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+          <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline" />
             Free Consultation • No Obligation
           </Badge>
@@ -525,13 +525,13 @@ export default function AIConsultingPage() {
             Schedule a free consultation with our AI experts. Let&apos;s discuss your challenges, explore opportunities, and create a roadmap to measurable business impact.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
               <Link href="/contact">
                 Schedule Free Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8 border-2" asChild>
               <Link href="/contact">Contact Sales</Link>
             </Button>
           </div>

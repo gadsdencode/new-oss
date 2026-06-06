@@ -260,7 +260,7 @@ export default function B2BResearchPage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-background font-sans">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
       {/* Service Schema for SEO - Bing and Google recognition */}
       <StructuredData data={researchServiceSchema} />
       
@@ -275,7 +275,7 @@ export default function B2BResearchPage() {
       <header className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-accent/10 to-primary/20 dark:from-primary/10 dark:via-accent/5 dark:to-primary/10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-20">
-          <Badge variant="outline" className="mb-4 border-primary text-primary px-4 py-1">
+          <Badge variant="outline" className="mb-4 max-w-full whitespace-normal text-center border-primary text-primary px-4 py-1">
             <SparklesIcon className="w-3 h-3 mr-2 inline" />
             AI-Enabled Research Platform
           </Badge>
@@ -289,10 +289,10 @@ export default function B2BResearchPage() {
             Transform your research process with AI-powered intelligence. Identify partners, track opportunities, and drive growth faster than ever.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/demo">Request Demo</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/contact">Talk to an Expert</Link>
             </Button>
           </div>
@@ -505,7 +505,7 @@ export default function B2BResearchPage() {
                 <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-6xl font-bold text-primary/20">{item.step}</span>
+                      <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary/20">{item.step}</span>
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                         <item.icon className="h-6 w-6 text-primary" />
                       </div>
@@ -537,13 +537,13 @@ export default function B2BResearchPage() {
             Join hundreds of healthcare and non-profit organizations using AI to accelerate their B2B research.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/demo">
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/pricing">View Pricing</Link>
             </Button>
           </div>

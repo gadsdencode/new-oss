@@ -151,7 +151,7 @@ export default function Home() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-background font-sans">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
       {/* Premium Hero Section - Enterprise Value Proposition */}
       <header className="relative flex min-h-[75vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
         {/* Premium Grid Pattern */}
@@ -162,7 +162,7 @@ export default function Home() {
         <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />
         
         <div className="relative z-10 mx-auto max-w-7xl text-center px-4 sm:px-6 lg:px-8 py-20">
-          <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+          <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
             AI Solutions for Business Intelligence
           </Badge>
@@ -181,27 +181,27 @@ export default function Home() {
             <span className="block mt-2 font-medium">We deliver measurable results, not promises.</span>
           </p>
           
-          {/* Clear CTAs - Primary & Secondary (single row) */}
-          <div className="mt-10 mx-auto flex w-full max-w-6xl flex-nowrap items-center justify-center gap-2 overflow-x-auto px-2 sm:gap-3 sm:overflow-visible sm:px-0">
-            <Button size="default" className="h-11 shrink-0 px-3 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 sm:px-4" asChild>
+          {/* Clear CTAs - stack on mobile, 2-up on small screens, single row on large */}
+          <div className="mt-10 mx-auto grid w-full max-w-6xl grid-cols-1 gap-3 px-2 sm:grid-cols-2 sm:px-0 lg:flex lg:flex-nowrap lg:items-center lg:justify-center">
+            <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
               <Link href="/ai">
                 Order Your Custom AI
                 <BrainCircuitIcon className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="default" className="h-11 shrink-0 px-3 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 sm:px-4" asChild>
+            <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
               <Link href="/ai-center-of-excellence">
                 AI Center of Excellence
                 <TargetIcon className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="default" className="h-11 shrink-0 px-3 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 sm:px-4" asChild>
+            <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
               <Link href="/web-development">
                 Order Your Custom Website
                 <GlobeIcon className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="default" className="h-11 shrink-0 px-3 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 sm:px-4" asChild>
+            <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
               <Link href="/contact">
                 Schedule Consultation
                 <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -442,7 +442,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
         
         <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-          <Badge variant="outline" className="mb-6 border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+          <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline" />
             Free Consultation Available
           </Badge>
@@ -453,13 +453,13 @@ export default function Home() {
             Schedule a free consultation with our AI experts. Let's discuss how we can help you achieve measurable results and competitive advantage through AI.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
               <Link href="/contact">
                 Schedule Free Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-2" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8 border-2" asChild>
               <Link href="/consulting">View All Services</Link>
             </Button>
           </div>

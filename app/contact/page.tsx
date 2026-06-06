@@ -238,7 +238,7 @@ export default function ContactPage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-background font-sans">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
       {/* FAQPage Schema for SEO - Bing and Google rich snippets */}
       <StructuredData data={faqPageSchema} />
       
@@ -297,15 +297,15 @@ export default function ContactPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center">
                     <span className="text-sm text-muted-foreground">Availability</span>
                     <span className="text-sm font-medium">24/7</span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center">
                     <span className="text-sm text-muted-foreground">Support Type</span>
                     <span className="text-sm font-medium">Global, all time zones</span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center">
                     <span className="text-sm text-muted-foreground">Live response with AI</span>
                     <span className="text-sm font-medium">Available round-the-clock</span>
                   </div>
@@ -362,7 +362,7 @@ export default function ContactPage() {
               <Link key={idx} href={method.href}>
                 <Card className={cn(
                   "h-full border-2 hover:border-primary/50 transition-all hover:shadow-lg cursor-pointer group",
-                  "hover:scale-105 duration-200"
+                  "md:hover:scale-105 duration-200"
                 )}>
                   <div className={cn("h-2 bg-gradient-to-r", method.color)} />
                   <CardHeader>
@@ -373,7 +373,7 @@ export default function ContactPage() {
                       <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                     </div>
                     <CardTitle className="text-lg">{method.title}</CardTitle>
-                    <CardDescription className="font-medium text-foreground mt-1">
+                    <CardDescription className="font-medium text-foreground mt-1 break-words">
                       {method.detail}
                     </CardDescription>
                   </CardHeader>
@@ -388,7 +388,7 @@ export default function ContactPage() {
       </section>
 
       {/* Phone Extension Directory */}
-      <section className="pb-16 -mt-4">
+      <section className="pb-16 pt-4 sm:-mt-4 sm:pt-0">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Card className="border-2 overflow-hidden">
             <div className="h-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10" />

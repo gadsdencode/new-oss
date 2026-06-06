@@ -368,7 +368,7 @@ const comparisonCategories = [
 
 export default function AIPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-background font-sans">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
       {/* Register page-specific AI tools for AI models page */}
       {/* These tools are ONLY available on this page */}
       <AIPageTools />
@@ -380,7 +380,7 @@ export default function AIPage() {
       <header className="relative flex min-h-[65vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary-500/20 via-accent-500/10 to-secondary-500/20 dark:from-primary-500/10 dark:via-accent-500/5 dark:to-secondary-500/10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-20">
-          <Badge variant="outline" className="mb-4 border-primary text-primary px-4 py-1.5">
+          <Badge variant="outline" className="mb-4 max-w-full whitespace-normal text-center border-primary text-primary px-4 py-1.5">
             <BrainCircuitIcon className="w-3 h-3 mr-2 inline" />
             Custom LLM Solutions
           </Badge>
@@ -394,10 +394,10 @@ export default function AIPage() {
             Create tailored LLM solutions powered by the latest foundation models. From Mistral Large 3 to Llama 4, we fine-tune and deploy custom AI systems built for your specific business needs.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="#calculator">Get Your Estimate</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/contact">Schedule Consultation</Link>
             </Button>
           </div>
@@ -656,13 +656,13 @@ export default function AIPage() {
             Our AI consulting experts can help you select and implement the perfect model for your specific use case and requirements.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/consulting">
                 Get AI Consulting
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/contact">Contact Us</Link>
             </Button>
           </div>

@@ -5,7 +5,7 @@ import { TargetIcon, CrownIcon, UserCogIcon, GitMergeIcon, ShieldCheckIcon, Comp
 
 export function VisionOrbit() {
   return (
-    <div className="relative flex h-[440px] w-full items-center justify-center overflow-hidden">
+    <div className="relative flex h-[340px] w-full items-center justify-center overflow-hidden scale-[0.68] sm:h-[400px] sm:scale-90 md:h-[440px] md:scale-100">
       {/* Center core */}
       <div className="absolute z-10 flex h-28 w-28 flex-col items-center justify-center rounded-full bg-gradient-to-br from-[#0B7CFF] to-[#00D6C9] text-white shadow-brand">
         <CompassIcon className="h-7 w-7" />

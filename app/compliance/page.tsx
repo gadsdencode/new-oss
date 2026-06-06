@@ -372,7 +372,7 @@ export default function CompliancePage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-background font-sans">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
       {/* Service Schema for SEO - Bing and Google recognition */}
       <StructuredData data={complianceServiceSchema} />
       
@@ -387,7 +387,7 @@ export default function CompliancePage() {
       <header className="relative flex min-h-[65vh] items-center justify-center overflow-hidden bg-gradient-to-br from-green-500/20 via-emerald-500/10 to-teal-500/20 dark:from-green-500/10 dark:via-emerald-500/5 dark:to-teal-500/10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-20">
-          <Badge variant="outline" className="mb-4 border-primary text-primary px-4 py-1.5">
+          <Badge variant="outline" className="mb-4 max-w-full whitespace-normal text-center border-primary text-primary px-4 py-1.5">
             <ShieldCheckIcon className="w-3 h-3 mr-2 inline" />
             Enterprise-Grade Security & Compliance
           </Badge>
@@ -401,10 +401,10 @@ export default function CompliancePage() {
             Industry-leading security standards and compliance certifications. Your data is protected by enterprise-grade infrastructure trusted by leading organizations.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/contact">Request Security Documentation</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="#certifications">View Certifications</Link>
             </Button>
           </div>
@@ -534,7 +534,7 @@ export default function CompliancePage() {
                 <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-6xl font-bold text-primary/20">{step.step}</span>
+                      <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary/20">{step.step}</span>
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                         <step.icon className="h-6 w-6 text-primary" />
                       </div>
@@ -642,13 +642,13 @@ export default function CompliancePage() {
             Get detailed security documentation and discuss your specific compliance needs with our security team.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8" asChild>
+            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/contact">
                 Contact Security Team
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
               <Link href="/security-whitepaper">Download Security Whitepaper</Link>
             </Button>
           </div>
