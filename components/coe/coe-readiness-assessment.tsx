@@ -27,6 +27,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 type PillarId = "vision" | "expertise" | "infrastructure" | "data" | "governance" | "adoption";
 
@@ -244,7 +245,7 @@ export function CoEReadinessAssessment() {
       {/* Right Column - Sticky Result Summary */}
       <div className="lg:col-span-2">
         <div className="sticky top-24 space-y-6">
-          <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-[#0B7CFF]/5 via-card to-[#00D6C9]/5">
+          <Card className="relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-[#0B7CFF]/5 via-card to-[#00D6C9]/5">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3 mb-2">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#0B7CFF] to-[#00D6C9]">
@@ -312,6 +313,10 @@ export function CoEReadinessAssessment() {
                 </p>
               )}
             </CardContent>
+
+            {allAnswered && (
+              <BorderBeam duration={8} size={120} colorFrom="#0B7CFF" colorTo="#00D6C9" />
+            )}
           </Card>
 
           <p className="text-xs text-muted-foreground text-center px-4">

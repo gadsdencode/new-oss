@@ -10,6 +10,8 @@ import Link from "next/link";
 import { PageAiContext } from "@/components/page-ai-context";
 import { CoEPageTools } from "./CoEPageTools";
 import { StructuredData } from "@/components/structured-data";
+import { NumberTicker } from "@/components/ui/number-ticker";
+import { MagicCard } from "@/components/ui/magic-card";
 import {
   TargetIcon,
   UsersIcon,
@@ -41,6 +43,7 @@ const coePillars = [
     features: ["Forward-looking vision", "Measurable objectives", "Executive sponsorship", "Business-goal alignment"],
     bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
     gradient: "from-primary/15 via-accent/10 to-primary/5",
+    href: "strategic-vision",
   },
   {
     icon: UsersIcon,
@@ -50,6 +53,7 @@ const coePillars = [
     features: ["Data scientists", "ML engineers", "Domain experts", "Business analysts"],
     bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
     gradient: "from-accent/15 via-accent/10 to-accent/5",
+    href: "centralized-expertise",
   },
   {
     icon: ServerIcon,
@@ -59,6 +63,7 @@ const coePillars = [
     features: ["Cloud-native architecture", "Containerization & orchestration", "Autoscaling & load balancing", "Monitoring & observability"],
     bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
     gradient: "from-secondary/15 via-secondary/10 to-secondary/5",
+    href: "scalable-infrastructure",
   },
   {
     icon: DatabaseIcon,
@@ -68,6 +73,7 @@ const coePillars = [
     features: ["Data cataloging", "Quality assurance", "Privacy & security", "Compliance monitoring"],
     bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
     gradient: "from-primary/15 via-secondary/10 to-accent/5",
+    href: "data-governance",
   },
   {
     icon: ShieldCheckIcon,
@@ -77,6 +83,7 @@ const coePillars = [
     features: ["AI governance board", "Risk assessment", "Model monitoring & auditing", "Incident response"],
     bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
     gradient: "from-accent/15 via-primary/10 to-secondary/5",
+    href: "governance-risk",
   },
   {
     icon: GraduationCapIcon,
@@ -86,6 +93,7 @@ const coePillars = [
     features: ["Cross-functional collaboration", "Comprehensive training", "Showcase use cases", "Continuous upskilling"],
     bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
     gradient: "from-secondary/15 via-accent/10 to-primary/5",
+    href: "adoption-culture",
   },
 ];
 
@@ -110,10 +118,10 @@ const coeOutcomes = [
 
 // ---- Industry-backed impact stats (KEEP SOURCE ATTRIBUTIONS) ----
 const impactStats = [
-  { stat: "10-20%", label: "Manufacturing Cost Reduction", description: "Through AI automation and process optimization (McKinsey)." },
-  { stat: "~1/3", label: "Lower Support Costs", description: "Generative AI can cut customer-support costs while increasing conversions." },
-  { stat: "41%", label: "Supply Chain Savings", description: "Cost reduction achieved in some AI supply-chain implementations (McKinsey)." },
-  { stat: "54%", label: "Executives Expect Savings", description: "Of executives expect AI cost savings; half anticipate over 10% (BCG)." },
+  { prefix: "10–", value: 20, suffix: "%", label: "Manufacturing Cost Reduction", description: "Through AI automation and process optimization (McKinsey)." },
+  { prefix: "~", value: 33, suffix: "%", label: "Lower Support Costs", description: "Generative AI can cut customer-support costs while increasing conversions." },
+  { prefix: "", value: 41, suffix: "%", label: "Supply Chain Savings", description: "Cost reduction achieved in some AI supply-chain implementations (McKinsey)." },
+  { prefix: "", value: 54, suffix: "%", label: "Executives Expect Savings", description: "Of executives expect AI cost savings; half anticipate over 10% (BCG)." },
 ];
 
 // ---- OSS engagement process (advisor-led). Durations are placeholders - adjust to your standard SOW. ----
@@ -171,7 +179,7 @@ export default function AICenterOfExcellencePage() {
             </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
               Build Your AI Center of Excellence
-              <span className="block mt-3 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+              <span className="block mt-3 pb-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
                 From Strategy to Scale
               </span>
             </h1>
@@ -205,7 +213,15 @@ export default function AICenterOfExcellencePage() {
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {impactStats.map((s, idx) => (
                 <div key={idx} className="text-center">
-                  <p className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{s.stat}</p>
+                  <p className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    {s.prefix}
+                    <NumberTicker
+                      value={s.value}
+                      delay={0.15 * idx}
+                      className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                    />
+                    {s.suffix}
+                  </p>
                   <p className="mt-2 font-semibold text-foreground">{s.label}</p>
                   <p className="mt-2 text-sm text-muted-foreground">{s.description}</p>
                 </div>
@@ -233,8 +249,8 @@ export default function AICenterOfExcellencePage() {
                   background={<div className={`absolute inset-0 bg-gradient-to-br ${p.gradient}`} />}
                   Icon={p.icon}
                   description={p.description}
-                  href="/contact"
-                  cta="Learn More"
+                  href={`/ai-center-of-excellence/${p.href}`}
+                  cta="Explore This Pillar"
                 />
               ))}
             </BentoGrid>
@@ -292,15 +308,20 @@ export default function AICenterOfExcellencePage() {
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {coeOutcomes.map((o, idx) => (
-                <Card key={idx} className="h-full border-2 hover:border-primary/50 transition-colors">
-                  <CardHeader>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 mb-4">
-                      <o.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <CardTitle className="text-xl">{o.title}</CardTitle>
-                    <CardDescription>{o.description}</CardDescription>
-                  </CardHeader>
-                </Card>
+                <MagicCard
+                  key={idx}
+                  className="h-full rounded-xl border-2 p-6"
+                  gradientFrom="#0B7CFF"
+                  gradientTo="#00D6C9"
+                  gradientColor="#0B1224"
+                  gradientOpacity={0.15}
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 mb-4">
+                    <o.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground">{o.title}</h3>
+                  <p className="text-muted-foreground">{o.description}</p>
+                </MagicCard>
               ))}
             </div>
           </div>
