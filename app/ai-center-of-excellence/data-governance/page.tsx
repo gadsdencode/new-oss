@@ -8,6 +8,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { DataGovernancePageTools } from "./DataGovernancePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
+import { DataCatalogTree } from "@/components/coe/visuals/data-catalog-tree";
 import {
   FolderTreeIcon,
   CheckCircle2,
@@ -93,6 +94,14 @@ export default function DataGovernancePage() {
             </div>
           </div>
         </header>
+
+        {/* Signature visual */}
+        <section className="py-16">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
+            <p className="text-sm font-medium text-muted-foreground mb-6">A cataloged, governed data estate</p>
+            <DataCatalogTree />
+          </div>
+        </section>
 
         {/* Why it matters */}
         <section className="py-20 border-b">

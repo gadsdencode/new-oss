@@ -8,6 +8,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { ScalableInfrastructurePageTools } from "./ScalableInfrastructurePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
+import { ScaleRipple } from "@/components/coe/visuals/scale-ripple";
 import {
   CloudIcon,
   BoxesIcon,
@@ -93,6 +94,13 @@ export default function ScalableInfrastructurePage() {
             </div>
           </div>
         </header>
+
+        {/* Signature visual */}
+        <section className="py-16">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <ScaleRipple />
+          </div>
+        </section>
 
         {/* Why it matters */}
         <section className="py-20 border-b">

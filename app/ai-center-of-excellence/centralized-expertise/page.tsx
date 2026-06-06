@@ -8,6 +8,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { CentralizedExpertisePageTools } from "./CentralizedExpertisePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
+import { ExpertiseBeam } from "@/components/coe/visuals/expertise-beam";
 import {
   UsersIcon,
   FlaskConicalIcon,
@@ -104,6 +105,14 @@ export default function CentralizedExpertisePage() {
             </div>
           </div>
         </header>
+
+        {/* Signature visual */}
+        <section className="py-16">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
+            <p className="text-sm font-medium text-muted-foreground mb-6">Four disciplines, one deployable center of expertise</p>
+            <ExpertiseBeam />
+          </div>
+        </section>
 
         {/* Why it matters */}
         <section className="py-20 border-b">

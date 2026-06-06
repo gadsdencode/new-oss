@@ -8,6 +8,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { GovernanceRiskPageTools } from "./GovernanceRiskPageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
+import { ResponsibleAIGauges } from "@/components/coe/visuals/responsible-ai-gauges";
 import {
   UsersIcon,
   AlertTriangleIcon,
@@ -205,6 +206,9 @@ export default function GovernanceRiskPage() {
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 Every AI system we help build is grounded in five core principles that make it defensible, trustworthy, and aligned with organizational values.
               </p>
+            </div>
+            <div className="mb-16">
+              <ResponsibleAIGauges />
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {principles.map((p, idx) => (

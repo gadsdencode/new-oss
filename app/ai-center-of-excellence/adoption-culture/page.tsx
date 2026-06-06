@@ -8,6 +8,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { AdoptionCulturePageTools } from "./AdoptionCulturePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
+import { ImprovementCycleOrbit } from "@/components/coe/visuals/improvement-cycle-orbit";
 import {
   UsersIcon,
   BookOpenIcon,
@@ -37,15 +38,6 @@ const approach = [
 const applications = [
   { title: "Knowledge-Sharing & Innovation Labs", description: "Regular sessions where teams present projects and experiment with new AI techniques." },
   { title: "Agile Prototyping", description: "Use Scrum or Kanban to rapidly prototype and refine solutions like recommendation systems." },
-];
-
-const improvementCycle = [
-  { step: "1", text: "Continuously monitor performance and gather feedback" },
-  { step: "2", text: "Analyze the data to identify areas for improvement" },
-  { step: "3", text: "Iterate on processes and technologies to address issues" },
-  { step: "4", text: "Implement changes and test the impact" },
-  { step: "5", text: "Communicate updates and lessons learned with the team" },
-  { step: "6", text: "Repeat the cycle to maintain agility and impact" },
 ];
 
 const schema = {
@@ -203,16 +195,7 @@ export default function AdoptionCulturePage() {
                 A structured six-step cycle turns every AI deployment into a learning opportunity that sharpens the next one.
               </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {improvementCycle.map((item) => (
-                <div key={item.step} className="flex items-start gap-4 rounded-lg border-2 border-border hover:border-primary/50 transition-colors p-5 bg-background">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold">
-                    {item.step}
-                  </span>
-                  <p className="text-sm text-foreground leading-relaxed">{item.text}</p>
-                </div>
-              ))}
-            </div>
+            <ImprovementCycleOrbit />
           </div>
         </section>
 
