@@ -9,6 +9,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { AdoptionCulturePageTools } from "./AdoptionCulturePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
+import { StartHereBlock } from "@/components/coe/start-here-block";
 import { ImprovementCycleOrbit } from "@/components/coe/visuals/improvement-cycle-orbit";
 import {
   UsersIcon,
@@ -202,6 +203,9 @@ export default function AdoptionCulturePage() {
 
         {/* Sibling pillars */}
         <PillarNav current="adoption-culture" />
+
+        {/* Start Here entry point */}
+        <StartHereBlock />
 
         {/* CTA */}
         <section className="relative py-24 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">

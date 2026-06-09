@@ -1,6 +1,6 @@
 // components/coe/pillar-nav.tsx
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, MapPinIcon } from "lucide-react";
+import { ArrowLeft, ArrowRight, MapPinIcon, RocketIcon } from "lucide-react";
 
 export const COE_PILLARS = [
   { slug: "strategic-vision", title: "Strategic Vision & Leadership" },
@@ -11,10 +11,56 @@ export const COE_PILLARS = [
   { slug: "adoption-culture", title: "Culture of Adoption & Continuous Learning" },
 ];
 
+// Distinct entry point - intentionally NOT a seventh pillar. Rendered as a
+// lead "Start here" banner above the six pillars, data-driven via this flag.
+const COE_ENTRY_POINT = {
+  slug: "getting-started",
+  title: "Getting Started",
+  description: "New to the framework? Begin with the recommended path - how to start, what you'll need, and how an engagement runs.",
+  isEntryPoint: true as const,
+};
+
 export function PillarNav({ current }: { current: string }) {
+  const entryActive = current === COE_ENTRY_POINT.slug;
   return (
     <nav aria-label="Center of Excellence pillars" className="py-16 border-t">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Entry point - the first step, distinct from the six pillars */}
+        <Link
+          href={`/ai-center-of-excellence/${COE_ENTRY_POINT.slug}`}
+          aria-current={entryActive ? "page" : undefined}
+          aria-disabled={entryActive ? true : undefined}
+          className={`group mb-8 flex items-center justify-between gap-4 rounded-xl border-2 p-5 transition-colors ${
+            entryActive
+              ? "border-primary bg-primary/5 pointer-events-none"
+              : "border-primary/40 bg-primary/5 hover:border-primary hover:shadow-sm"
+          }`}
+        >
+          <span className="flex items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <RocketIcon className="h-6 w-6 text-primary" aria-hidden="true" />
+            </span>
+            <span className="flex flex-col">
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                Start here
+              </span>
+              <span className="text-lg font-bold text-foreground">{COE_ENTRY_POINT.title}</span>
+              <span className="mt-0.5 text-sm text-muted-foreground">{COE_ENTRY_POINT.description}</span>
+            </span>
+          </span>
+          {entryActive ? (
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+              <MapPinIcon className="h-3 w-3" />
+              You are here
+            </span>
+          ) : (
+            <ArrowRight
+              className="h-6 w-6 shrink-0 text-primary transition-transform group-hover:translate-x-1"
+              aria-hidden="true"
+            />
+          )}
+        </Link>
+
         <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
           <div>
             <h2 className="text-2xl font-bold text-foreground">Explore the Six Pillars</h2>

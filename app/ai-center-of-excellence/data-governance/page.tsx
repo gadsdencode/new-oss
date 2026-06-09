@@ -9,6 +9,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { DataGovernancePageTools } from "./DataGovernancePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
+import { StartHereBlock } from "@/components/coe/start-here-block";
 import { DataCatalogTree } from "@/components/coe/visuals/data-catalog-tree";
 import {
   FolderTreeIcon,
@@ -196,6 +197,9 @@ export default function DataGovernancePage() {
 
         {/* Sibling pillars */}
         <PillarNav current="data-governance" />
+
+        {/* Start Here entry point */}
+        <StartHereBlock />
 
         {/* CTA */}
         <section className="relative py-24 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">

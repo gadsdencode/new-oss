@@ -9,6 +9,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { ScalableInfrastructurePageTools } from "./ScalableInfrastructurePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
+import { StartHereBlock } from "@/components/coe/start-here-block";
 import { ScaleRipple } from "@/components/coe/visuals/scale-ripple";
 import {
   CloudIcon,
@@ -215,6 +216,9 @@ export default function ScalableInfrastructurePage() {
 
         {/* Sibling pillars */}
         <PillarNav current="scalable-infrastructure" />
+
+        {/* Start Here entry point */}
+        <StartHereBlock />
 
         {/* CTA */}
         <section className="relative py-24 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">

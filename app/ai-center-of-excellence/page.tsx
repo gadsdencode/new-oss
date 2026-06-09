@@ -10,6 +10,8 @@ import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { PageAiContext } from "@/components/page-ai-context";
 import { CoEPageTools } from "./CoEPageTools";
+import { StartHereBlock } from "@/components/coe/start-here-block";
+import { BrandLogo } from "@/components/brand-logo";
 import { StructuredData } from "@/components/structured-data";
 import { NumberTicker } from "@/components/ui/number-ticker";
 import { MagicCard } from "@/components/ui/magic-card";
@@ -30,7 +32,6 @@ import {
   TrendingUpIcon,
   ClockIcon,
   ArrowRight,
-  SparklesIcon,
   BrainCircuitIcon,
 } from "lucide-react";
 
@@ -174,10 +175,18 @@ export default function AICenterOfExcellencePage() {
           <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />
 
           <div className="relative z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-24">
-            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
-              <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
-              AI Center of Excellence &bull; Enterprise Capability Building
-            </Badge>
+            {/* Brand mark crowning the headline (matches the homepage hero treatment) */}
+            <div className="relative mx-auto mb-7 w-fit sm:mb-8">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-3xl sm:h-44 sm:w-44"
+              />
+              <BrandLogo
+                size="xl"
+                priority
+                className="relative h-auto w-24 drop-shadow-[0_6px_24px_rgba(11,124,255,0.3)] sm:w-28 md:w-32"
+              />
+            </div>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
               Build Your AI Center of Excellence
               <span className="block mt-3 pb-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
@@ -189,10 +198,13 @@ export default function AICenterOfExcellencePage() {
             </p>
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/contact">
-                  Schedule a CoE Consultation
+                <Link href="/ai-center-of-excellence/getting-started">
+                  How to Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+                <Link href="/contact">Schedule a CoE Consultation</Link>
               </Button>
               <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
                 <Link href="#assessment">Assess Your Readiness</Link>
@@ -201,11 +213,13 @@ export default function AICenterOfExcellencePage() {
           </div>
         </header>
 
+        {/* Start Here entry point - surfaced at the top for immediate access */}
+        <StartHereBlock />
+
         {/* Impact stats */}
         <section className="py-20 border-b">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <Badge variant="secondary" className="mb-4">Why a CoE</Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">The Business Case for AI at Scale</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 A well-run Center of Excellence concentrates expertise and turns AI investment into measurable returns.
@@ -235,7 +249,6 @@ export default function AICenterOfExcellencePage() {
         <section id="framework" className="py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">The Framework</Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">Six Pillars of a Successful AI CoE</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 We build each pillar to fit your organization, then connect them into one operating model.
@@ -262,10 +275,6 @@ export default function AICenterOfExcellencePage() {
         <section id="assessment" className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">
-                <SparklesIcon className="w-3 h-3 mr-2 inline" />
-                AI Readiness Assessment
-              </Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">How Ready Is Your Organization?</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 Rate yourself across the six pillars to see your AI maturity profile and where a Center of Excellence would move the needle first.
@@ -279,7 +288,6 @@ export default function AICenterOfExcellencePage() {
         <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">AI Capability Model</Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">From Maturity Assessment to Continuous Growth</h2>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
@@ -304,7 +312,6 @@ export default function AICenterOfExcellencePage() {
         <section className="py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">What a CoE Delivers</Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">Measurable Outcomes Across the Business</h2>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -332,7 +339,6 @@ export default function AICenterOfExcellencePage() {
         <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">How We Engage</Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">Advisor-Led, Built to Last</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 An experienced AI advisor sets the strategic direction and operating framework from day one.
@@ -374,10 +380,6 @@ export default function AICenterOfExcellencePage() {
         <section className="relative py-32 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
-              <SparklesIcon className="w-3 h-3 mr-2 inline" />
-              Free Consultation Available
-            </Badge>
             <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Ready to Build Your AI Center of Excellence?
             </h2>
