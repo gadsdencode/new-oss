@@ -213,12 +213,12 @@ export default function AICenterOfExcellencePage() {
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {impactStats.map((s, idx) => (
                 <div key={idx} className="text-center">
-                  <p className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  <p className="text-4xl font-bold bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">
                     {s.prefix}
                     <NumberTicker
                       value={s.value}
                       delay={0.15 * idx}
-                      className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                      className="bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent"
                     />
                     {s.suffix}
                   </p>
