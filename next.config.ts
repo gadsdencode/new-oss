@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
   // duplicate Next runtime and break static prerendering ("Expected
   // workUnitAsyncStorage to have a store").
   outputFileTracingRoot: path.join(__dirname),
+  images: {
+    // Next 16 clamps next/image quality to this list (default [75]). The CoE
+    // hero backdrops request quality={90} to avoid recompressing the soft
+    // atmospheric art.
+    qualities: [75, 90],
+  },
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',

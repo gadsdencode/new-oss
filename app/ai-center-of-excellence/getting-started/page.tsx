@@ -12,6 +12,7 @@ import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { BrandLogo } from "@/components/brand-logo";
+import { HeroBackdrop } from "@/components/coe/hero-backdrop";
 import {
   SearchCheckIcon,
   RocketIcon,
@@ -30,6 +31,20 @@ export const metadata: Metadata = {
   title: "How to Start an AI Center of Excellence | Overture Systems",
   description:
     "A clear, low-risk path to launching your AI Center of Excellence - start with a short readiness diagnostic, prove value with a foundation pilot, then build and scale. See the tiers, what you'll need, and how an engagement runs.",
+  // Absolute URLs: no metadataBase is set in app/layout.tsx (origin matches the JSON-LD schemas).
+  openGraph: {
+    images: [
+      {
+        url: "https://new-oss.vercel.app/images/coe/coe-getting-started-og.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["https://new-oss.vercel.app/images/coe/coe-getting-started-og.jpg"],
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -208,7 +223,8 @@ export default function GettingStartedPage() {
         <HomeButton />
 
         {/* 1. Hero */}
-        <header className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-linear-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
+        <header className="relative isolate flex min-h-[60vh] items-center justify-center overflow-hidden bg-linear-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
+          <HeroBackdrop src="/images/coe/coe-getting-started-hero.webp" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[14px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-5xl text-center px-4 sm:px-6 lg:px-8 py-20">
             {/* Brand mark crowning the headline (matches the homepage hero treatment) */}

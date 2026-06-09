@@ -1,5 +1,6 @@
 // app/ai-center-of-excellence/page.tsx
 // NO "use client" directive - this is a Server Component (matches app/consulting/page.tsx)
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,7 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { CoEPageTools } from "./CoEPageTools";
 import { StartHereBlock } from "@/components/coe/start-here-block";
 import { BrandLogo } from "@/components/brand-logo";
+import { HeroBackdrop } from "@/components/coe/hero-backdrop";
 import { StructuredData } from "@/components/structured-data";
 import { NumberTicker } from "@/components/ui/number-ticker";
 import { MagicCard } from "@/components/ui/magic-card";
@@ -34,6 +36,25 @@ import {
   ArrowRight,
   BrainCircuitIcon,
 } from "lucide-react";
+
+// Social cards only; title/description inherit from the root layout.
+// No metadataBase is set in app/layout.tsx, so URLs are absolute (matches the
+// production origin used in the JSON-LD schemas).
+export const metadata: Metadata = {
+  openGraph: {
+    images: [
+      {
+        url: "https://new-oss.vercel.app/images/coe/coe-hub-og.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["https://new-oss.vercel.app/images/coe/coe-hub-og.jpg"],
+  },
+};
 
 // ---- The six CoE pillars (services grid) ----
 const coePillars = [
@@ -169,7 +190,8 @@ export default function AICenterOfExcellencePage() {
         <HomeButton />
 
         {/* Hero */}
-        <header className="relative flex min-h-[75vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
+        <header className="relative isolate flex min-h-[75vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
+          <HeroBackdrop src="/images/coe/coe-hub-hero.webp" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="absolute top-20 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow opacity-50" />
           <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />

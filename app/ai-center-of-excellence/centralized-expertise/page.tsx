@@ -1,4 +1,5 @@
 // app/ai-center-of-excellence/centralized-expertise/page.tsx
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,7 @@ import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
 import { StartHereBlock } from "@/components/coe/start-here-block";
 import { ExpertiseBeam } from "@/components/coe/visuals/expertise-beam";
+import { HeroBackdrop } from "@/components/coe/hero-backdrop";
 import {
   UsersIcon,
   FlaskConicalIcon,
@@ -25,6 +27,24 @@ import {
   ArrowRight,
   SparklesIcon,
 } from "lucide-react";
+
+// Social cards only; title/description inherit from the root layout.
+// No metadataBase is set in app/layout.tsx, so URLs are absolute.
+export const metadata: Metadata = {
+  openGraph: {
+    images: [
+      {
+        url: "https://new-oss.vercel.app/images/coe/coe-centralized-expertise-og.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["https://new-oss.vercel.app/images/coe/coe-centralized-expertise-og.jpg"],
+  },
+};
 
 const capabilities = [
   { icon: FlaskConicalIcon, title: "Data Scientists", description: "Design, train, and validate models grounded in the organization's real problems and data." },
@@ -78,7 +98,8 @@ export default function CentralizedExpertisePage() {
         <HomeButton />
 
         {/* Hero */}
-        <header className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-gradient-to-br from-accent/10 via-accent/5 to-background dark:from-accent/5 dark:via-accent/5 dark:to-background">
+        <header className="relative isolate flex min-h-[60vh] items-center justify-center overflow-hidden bg-gradient-to-br from-accent/10 via-accent/5 to-background dark:from-accent/5 dark:via-accent/5 dark:to-background">
+          <HeroBackdrop src="/images/coe/coe-centralized-expertise-hero.webp" intensity="strong" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-5xl text-center px-4 sm:px-6 lg:px-8 py-20">
             <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
