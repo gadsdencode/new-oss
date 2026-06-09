@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
+import { SiteFooter } from "@/components/site-footer";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
@@ -473,9 +474,7 @@ export default function ContactPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-        © 2025 Overture Systems Solutions. All rights reserved.
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

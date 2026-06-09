@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { CoEReadinessAssessment } from "@/components/coe/coe-readiness-assessment";
 import { HomeButton } from "@/components/ui/home-button";
+import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { PageAiContext } from "@/components/page-ai-context";
 import { CoEPageTools } from "./CoEPageTools";
@@ -397,9 +398,7 @@ export default function AICenterOfExcellencePage() {
           </div>
         </section>
 
-        <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-          &copy; 2025 Overture Systems Solutions. All rights reserved.
-        </footer>
+        <SiteFooter />
       </div>
     </>
   );

@@ -2,15 +2,16 @@
 "use client";
 
 import Link from "next/link";
-import { HomeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 
 interface HomeButtonProps {
   className?: string;
+  priority?: boolean;
 }
 
-export function HomeButton({ className }: HomeButtonProps) {
+export function HomeButton({ className, priority = false }: HomeButtonProps) {
   return (
     <Link href="/" className={cn("fixed top-4 left-4 z-50", className)}>
       <Button
@@ -25,9 +26,12 @@ export function HomeButton({ className }: HomeButtonProps) {
         )}
         aria-label="Return to homepage"
       >
-        <HomeIcon className="h-4 w-4 transition-colors group-hover:text-primary" />
+        <BrandLogo
+          size="md"
+          priority={priority}
+          className="h-5 w-5 transition-opacity group-hover:opacity-80"
+        />
       </Button>
     </Link>
   );
 }
-

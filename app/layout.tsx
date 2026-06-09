@@ -28,6 +28,10 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Overture Systems Solutions - Revolutionizing Intelligence",
   description: "Empowering businesses with cutting-edge AI-powered solutions.",
+  icons: {
+    icon: "/images/Overture_icon_transparent_32.png",
+    apple: "/images/Overture_icon_transparent_128.png",
+  },
 };
 
 // Organization Schema for all pages - Bing and Google love this!
@@ -36,7 +40,7 @@ const organizationSchema = {
   "@type": "Organization",
   "name": "Overture Systems Solutions",
   "url": "https://new-oss.vercel.app",
-  "logo": "https://new-oss.vercel.app/logo.png",
+  "logo": "https://new-oss.vercel.app/images/Overture_logo_square_dark_1254.png",
   "description": "Enterprise AI solutions for business intelligence, strategy, implementation, and compliance. We deliver 3.5x average ROI within 18 months, 60% operational time savings, and 95% project success rates.",
   "foundingDate": "2020",
   "contactPoint": {

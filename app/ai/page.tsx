@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { HomeButton } from "@/components/ui/home-button";
+import { SiteFooter } from "@/components/site-footer";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { AIPageTools } from "./AIPageTools";
@@ -684,9 +685,7 @@ export default function AIPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-        © 2025 Overture Systems Solutions. All rights reserved.
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid"
+import { HomeButton } from "@/components/ui/home-button";
+import { BrandLogo } from "@/components/brand-logo";
+import { SiteFooter } from "@/components/site-footer";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
@@ -152,6 +155,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
+      <HomeButton priority />
       {/* Premium Hero Section - Enterprise Value Proposition */}
       <header className="relative flex min-h-[75vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
         {/* Premium Grid Pattern */}
@@ -162,11 +166,19 @@ export default function Home() {
         <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />
         
         <div className="relative z-10 mx-auto max-w-7xl text-center px-4 sm:px-6 lg:px-8 py-20">
-          <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
-            <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
-            AI Solutions for Business Intelligence
-          </Badge>
-          
+          {/* Brand mark — transparent icon crowning the headline, glow ties it to the orb aesthetic */}
+          <div className="relative mx-auto mb-7 w-fit sm:mb-8">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-3xl sm:h-44 sm:w-44"
+            />
+            <BrandLogo
+              size="xl"
+              priority
+              className="relative h-auto w-24 drop-shadow-[0_6px_24px_rgba(11,124,255,0.3)] sm:w-28 md:w-32"
+            />
+          </div>
+
           {/* Hero Headline - Clear Value Proposition */}
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
             Transform Your Business
@@ -481,12 +493,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-8 text-center text-sm text-muted-foreground bg-muted/20">
-        <p>© 2025 Overture Systems Solutions. All rights reserved.</p>
-        <p className="mt-2 text-xs">
-          SOC 2 Type II Certified • HIPAA Compliant • Enterprise-Grade Security
-        </p>
-      </footer>
+      <SiteFooter variant="full" />
     </div>
   );
 }

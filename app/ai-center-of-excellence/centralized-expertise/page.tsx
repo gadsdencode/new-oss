@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
+import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { PageAiContext } from "@/components/page-ai-context";
 import { CentralizedExpertisePageTools } from "./CentralizedExpertisePageTools";
@@ -250,9 +251,7 @@ export default function CentralizedExpertisePage() {
           </div>
         </section>
 
-        <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-          &copy; 2025 Overture Systems Solutions. All rights reserved.
-        </footer>
+        <SiteFooter />
       </div>
     </>
   );

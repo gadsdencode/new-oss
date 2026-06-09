@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { HomeButton } from "@/components/ui/home-button";
+import { SiteFooter } from "@/components/site-footer";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
@@ -670,9 +671,7 @@ export default function CompliancePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-        © 2025 Overture Systems Solutions. All rights reserved.
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
