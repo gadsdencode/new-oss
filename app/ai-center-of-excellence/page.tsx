@@ -9,9 +9,11 @@ import { CoEReadinessAssessment } from "@/components/coe/coe-readiness-assessmen
 import { HomeButton } from "@/components/ui/home-button";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
+import Image from "next/image";
 import { PageAiContext } from "@/components/page-ai-context";
 import { CoEPageTools } from "./CoEPageTools";
 import { StartHereBlock } from "@/components/coe/start-here-block";
+import { CtaTexture } from "@/components/coe/cta-texture";
 import { BrandLogo } from "@/components/brand-logo";
 import { HeroBackdrop } from "@/components/coe/hero-backdrop";
 import { StructuredData } from "@/components/structured-data";
@@ -65,7 +67,7 @@ const coePillars = [
       "Define a forward-looking AI vision with measurable objectives, executive sponsorship, and tight alignment to business goals - the foundation every successful CoE is built on.",
     features: ["Forward-looking vision", "Measurable objectives", "Executive sponsorship", "Business-goal alignment"],
     bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
-    gradient: "from-primary/15 via-accent/10 to-primary/5",
+    image: "/images/coe/coe-strategic-vision-hero.webp",
     href: "strategic-vision",
   },
   {
@@ -75,7 +77,7 @@ const coePillars = [
       "Assemble a multidisciplinary team - data scientists, ML engineers, domain experts, and business analysts - deployable across the organization for consistent delivery.",
     features: ["Data scientists", "ML engineers", "Domain experts", "Business analysts"],
     bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
-    gradient: "from-accent/15 via-accent/10 to-accent/5",
+    image: "/images/coe/coe-centralized-expertise-hero.webp",
     href: "centralized-expertise",
   },
   {
@@ -85,7 +87,7 @@ const coePillars = [
       "Stand up cloud-native, containerized infrastructure with distributed training, autoscaling, and full observability so AI models deploy and scale reliably as demand grows.",
     features: ["Cloud-native architecture", "Containerization & orchestration", "Autoscaling & load balancing", "Monitoring & observability"],
     bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
-    gradient: "from-secondary/15 via-secondary/10 to-secondary/5",
+    image: "/images/coe/coe-scalable-infrastructure-hero.webp",
     href: "scalable-infrastructure",
   },
   {
@@ -95,7 +97,7 @@ const coePillars = [
       "Build a robust data ecosystem with cataloging, quality assurance, and secure storage - the high-quality, well-governed foundation effective AI depends on.",
     features: ["Data cataloging", "Quality assurance", "Privacy & security", "Compliance monitoring"],
     bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
-    gradient: "from-primary/15 via-secondary/10 to-accent/5",
+    image: "/images/coe/coe-data-governance-hero.webp",
     href: "data-governance",
   },
   {
@@ -105,7 +107,7 @@ const coePillars = [
       "Establish a cross-functional governance board, structured risk assessment, model monitoring and auditing, incident response, and regulatory compliance for trustworthy AI.",
     features: ["AI governance board", "Risk assessment", "Model monitoring & auditing", "Incident response"],
     bentoClassName: "col-span-1 md:col-span-1 lg:col-span-1",
-    gradient: "from-accent/15 via-primary/10 to-secondary/5",
+    image: "/images/coe/coe-governance-risk-hero.webp",
     href: "governance-risk",
   },
   {
@@ -115,7 +117,7 @@ const coePillars = [
       "Drive cross-functional collaboration, comprehensive training, and visible success stories so adoption spreads - paired with continuous learning to stay at the frontier.",
     features: ["Cross-functional collaboration", "Comprehensive training", "Showcase use cases", "Continuous upskilling"],
     bentoClassName: "col-span-1 md:col-span-2 lg:col-span-2",
-    gradient: "from-secondary/15 via-accent/10 to-primary/5",
+    image: "/images/coe/coe-adoption-culture-hero.webp",
     href: "adoption-culture",
   },
 ];
@@ -281,8 +283,22 @@ export default function AICenterOfExcellencePage() {
                 <BentoCard
                   key={idx}
                   name={p.title}
-                  className={p.bentoClassName}
-                  background={<div className={`absolute inset-0 bg-gradient-to-br ${p.gradient}`} />}
+                  // "dark" scopes the dark-theme tokens to the card so its text stays
+                  // light on the navy artwork in either theme (intentional dark island).
+                  className={`dark ${p.bentoClassName}`}
+                  background={
+                    <div className="absolute inset-0">
+                      <Image
+                        src={p.image}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover opacity-40 transition-opacity duration-300 group-hover:opacity-60"
+                      />
+                      {/* BentoCard text is top-aligned, so the gradient is darkest at the top. */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#030F26]/95 via-[#030F26]/70 to-[#030F26]/40" />
+                    </div>
+                  }
                   Icon={p.icon}
                   description={p.description}
                   href={`/ai-center-of-excellence/${p.href}`}
@@ -400,6 +416,7 @@ export default function AICenterOfExcellencePage() {
 
         {/* CTA */}
         <section className="relative py-32 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
+          <CtaTexture />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">

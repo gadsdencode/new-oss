@@ -13,6 +13,8 @@ import { PillarNav } from "@/components/coe/pillar-nav";
 import { StartHereBlock } from "@/components/coe/start-here-block";
 import { ImprovementCycleOrbit } from "@/components/coe/visuals/improvement-cycle-orbit";
 import { HeroBackdrop } from "@/components/coe/hero-backdrop";
+import { SectionBand } from "@/components/coe/section-band";
+import { CtaTexture } from "@/components/coe/cta-texture";
 import {
   UsersIcon,
   BookOpenIcon,
@@ -152,6 +154,11 @@ export default function AdoptionCulturePage() {
           </div>
         </section>
 
+        {/* Mid-page breather band - echoes the hero artwork */}
+        <SectionBand src="/images/coe/coe-adoption-culture-hero.webp">
+          The most capable AI platform delivers zero value if the organization doesn&apos;t embrace it.
+        </SectionBand>
+
         {/* Approach */}
         <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -230,6 +237,7 @@ export default function AdoptionCulturePage() {
 
         {/* CTA */}
         <section className="relative py-24 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
+          <CtaTexture />
           <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               Ready to build an AI-first culture?

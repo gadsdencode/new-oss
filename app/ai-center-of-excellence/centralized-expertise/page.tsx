@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
+import Image from "next/image";
 import { PageAiContext } from "@/components/page-ai-context";
 import { CentralizedExpertisePageTools } from "./CentralizedExpertisePageTools";
 import { StructuredData } from "@/components/structured-data";
@@ -13,6 +14,8 @@ import { PillarNav } from "@/components/coe/pillar-nav";
 import { StartHereBlock } from "@/components/coe/start-here-block";
 import { ExpertiseBeam } from "@/components/coe/visuals/expertise-beam";
 import { HeroBackdrop } from "@/components/coe/hero-backdrop";
+import { SectionBand } from "@/components/coe/section-band";
+import { CtaTexture } from "@/components/coe/cta-texture";
 import {
   UsersIcon,
   FlaskConicalIcon,
@@ -61,10 +64,22 @@ const approach = [
   { step: "03", icon: RocketIcon, title: "Deploy on High-Value Work", description: "Direct the team to initiatives with the clearest, fastest business payoff." },
 ];
 
-const applications = [
-  { title: "Customer Sentiment Analysis", description: "A shared team builds an NLP tool to analyze customer feedback across retail operations." },
-  { title: "Supply-Chain Optimization", description: "A cross-functional team applies AI-driven demand forecasting to optimize logistics." },
+// Industry vignettes: keyword-matched per the Stage 2 mapping. Both items map
+// to the retail/supply-chain image ("retail" and "supply chain"/"logistics");
+// the repetition is intentional per the mapping.
+const applications: {
+  title: string;
+  description: string;
+  image?: string;
+  imagePosition?: string;
+}[] = [
+  { title: "Customer Sentiment Analysis", description: "A shared team builds an NLP tool to analyze customer feedback across retail operations.", image: "/images/coe/coe-industry-supplychain.webp", imagePosition: "object-center" },
+  { title: "Supply-Chain Optimization", description: "A cross-functional team applies AI-driven demand forecasting to optimize logistics.", image: "/images/coe/coe-industry-supplychain.webp", imagePosition: "object-center" },
 ];
+
+// Colored version of the section's matched vignette, washed behind the whole
+// Applications section; the card copies render greyscale for chromatic contrast.
+const sectionVignette = applications.find((a) => a.image)?.image;
 
 const benefits = [
   { icon: LightbulbIcon, title: "Improved Innovation", description: "Concentrated expertise sparks better ideas and faster experimentation." },
@@ -171,6 +186,11 @@ export default function CentralizedExpertisePage() {
           </div>
         </section>
 
+        {/* Mid-page breather band - echoes the hero artwork */}
+        <SectionBand src="/images/coe/coe-centralized-expertise-hero.webp">
+          A multidisciplinary team - deployable across the organization - that turns scattered effort into consistent, high-quality AI delivery.
+        </SectionBand>
+
         {/* Approach */}
         <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -207,8 +227,25 @@ export default function CentralizedExpertisePage() {
         </section>
 
         {/* Applications */}
-        <section className="py-20">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden py-20">
+          {/* Colored section field: full-color vignette washes the section and
+              fades at both edges; the greyscale card copy above it supplies the
+              chromatic figure-ground contrast. */}
+          {sectionVignette && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 mask-[linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)]"
+            >
+              <Image
+                src={sectionVignette}
+                alt=""
+                fill
+                sizes="100vw"
+                className="object-cover object-center opacity-15 dark:opacity-25"
+              />
+            </div>
+          )}
+          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <Badge variant="secondary" className="mb-4">In Practice</Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">Real-World Applications</h2>
@@ -216,6 +253,23 @@ export default function CentralizedExpertisePage() {
             <div className="grid gap-8 md:grid-cols-2">
               {applications.map((a, idx) => (
                 <Card key={idx} className="h-full border-2">
+                  {/* Industry vignette as an edge-bleed backdrop: anchored to the
+                      right periphery and masked toward the text, so reading
+                      anchors top-left while the image registers as atmosphere. */}
+                  {a.image && (
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-y-0 right-0 w-3/5 mask-[linear-gradient(to_left,black_25%,transparent_95%)]"
+                    >
+                      <Image
+                        src={a.image}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) 66vw, 30vw"
+                        className={`object-cover ${a.imagePosition ?? "object-center"} grayscale opacity-30 dark:opacity-45 transition-all duration-500 group-hover:grayscale-0`}
+                      />
+                    </div>
+                  )}
                   <CardHeader>
                     <div className="h-2 w-16 rounded-full bg-gradient-to-r from-primary to-accent mb-4" />
                     <CardTitle className="text-xl">{a.title}</CardTitle>
@@ -258,6 +312,7 @@ export default function CentralizedExpertisePage() {
 
         {/* CTA */}
         <section className="relative py-24 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
+          <CtaTexture />
           <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               Ready to build your AI team?

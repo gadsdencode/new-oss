@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
+import Image from "next/image";
+import { CtaTexture } from "@/components/coe/cta-texture";
 import { PageAiContext } from "@/components/page-ai-context";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
@@ -68,6 +70,7 @@ const GETTING_STARTED = {
       id: "diagnostic",
       name: "Readiness Diagnostic",
       tagline: "Find out where you stand",
+      image: "/images/coe/coe-tier-diagnostic.webp",
       duration: "2 to 3 weeks",
       whatItIs:
         "A structured assessment across all six CoE pillars, benchmarked against a maturity model.",
@@ -84,6 +87,7 @@ const GETTING_STARTED = {
       id: "pilot",
       name: "Foundation Pilot",
       tagline: "Prove value on one real use case",
+      image: "/images/coe/coe-tier-pilot.webp",
       duration: "8 to 12 weeks",
       whatItIs:
         "We stand up the governance and infrastructure baseline and deliver one high-value use case end to end.",
@@ -100,6 +104,7 @@ const GETTING_STARTED = {
       id: "scale",
       name: "CoE Build & Scale",
       tagline: "Operationalize the full Center of Excellence",
+      image: "/images/coe/coe-tier-scale.webp",
       duration: "Phased, typically 6 months and up",
       whatItIs:
         "Full operationalization across all six pillars, with the operating model, enablement, and governance to scale AI organization-wide.",
@@ -191,6 +196,13 @@ const GETTING_STARTED = {
 
 // Decorative icons paired to tiers / prerequisites (kept out of the copy constant).
 const tierIcons = [SearchCheckIcon, RocketIcon, TrendingUpIcon] as const;
+// Per-tier crop, indexed like tierIcons: diagnostic's subject is upper-center,
+// pilot's launch beam and scale's network plane both read best centered.
+const tierImageStyles = [
+  { position: "object-top" },
+  { position: "object-center" },
+  { position: "object-center" },
+] as const;
 const prerequisiteIcons = [CrownIcon, TargetIcon, DatabaseIcon, UsersIcon] as const;
 
 // ---- JSON-LD HowTo schema (SEO) ----
@@ -260,8 +272,24 @@ export default function GettingStartedPage() {
         </header>
 
         {/* 2. Tiered entry path */}
-        <section className="py-20 border-b">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden py-20 border-b">
+          {/* Colored section field: the Build & Scale artwork (the destination of
+              the three-tier journey) washes the section in color, fading at both
+              edges. The tier cards above carry greyscale versions of their own
+              art, so color reads as ambient ground and the cards as figure. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 mask-[linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)]"
+          >
+            <Image
+              src="/images/coe/coe-tier-scale.webp"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover object-center opacity-15 dark:opacity-25"
+            />
+          </div>
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold tracking-tight text-foreground">Three Ways to Begin</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -288,7 +316,23 @@ export default function GettingStartedPage() {
                     {tier.featured && (
                       <BorderBeam size={120} duration={8} colorFrom="#0B7CFF" colorTo="#00D6C9" />
                     )}
-                    <CardHeader>
+                    {/* Ambient tier visual: bleeds from the card's top edge and
+                        dissolves into the surface via a mask, so there is no hard
+                        image boundary for the eye to snag on. Copy stays the
+                        figure; the artwork reads as atmosphere behind it. */}
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-x-0 top-0 h-48 mask-[linear-gradient(to_bottom,black_20%,transparent_100%)]"
+                    >
+                      <Image
+                        src={tier.image}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className={`object-cover ${tierImageStyles[idx].position} grayscale opacity-40 dark:opacity-60 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0`}
+                      />
+                    </div>
+                    <CardHeader className="pt-28">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                           <Icon className="h-6 w-6 text-primary" />
@@ -441,6 +485,7 @@ export default function GettingStartedPage() {
 
         {/* 6. Primary CTA */}
         <section className="relative py-24 overflow-hidden bg-linear-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
+          <CtaTexture />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[14px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">

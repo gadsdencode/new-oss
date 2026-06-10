@@ -1,14 +1,15 @@
 // components/coe/pillar-nav.tsx
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, ArrowRight, MapPinIcon, RocketIcon } from "lucide-react";
 
 export const COE_PILLARS = [
-  { slug: "strategic-vision", title: "Strategic Vision & Leadership" },
-  { slug: "centralized-expertise", title: "Centralized AI Expertise" },
-  { slug: "scalable-infrastructure", title: "Scalable AI Infrastructure" },
-  { slug: "data-governance", title: "Data Management & Governance" },
-  { slug: "governance-risk", title: "Governance, Risk & Responsible AI" },
-  { slug: "adoption-culture", title: "Culture of Adoption & Continuous Learning" },
+  { slug: "strategic-vision", title: "Strategic Vision & Leadership", image: "/images/coe/coe-strategic-vision-hero.webp" },
+  { slug: "centralized-expertise", title: "Centralized AI Expertise", image: "/images/coe/coe-centralized-expertise-hero.webp" },
+  { slug: "scalable-infrastructure", title: "Scalable AI Infrastructure", image: "/images/coe/coe-scalable-infrastructure-hero.webp" },
+  { slug: "data-governance", title: "Data Management & Governance", image: "/images/coe/coe-data-governance-hero.webp" },
+  { slug: "governance-risk", title: "Governance, Risk & Responsible AI", image: "/images/coe/coe-governance-risk-hero.webp" },
+  { slug: "adoption-culture", title: "Culture of Adoption & Continuous Learning", image: "/images/coe/coe-adoption-culture-hero.webp" },
 ];
 
 // Distinct entry point - intentionally NOT a seventh pillar. Rendered as a
@@ -92,11 +93,24 @@ export function PillarNav({ current }: { current: string }) {
                       : "border-border hover:border-primary/50 hover:bg-muted/50 hover:shadow-sm"
                   }`}
                 >
-                  <span className="flex flex-col">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
-                      Pillar {number}
+                  <span className="flex min-w-0 items-center gap-3">
+                    {/* Pillar hero art thumbnail - decorative, echoes the destination page's hero */}
+                    <span aria-hidden="true" className="relative h-20 w-24 shrink-0 overflow-hidden rounded-md">
+                      <Image
+                        src={p.image}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) 50vw, 16vw"
+                        className="object-cover opacity-50 transition-opacity duration-300 group-hover:opacity-75"
+                      />
+                      <span className="absolute inset-0 bg-[#030F26]/65" />
                     </span>
-                    <span className="font-medium text-foreground">{p.title}</span>
+                    <span className="flex min-w-0 flex-col">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
+                        Pillar {number}
+                      </span>
+                      <span className="font-medium text-foreground">{p.title}</span>
+                    </span>
                   </span>
                   {active ? (
                     <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
