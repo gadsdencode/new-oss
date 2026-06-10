@@ -16,6 +16,8 @@ import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { cn } from "@/lib/utils";
 import {
@@ -34,7 +36,6 @@ import {
   ClipboardCheckIcon,
   ClockIcon,
   CheckCircle2,
-  CircleIcon,
   ArrowRight,
   ArrowLeft,
   RotateCcw,
@@ -195,28 +196,27 @@ export function PathFinder() {
             <div className="space-y-3">
               {GETTING_STARTED.prerequisites.map((req, idx) => {
                 const isOn = checked[idx];
+                const prereqId = `path-finder-prereq-${idx}`;
                 return (
-                  <button
+                  <Label
                     key={req.title}
-                    type="button"
-                    role="checkbox"
-                    aria-checked={isOn}
-                    onClick={() => togglePrereq(idx)}
+                    htmlFor={prereqId}
                     className={cn(
-                      "flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                      "flex w-full cursor-pointer items-start gap-3 rounded-xl border-2 p-4 text-left transition-colors",
                       isOn ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
                     )}
                   >
-                    {isOn ? (
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                    ) : (
-                      <CircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground/50" />
-                    )}
+                    <Checkbox
+                      id={prereqId}
+                      checked={isOn}
+                      onCheckedChange={() => togglePrereq(idx)}
+                      className="mt-0.5"
+                    />
                     <span>
                       <span className="block font-semibold text-foreground">{req.title}</span>
                       <span className="mt-0.5 block text-sm text-muted-foreground">{req.detail}</span>
                     </span>
-                  </button>
+                  </Label>
                 );
               })}
             </div>

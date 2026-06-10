@@ -21,8 +21,8 @@ export function EngagementPhases() {
 
   return (
     <div>
-      {/* Stepper rail */}
-      <div role="tablist" aria-label="Engagement phases" className="mb-8 flex items-start justify-center">
+      {/* Stepper rail — nav/step semantics (not tabs): one shared panel below */}
+      <nav aria-label="Engagement phases" className="mb-8 flex items-start justify-center">
         {phases.map((p, idx) => {
           const isActive = idx === active;
           const isPast = idx < active;
@@ -36,12 +36,10 @@ export function EngagementPhases() {
               )}
               <button
                 type="button"
-                role="tab"
                 id={`phase-tab-${p.step}`}
-                aria-selected={isActive}
-                aria-controls="phase-panel"
+                aria-current={isActive ? "step" : undefined}
                 onClick={() => setActive(idx)}
-                className="group flex w-16 flex-col items-center gap-2 focus-visible:outline-none sm:w-24"
+                className="group flex w-16 flex-col items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:w-24"
               >
                 <span
                   className={cn(
@@ -67,15 +65,14 @@ export function EngagementPhases() {
             </React.Fragment>
           );
         })}
-      </div>
+      </nav>
 
       {/* Active phase panel */}
-      <Card
-        id="phase-panel"
-        role="tabpanel"
+      <section
         aria-labelledby={`phase-tab-${phase.step}`}
-        className="border-2 mx-auto max-w-4xl"
+        className="mx-auto max-w-4xl"
       >
+      <Card className="border-2">
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <CardTitle className="text-xl">
@@ -128,6 +125,7 @@ export function EngagementPhases() {
           </div>
         </CardContent>
       </Card>
+      </section>
     </div>
   );
 }
