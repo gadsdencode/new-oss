@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
-import Image from "next/image";
 import { PageAiContext } from "@/components/page-ai-context";
 import { CentralizedExpertisePageTools } from "./CentralizedExpertisePageTools";
 import { StructuredData } from "@/components/structured-data";
@@ -16,6 +15,8 @@ import { ExpertiseBeam } from "@/components/coe/visuals/expertise-beam";
 import { HeroBackdrop } from "@/components/coe/hero-backdrop";
 import { SectionBand } from "@/components/coe/section-band";
 import { CtaTexture } from "@/components/coe/cta-texture";
+import { SectionWash } from "@/components/coe/section-wash";
+import { VignetteLayer } from "@/components/coe/vignette-layer";
 import {
   UsersIcon,
   FlaskConicalIcon,
@@ -64,22 +65,26 @@ const approach = [
   { step: "03", icon: RocketIcon, title: "Deploy on High-Value Work", description: "Direct the team to initiatives with the clearest, fastest business payoff." },
 ];
 
-// Industry vignettes: keyword-matched per the Stage 2 mapping. Both items map
-// to the retail/supply-chain image ("retail" and "supply chain"/"logistics");
-// the repetition is intentional per the mapping.
+// Industry vignettes: keyword-matched per the Stage 2 mapping.
+// - Customer Sentiment Analysis: explicit override (keywords: sentiment,
+//   customer feedback, NLP, voice of customer -> coe-usecase-sentiment.webp);
+//   object-left keeps the phone-with-speech-bubble subject in frame on narrow
+//   crops. Previously mapped to the retail/supply-chain image via "retail".
+// - Supply-Chain Optimization: "supply chain"/"logistics" -> supply-chain image.
 const applications: {
   title: string;
   description: string;
   image?: string;
   imagePosition?: string;
 }[] = [
-  { title: "Customer Sentiment Analysis", description: "A shared team builds an NLP tool to analyze customer feedback across retail operations.", image: "/images/coe/coe-industry-supplychain.webp", imagePosition: "object-center" },
+  { title: "Customer Sentiment Analysis", description: "A shared team builds an NLP tool to analyze customer feedback across retail operations.", image: "/images/coe/coe-usecase-sentiment.webp", imagePosition: "object-left" },
   { title: "Supply-Chain Optimization", description: "A cross-functional team applies AI-driven demand forecasting to optimize logistics.", image: "/images/coe/coe-industry-supplychain.webp", imagePosition: "object-center" },
 ];
 
-// Colored version of the section's matched vignette, washed behind the whole
-// Applications section; the card copies render greyscale for chromatic contrast.
-const sectionVignette = applications.find((a) => a.image)?.image;
+// Colored wash behind the whole Applications section; the card copies render
+// greyscale for chromatic contrast. Pinned to the section's industry image so
+// the per-card sentiment override above does not re-theme the entire section.
+const sectionVignette = "/images/coe/coe-industry-supplychain.webp";
 
 const benefits = [
   { icon: LightbulbIcon, title: "Improved Innovation", description: "Concentrated expertise sparks better ideas and faster experimentation." },
@@ -231,20 +236,7 @@ export default function CentralizedExpertisePage() {
           {/* Colored section field: full-color vignette washes the section and
               fades at both edges; the greyscale card copy above it supplies the
               chromatic figure-ground contrast. */}
-          {sectionVignette && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 mask-[linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)]"
-            >
-              <Image
-                src={sectionVignette}
-                alt=""
-                fill
-                sizes="100vw"
-                className="object-cover object-center opacity-15 dark:opacity-25"
-              />
-            </div>
-          )}
+          {sectionVignette && <SectionWash src={sectionVignette} />}
           <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <Badge variant="secondary" className="mb-4">In Practice</Badge>
@@ -256,20 +248,7 @@ export default function CentralizedExpertisePage() {
                   {/* Industry vignette as an edge-bleed backdrop: anchored to the
                       right periphery and masked toward the text, so reading
                       anchors top-left while the image registers as atmosphere. */}
-                  {a.image && (
-                    <div
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-y-0 right-0 w-3/5 mask-[linear-gradient(to_left,black_25%,transparent_95%)]"
-                    >
-                      <Image
-                        src={a.image}
-                        alt=""
-                        fill
-                        sizes="(max-width: 768px) 66vw, 30vw"
-                        className={`object-cover ${a.imagePosition ?? "object-center"} grayscale opacity-30 dark:opacity-45 transition-all duration-500 group-hover:grayscale-0`}
-                      />
-                    </div>
-                  )}
+                  {a.image && <VignetteLayer src={a.image} position={a.imagePosition} edge="right" />}
                   <CardHeader>
                     <div className="h-2 w-16 rounded-full bg-gradient-to-r from-primary to-accent mb-4" />
                     <CardTitle className="text-xl">{a.title}</CardTitle>

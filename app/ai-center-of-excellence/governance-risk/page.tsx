@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
-import Image from "next/image";
 import { PageAiContext } from "@/components/page-ai-context";
 import { GovernanceRiskPageTools } from "./GovernanceRiskPageTools";
 import { StructuredData } from "@/components/structured-data";
@@ -16,6 +15,8 @@ import { ResponsibleAIGauges } from "@/components/coe/visuals/responsible-ai-gau
 import { HeroBackdrop } from "@/components/coe/hero-backdrop";
 import { SectionBand } from "@/components/coe/section-band";
 import { CtaTexture } from "@/components/coe/cta-texture";
+import { SectionWash } from "@/components/coe/section-wash";
+import { VignetteLayer } from "@/components/coe/vignette-layer";
 import {
   UsersIcon,
   AlertTriangleIcon,
@@ -224,20 +225,7 @@ export default function GovernanceRiskPage() {
           {/* Colored section field: full-color vignette washes the section and
               fades at both edges; the greyscale card copy above it supplies the
               chromatic figure-ground contrast. */}
-          {sectionVignette && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 mask-[linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)]"
-            >
-              <Image
-                src={sectionVignette}
-                alt=""
-                fill
-                sizes="100vw"
-                className="object-cover object-center opacity-15 dark:opacity-25"
-              />
-            </div>
-          )}
+          {sectionVignette && <SectionWash src={sectionVignette} />}
           <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <Badge variant="secondary" className="mb-4">In Practice</Badge>
@@ -249,20 +237,7 @@ export default function GovernanceRiskPage() {
                   {/* Industry vignette as an edge-bleed backdrop: anchored to the
                       right periphery and masked toward the text, so reading
                       anchors top-left while the image registers as atmosphere. */}
-                  {a.image && (
-                    <div
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-y-0 right-0 w-3/5 mask-[linear-gradient(to_left,black_25%,transparent_95%)]"
-                    >
-                      <Image
-                        src={a.image}
-                        alt=""
-                        fill
-                        sizes="(max-width: 768px) 66vw, 30vw"
-                        className={`object-cover ${a.imagePosition ?? "object-center"} grayscale opacity-30 dark:opacity-45 transition-all duration-500 group-hover:grayscale-0`}
-                      />
-                    </div>
-                  )}
+                  {a.image && <VignetteLayer src={a.image} position={a.imagePosition} edge="right" />}
                   <CardHeader>
                     <div className="h-2 w-16 rounded-full bg-gradient-to-r from-primary to-accent mb-4" />
                     <CardTitle className="text-xl">{a.title}</CardTitle>

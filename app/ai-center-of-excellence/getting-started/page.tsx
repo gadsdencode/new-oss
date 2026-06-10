@@ -7,8 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
-import Image from "next/image";
 import { CtaTexture } from "@/components/coe/cta-texture";
+import { SectionWash } from "@/components/coe/section-wash";
+import { VignetteLayer } from "@/components/coe/vignette-layer";
 import { PageAiContext } from "@/components/page-ai-context";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
@@ -277,18 +278,7 @@ export default function GettingStartedPage() {
               the three-tier journey) washes the section in color, fading at both
               edges. The tier cards above carry greyscale versions of their own
               art, so color reads as ambient ground and the cards as figure. */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 mask-[linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)]"
-          >
-            <Image
-              src="/images/coe/coe-tier-scale.webp"
-              alt=""
-              fill
-              sizes="100vw"
-              className="object-cover object-center opacity-15 dark:opacity-25"
-            />
-          </div>
+          <SectionWash src="/images/coe/coe-tier-scale.webp" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold tracking-tight text-foreground">Three Ways to Begin</h2>
@@ -320,18 +310,7 @@ export default function GettingStartedPage() {
                         dissolves into the surface via a mask, so there is no hard
                         image boundary for the eye to snag on. Copy stays the
                         figure; the artwork reads as atmosphere behind it. */}
-                    <div
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-x-0 top-0 h-48 mask-[linear-gradient(to_bottom,black_20%,transparent_100%)]"
-                    >
-                      <Image
-                        src={tier.image}
-                        alt=""
-                        fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        className={`object-cover ${tierImageStyles[idx].position} grayscale opacity-40 dark:opacity-60 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0`}
-                      />
-                    </div>
+                    <VignetteLayer src={tier.image} position={tierImageStyles[idx].position} edge="top" />
                     <CardHeader className="pt-28">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">

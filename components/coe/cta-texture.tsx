@@ -17,14 +17,16 @@ export function CtaTexture({ className }: CtaTextureProps) {
       {/* Near-black asset with a faint wave in the lower half. The bottom-rising
           mask makes the wave read as a ground plane under the headline instead of
           a full-bleed picture: strongest at the section's base, fully dissolved
-          before it reaches the text. Light theme stays much fainter so the dark
-          texture never fights the dark foreground text. */}
+          before it reaches the text.
+          Per-theme compositing: light = multiply ("graphite ink" that preserves
+          the band's tint); dark = screen (only the wave's glow adds light, so
+          there is no black smudge over the dark band). */}
       <Image
         src="/images/coe/coe-cta-texture.webp"
         alt=""
         fill
         sizes="100vw"
-        className="object-cover object-bottom opacity-20 dark:opacity-70 mask-[linear-gradient(to_top,black_30%,transparent_85%)]"
+        className="object-cover object-bottom mix-blend-multiply opacity-35 dark:mix-blend-screen dark:opacity-80 mask-[linear-gradient(to_top,black_30%,transparent_85%)]"
       />
     </div>
   );
