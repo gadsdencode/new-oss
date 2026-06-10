@@ -1,6 +1,8 @@
 // app/ai-center-of-excellence/getting-started/page.tsx
 // NO "use client" directive - this is a Server Component (matches the pillar pages).
+// Interactive islands (PathFinder, EngagementPhases) are client components.
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +12,9 @@ import Link from "next/link";
 import { CtaTexture } from "@/components/coe/cta-texture";
 import { SectionWash } from "@/components/coe/section-wash";
 import { VignetteLayer } from "@/components/coe/vignette-layer";
+import { PathFinder } from "@/components/coe/path-finder";
+import { EngagementPhases } from "@/components/coe/engagement-phases";
+import { GETTING_STARTED } from "@/lib/coe/getting-started-data";
 import { PageAiContext } from "@/components/page-ai-context";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
@@ -50,150 +55,8 @@ export const metadata: Metadata = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// GETTING_STARTED — single source of truth for ALL copy on this page.
-// Editorial defaults: timelines SHOWN (as ranges), pricing NOT shown.
-// To show pricing later: add a `price` field per tier here and render one line
-// in the tier card. No other file changes required.
-// ---------------------------------------------------------------------------
-const GETTING_STARTED = {
-  hero: {
-    eyebrow: "Center of Excellence",
-    title: "How to get started",
-    subtitle:
-      "You don't have to commit to a full build to begin. Most teams start with a short, fixed-scope diagnostic, then scale as the value is proven.",
-  },
-
-  // Three entry tiers (crawl / walk / run). Maps to journey stages:
-  // Diagnostic = Exploring/Planning, Pilot = Building, Build & Scale = Scaling.
-  tiers: [
-    {
-      id: "diagnostic",
-      name: "Readiness Diagnostic",
-      tagline: "Find out where you stand",
-      image: "/images/coe/coe-tier-diagnostic.webp",
-      duration: "2 to 3 weeks",
-      whatItIs:
-        "A structured assessment across all six CoE pillars, benchmarked against a maturity model.",
-      walkAwayWith: [
-        "A maturity score across the six pillars",
-        "A prioritized gap analysis",
-        "A recommended roadmap and starting point",
-      ],
-      bestFor:
-        "Teams exploring or planning a CoE who want an objective baseline before committing.",
-      featured: true, // primary, lowest-barrier entry point
-    },
-    {
-      id: "pilot",
-      name: "Foundation Pilot",
-      tagline: "Prove value on one real use case",
-      image: "/images/coe/coe-tier-pilot.webp",
-      duration: "8 to 12 weeks",
-      whatItIs:
-        "We stand up the governance and infrastructure baseline and deliver one high-value use case end to end.",
-      walkAwayWith: [
-        "A production-ready pilot",
-        "A governance and data baseline",
-        "A measured outcome to build the internal case",
-      ],
-      bestFor:
-        "Teams ready to build who want to de-risk the full investment by proving the model first.",
-      featured: false,
-    },
-    {
-      id: "scale",
-      name: "CoE Build & Scale",
-      tagline: "Operationalize the full Center of Excellence",
-      image: "/images/coe/coe-tier-scale.webp",
-      duration: "Phased, typically 6 months and up",
-      whatItIs:
-        "Full operationalization across all six pillars, with the operating model, enablement, and governance to scale AI organization-wide.",
-      walkAwayWith: [
-        "A running Center of Excellence",
-        "An operating model and governance framework",
-        "An enabled internal team and adoption plan",
-      ],
-      bestFor:
-        "Teams scaling AI who are committed to a durable, organization-wide capability.",
-      featured: false,
-    },
-  ],
-
-  // "What you'll need" — qualifies leads and builds trust.
-  prerequisites: [
-    {
-      title: "An executive sponsor",
-      detail:
-        "A senior leader accountable for outcomes and empowered to clear roadblocks.",
-    },
-    {
-      title: "A defined business problem",
-      detail:
-        "At least one concrete, high-value problem to anchor the work. We help you sharpen it if needed.",
-    },
-    {
-      title: "Access to data and systems",
-      detail:
-        "Reasonable access to the relevant data, tools, and stakeholders during the engagement.",
-    },
-    {
-      title: "A cross-functional point of contact",
-      detail:
-        "One person or small team to coordinate on your side and keep momentum.",
-    },
-  ],
-  prerequisitesNote:
-    "Don't have all of these in place yet? That is exactly what the Readiness Diagnostic is for.",
-
-  // Engagement phases — shows BOTH sides of the work (this is what converts).
-  phases: [
-    {
-      step: "01",
-      title: "Discovery & Readiness",
-      duration: "2 to 3 weeks",
-      ossDoes:
-        "Assess maturity across the six pillars, identify gaps, and define success metrics.",
-      youDo: "Connect us with stakeholders and provide access to context.",
-      deliverable: "Maturity baseline and prioritized roadmap.",
-    },
-    {
-      step: "02",
-      title: "Foundation",
-      duration: "4 to 6 weeks",
-      ossDoes: "Stand up governance, data, and infrastructure baselines.",
-      youDo: "Review and approve the operating model and guardrails.",
-      deliverable: "Governance framework and technical foundation.",
-    },
-    {
-      step: "03",
-      title: "Pilot & Prove",
-      duration: "4 to 8 weeks",
-      ossDoes: "Build and deploy one high-value use case end to end.",
-      youDo: "Provide subject-matter input and validate outcomes.",
-      deliverable: "Production-ready pilot with measured results.",
-    },
-    {
-      step: "04",
-      title: "Scale & Enable",
-      duration: "Ongoing",
-      ossDoes:
-        "Expand across the pillars, enable your team, and operationalize the CoE.",
-      youDo: "Grow internal ownership and adoption.",
-      deliverable: "A self-sustaining Center of Excellence.",
-    },
-  ],
-
-  cta: {
-    title: "Start with a readiness diagnostic",
-    body: "The lowest-risk first step. We give you an objective baseline and a clear recommendation, no commitment to a full build.",
-    primaryLabel: "Book a readiness workshop",
-    primaryHref: "/contact",
-    secondaryLabel: "Take the 5-minute readiness assessment",
-    // Anchor verified against app/ai-center-of-excellence/page.tsx (section id="assessment").
-    secondaryHref: "/ai-center-of-excellence#assessment",
-  },
-} as const;
+// GETTING_STARTED copy lives in lib/coe/getting-started-data.ts (shared with
+// the PathFinder wizard, the phase stepper, and the readiness assessment).
 
 // Decorative icons paired to tiers / prerequisites (kept out of the copy constant).
 const tierIcons = [SearchCheckIcon, RocketIcon, TrendingUpIcon] as const;
@@ -280,8 +143,23 @@ export default function GettingStartedPage() {
               art, so color reads as ambient ground and the cards as figure. */}
           <SectionWash src="/images/coe/coe-tier-scale.webp" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">Three Ways to Begin</h2>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">Find Your Starting Point</h2>
+              <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+                Two quick questions and we&apos;ll point you to the right entry tier - no form, no commitment.
+              </p>
+            </div>
+
+            {/* PathFinder is a client island reading ?stage= deep links; Suspense
+                keeps the page statically prerenderable with useSearchParams. */}
+            <Suspense fallback={null}>
+              <PathFinder />
+            </Suspense>
+
+            {/* Comparison view: full tier detail for browsers and crawlers,
+                anchored for the wizard's "Compare all three tiers" action. */}
+            <div id="compare-tiers" className="scroll-mt-24 text-center mt-24 mb-16">
+              <h3 className="text-3xl font-bold tracking-tight text-foreground">Three Ways to Begin</h3>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 Start small and scale as the value is proven. Most teams begin with the readiness diagnostic.
               </p>
@@ -406,45 +284,7 @@ export default function GettingStartedPage() {
                 A clear, phased path - with both sides of the work spelled out at every step.
               </p>
             </div>
-            <ol className="relative space-y-8 before:absolute before:left-[27px] before:top-2 before:bottom-2 before:w-px before:bg-border md:before:left-[31px]">
-              {GETTING_STARTED.phases.map((phase) => (
-                <li key={phase.step} className="relative pl-20 md:pl-24">
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-0 top-0 flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary/30 bg-background text-lg font-bold text-primary md:h-16 md:w-16"
-                  >
-                    {phase.step}
-                  </span>
-                  <Card className="border-2 hover:border-primary/50 transition-colors">
-                    <CardHeader>
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <CardTitle className="text-xl">{phase.title}</CardTitle>
-                        <Badge variant="outline" className="w-fit">
-                          <ClockIcon className="w-3 h-3 mr-1" />
-                          {phase.duration}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid gap-4 sm:grid-cols-3">
-                        <div className="rounded-lg border bg-muted/30 p-3">
-                          <p className="text-xs font-semibold uppercase tracking-wider text-primary/70 mb-1">We do</p>
-                          <p className="text-sm text-foreground">{phase.ossDoes}</p>
-                        </div>
-                        <div className="rounded-lg border border-primary/40 bg-primary/5 p-3">
-                          <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-1">You do</p>
-                          <p className="text-sm text-foreground">{phase.youDo}</p>
-                        </div>
-                        <div className="rounded-lg border bg-muted/30 p-3">
-                          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">You get</p>
-                          <p className="text-sm text-foreground">{phase.deliverable}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </li>
-              ))}
-            </ol>
+            <EngagementPhases />
           </div>
         </section>
 

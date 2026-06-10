@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { GETTING_STARTED_PATH, type JourneyStageId } from "@/lib/coe/getting-started-data";
 
 type PillarId = "vision" | "expertise" | "infrastructure" | "data" | "governance" | "adoption";
 
@@ -126,14 +127,19 @@ interface Tier {
   name: string;
   blurb: string;
   ctaLabel: string;
+  /** Journey stage preselected in the getting-started PathFinder (deep link). */
+  stageId: JourneyStageId;
+  /** Entry tier the maturity result maps to (Foundational/Developing -> Diagnostic,
+   *  Operational -> Pilot, Leading -> Build & Scale). */
+  entryTierName: string;
 }
 
 // Highest tier whose `min` the total meets, evaluated top-down.
 const TIERS: Tier[] = [
-  { min: 21, name: "Leading", blurb: "You're operating at a high level. We can help you optimize, govern at scale, and stay at the frontier of AI capability.", ctaLabel: "Schedule an Optimization Review" },
-  { min: 17, name: "Operational", blurb: "You have a working foundation. The opportunity now is consistency and scale across the whole organization.", ctaLabel: "Schedule a Scaling Assessment" },
-  { min: 12, name: "Developing", blurb: "You have momentum in places. Centralizing expertise and governance will turn pilots into a repeatable capability.", ctaLabel: "Schedule a Strategy Session" },
-  { min: 0, name: "Foundational", blurb: "You're at the starting line. A structured assessment and roadmap will give you the fastest path to value.", ctaLabel: "Schedule a Discovery Call" },
+  { min: 21, name: "Leading", blurb: "You're operating at a high level. We can help you optimize, govern at scale, and stay at the frontier of AI capability.", ctaLabel: "Schedule an Optimization Review", stageId: "scaling", entryTierName: "CoE Build & Scale" },
+  { min: 17, name: "Operational", blurb: "You have a working foundation. The opportunity now is consistency and scale across the whole organization.", ctaLabel: "Schedule a Scaling Assessment", stageId: "building", entryTierName: "Foundation Pilot" },
+  { min: 12, name: "Developing", blurb: "You have momentum in places. Centralizing expertise and governance will turn pilots into a repeatable capability.", ctaLabel: "Schedule a Strategy Session", stageId: "planning", entryTierName: "Readiness Diagnostic" },
+  { min: 0, name: "Foundational", blurb: "You're at the starting line. A structured assessment and roadmap will give you the fastest path to value.", ctaLabel: "Schedule a Discovery Call", stageId: "exploring", entryTierName: "Readiness Diagnostic" },
 ];
 
 function getTier(total: number): Tier {
@@ -294,10 +300,22 @@ export function CoEReadinessAssessment() {
                     </div>
                   )}
                   <p className="text-sm text-muted-foreground leading-relaxed">{tier.blurb}</p>
+                  {/* Entry-tier recommendation: connects the maturity result to
+                      the getting-started funnel instead of dead-ending here. */}
+                  <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
+                    <p className="text-xs font-medium text-muted-foreground mb-1">Your recommended starting point</p>
+                    <p className="font-semibold text-foreground">{tier.entryTierName}</p>
+                  </div>
                   <div className="space-y-3">
                     <Button className="w-full shadow-brand" asChild>
                       <Link href="/contact">
                         {tier.ctaLabel}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button variant="outline" className="w-full whitespace-normal" asChild>
+                      <Link href={`${GETTING_STARTED_PATH}?stage=${tier.stageId}`}>
+                        See your recommended starting point
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
