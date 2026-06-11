@@ -36,14 +36,13 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "How to Start an AI Center of Excellence | Overture Systems",
+  title: "Getting Started with Your AI CoE | Overture Systems Solutions",
   description:
-    "A clear, low-risk path to launching your AI Center of Excellence - start with a short readiness diagnostic, prove value with a foundation pilot, then build and scale. See the tiers, what you'll need, and how an engagement runs.",
-  // Absolute URLs: no metadataBase is set in app/layout.tsx (origin matches the JSON-LD schemas).
+    "Three entry tiers from readiness diagnostic to full CoE build. See prerequisites, timelines, and what you walk away with at each tier.",
   openGraph: {
     images: [
       {
-        url: "https://new-oss.vercel.app/images/coe/coe-getting-started-og.jpg",
+        url: "https://overture-systems.com/images/coe/coe-getting-started-og.jpg",
         width: 1200,
         height: 630,
       },
@@ -51,7 +50,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    images: ["https://new-oss.vercel.app/images/coe/coe-getting-started-og.jpg"],
+    images: ["https://overture-systems.com/images/coe/coe-getting-started-og.jpg"],
   },
 };
 
@@ -82,12 +81,12 @@ const gettingStartedSchema = {
     name: p.title,
     text: p.ossDoes,
   })),
-  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://new-oss.vercel.app" },
+  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://overture-systems.com" },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };
 
 // ---- Plain-text context for the AI assistant ----
-const pageContent = `This page explains HOW to get started with an Overture Systems Solutions AI Center of Excellence (CoE). Teams do not have to commit to a full build; most start with a short, fixed-scope diagnostic and scale as value is proven. There are three entry tiers: (1) Readiness Diagnostic - 2 to 3 weeks, a structured assessment across all six CoE pillars benchmarked against a maturity model; you walk away with a maturity score, a prioritized gap analysis, and a recommended roadmap and starting point; best for teams exploring or planning a CoE who want an objective baseline. This is the recommended, lowest-risk first step. (2) Foundation Pilot - 8 to 12 weeks, stand up the governance and infrastructure baseline and deliver one high-value use case end to end; you walk away with a production-ready pilot, a governance and data baseline, and a measured outcome; best for teams ready to build who want to de-risk the full investment. (3) CoE Build & Scale - phased, typically 6 months and up, full operationalization across all six pillars with the operating model, enablement, and governance to scale AI organization-wide; you walk away with a running Center of Excellence, an operating model and governance framework, and an enabled internal team and adoption plan; best for teams committed to a durable, organization-wide capability. What you'll need to begin: an executive sponsor accountable for outcomes; a defined, high-value business problem to anchor the work; reasonable access to relevant data, tools, and stakeholders; and a cross-functional point of contact to coordinate. Teams that don't yet have all of these should start with the Readiness Diagnostic. How an engagement runs, in four phases: 01 Discovery & Readiness (2 to 3 weeks) - OSS assesses maturity, identifies gaps, and defines success metrics while you connect stakeholders and provide context; deliverable is a maturity baseline and prioritized roadmap. 02 Foundation (4 to 6 weeks) - OSS stands up governance, data, and infrastructure baselines while you review and approve the operating model; deliverable is a governance framework and technical foundation. 03 Pilot & Prove (4 to 8 weeks) - OSS builds and deploys one high-value use case while you provide subject-matter input and validate outcomes; deliverable is a production-ready pilot with measured results. 04 Scale & Enable (ongoing) - OSS expands across the pillars and enables your team while you grow internal ownership and adoption; deliverable is a self-sustaining Center of Excellence. Every engagement opens with a rigorous readiness diagnostic, which is a big part of why Overture maintains a 95% project success rate. Pricing is scoped during the diagnostic; to begin, book a readiness workshop via the contact page or take the 5-minute readiness assessment on the AI Center of Excellence overview page.`;
+const pageContent = `This page explains HOW to get started with an Overture Systems Solutions AI Center of Excellence (CoE). Teams do not have to commit to a full build; most start with a short, fixed-scope diagnostic and scale as value is proven. There are three entry tiers: (1) Readiness Diagnostic - 2 to 3 weeks, a structured assessment across all six CoE pillars benchmarked against a maturity model; you walk away with a maturity score, a prioritized gap analysis, and a recommended roadmap and starting point; best for teams exploring or planning a CoE who want an objective baseline. This is the recommended, lowest-risk first step. (2) Foundation Pilot - 8 to 12 weeks, stand up the governance and infrastructure baseline and deliver one high-value use case end to end; you walk away with a production-ready pilot, a governance and data baseline, and a measured outcome; best for teams ready to build who want to de-risk the full investment. (3) CoE Build & Scale - phased, typically 6 months and up, full operationalization across all six pillars with the operating model, enablement, and governance to scale AI organization-wide; you walk away with a running Center of Excellence, an operating model and governance framework, and an enabled internal team and adoption plan; best for teams committed to a durable, organization-wide capability. What you'll need to begin: an executive sponsor accountable for outcomes; a defined, high-value business problem to anchor the work; reasonable access to relevant data, tools, and stakeholders; and a cross-functional point of contact to coordinate. Teams that don't yet have all of these should start with the Readiness Diagnostic. How an engagement runs, in four phases: 01 Discovery & Readiness (2 to 3 weeks) - OSS assesses maturity, identifies gaps, and defines success metrics while you connect stakeholders and provide context; deliverable is a maturity baseline and prioritized roadmap. 02 Foundation (4 to 6 weeks) - OSS stands up governance, data, and infrastructure baselines while you review and approve the operating model; deliverable is a governance framework and technical foundation. 03 Pilot & Prove (4 to 8 weeks) - OSS builds and deploys one high-value use case while you provide subject-matter input and validate outcomes; deliverable is a production-ready pilot with measured results. 04 Scale & Enable (ongoing) - OSS expands across the pillars and enables your team while you grow internal ownership and adoption; deliverable is a self-sustaining Center of Excellence. Every engagement opens with a rigorous readiness diagnostic - defined scope, a measured baseline, and clear success metrics keep projects on track. Pricing is scoped during the diagnostic; to begin, book a readiness workshop via the contact page or take the 5-minute readiness assessment on the AI Center of Excellence overview page.`;
 
 export default function GettingStartedPage() {
   return (
@@ -292,12 +291,11 @@ export default function GettingStartedPage() {
         <section className="py-20 border-y bg-linear-to-b from-background to-primary/5 dark:to-primary/5">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-2xl font-medium leading-relaxed text-foreground">
-              Every engagement opens with a rigorous readiness diagnostic. That discipline is a big part of
-              why we maintain a{" "}
+              Every engagement opens with a rigorous readiness diagnostic. That discipline -{" "}
               <span className="bg-linear-to-r from-primary to-chart-2 bg-clip-text text-transparent font-bold">
-                95% project success rate
+                defined scope, a measured baseline, and clear success metrics
               </span>{" "}
-              where the industry average struggles.
+              - keeps projects on track where the industry average struggles.
             </p>
           </div>
         </section>

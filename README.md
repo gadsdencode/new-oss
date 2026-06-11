@@ -204,8 +204,8 @@ Built with **shadcn/ui** and **Tailwind CSS**:
 
 ## 🔐 Security
 
-- ✅ SOC 2 Type II compliant infrastructure
-- ✅ HIPAA-ready for healthcare data
+- ✅ Security controls built around recognized frameworks
+- ✅ Secure, governed handling of sensitive data
 - ✅ Secure API key management
 - ✅ Environment variable validation
 - ✅ Error boundary protection

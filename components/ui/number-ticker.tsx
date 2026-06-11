@@ -23,7 +23,20 @@ export function NumberTicker({
   ...props
 }: NumberTickerProps) {
   const ref = useRef<HTMLSpanElement>(null)
-  const motionValue = useMotionValue(direction === "down" ? value : startValue)
+
+  // The value the stat resolves to. This is what server HTML must contain so
+  // crawlers, link previews, and no-JS environments never see a zero state.
+  const finalValue = direction === "down" ? startValue : value
+  const animateFrom = direction === "down" ? value : startValue
+
+  const formatNumber = (n: number) =>
+    Intl.NumberFormat("en-US", {
+      minimumFractionDigits: decimalPlaces,
+      maximumFractionDigits: decimalPlaces,
+    }).format(Number(n.toFixed(decimalPlaces)))
+
+  // Initialize at the final value; the count-up is a progressive enhancement.
+  const motionValue = useMotionValue(finalValue)
   const springValue = useSpring(motionValue, {
     damping: 60,
     stiffness: 100,
@@ -31,31 +44,30 @@ export function NumberTicker({
   const isInView = useInView(ref, { once: true, margin: "0px" })
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null
+    if (!isInView) return
 
-    if (isInView) {
-      timer = setTimeout(() => {
-        motionValue.set(direction === "down" ? startValue : value)
-      }, delay * 1000)
-    }
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches
+    if (prefersReducedMotion) return
 
-    return () => {
-      if (timer !== null) {
-        clearTimeout(timer)
-      }
-    }
-  }, [motionValue, isInView, delay, value, direction, startValue])
+    // Snap to the start value without animating, then spring to the final value.
+    motionValue.jump(animateFrom)
+    const timer = setTimeout(() => {
+      motionValue.set(finalValue)
+    }, delay * 1000)
+
+    return () => clearTimeout(timer)
+  }, [motionValue, isInView, delay, finalValue, animateFrom])
 
   useEffect(
     () =>
       springValue.on("change", (latest) => {
         if (ref.current) {
-          ref.current.textContent = Intl.NumberFormat("en-US", {
-            minimumFractionDigits: decimalPlaces,
-            maximumFractionDigits: decimalPlaces,
-          }).format(Number(latest.toFixed(decimalPlaces)))
+          ref.current.textContent = formatNumber(latest)
         }
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [springValue, decimalPlaces]
   )
 
@@ -68,7 +80,7 @@ export function NumberTicker({
       )}
       {...props}
     >
-      {startValue}
+      {formatNumber(finalValue)}
     </span>
   )
 }

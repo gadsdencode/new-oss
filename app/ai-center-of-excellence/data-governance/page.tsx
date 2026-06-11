@@ -32,10 +32,13 @@ import {
 // Social cards only; title/description inherit from the root layout.
 // No metadataBase is set in app/layout.tsx, so URLs are absolute.
 export const metadata: Metadata = {
+  title: "Data Management & Governance | AI Center of Excellence | Overture Systems Solutions",
+  description:
+    "Build a robust data ecosystem with cataloging, quality assurance, and secure storage - the governed foundation effective AI depends on.",
   openGraph: {
     images: [
       {
-        url: "https://new-oss.vercel.app/images/coe/coe-data-governance-og.jpg",
+        url: "https://overture-systems.com/images/coe/coe-data-governance-og.jpg",
         width: 1200,
         height: 630,
       },
@@ -43,7 +46,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    images: ["https://new-oss.vercel.app/images/coe/coe-data-governance-og.jpg"],
+    images: ["https://overture-systems.com/images/coe/coe-data-governance-og.jpg"],
   },
 };
 
@@ -85,7 +88,7 @@ const schema = {
   name: "Data Management & Governance for an AI Center of Excellence",
   description:
     "Building a robust data ecosystem with cataloging, quality assurance, and secure storage - the high-quality, well-governed foundation effective AI depends on.",
-  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://new-oss.vercel.app" },
+  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://overture-systems.com" },
   areaServed: { "@type": "Country", name: "United States" },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };

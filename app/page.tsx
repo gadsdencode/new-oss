@@ -1,7 +1,6 @@
 // page.tsx
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid"
 import { HomeButton } from "@/components/ui/home-button";
@@ -14,14 +13,10 @@ import {
   BrainCircuitIcon, 
   ChartBarIcon, 
   ShieldCheckIcon, 
-  Users2Icon, 
   SearchCheckIcon, 
-  MailIcon,
   CheckCircle2,
   ArrowRight,
   SparklesIcon,
-  TrendingUpIcon,
-  ClockIcon,
   AwardIcon,
   RocketIcon,
   TargetIcon,
@@ -31,71 +26,38 @@ import {
   LockIcon,
 } from "lucide-react";
 
-// Trust Stats for Social Proof
-const trustStats = [
-  {
-    icon: TrendingUpIcon,
-    stat: "3.5x",
-    label: "Average ROI",
-    description: "Return on AI investments within 18 months",
-  },
-  {
-    icon: ClockIcon,
-    stat: "60%",
-    label: "Time Savings",
-    description: "Operational efficiency improvement",
-  },
+// Verifiable trust stats - claims a prospect can confirm before signing
+const trustStats: {
+  icon: React.ElementType;
+  stat: string;
+  label: string;
+  description: string;
+  href?: string;
+}[] = [
   {
     icon: AwardIcon,
-    stat: "95%",
-    label: "Success Rate",
-    description: "Projects with measurable impact",
+    stat: "20+",
+    label: "Years in Business",
+    description: "Founded in 2005, delivering systems long before the AI boom",
   },
-  {
-    icon: Users2Icon,
-    stat: "200+",
-    label: "Clients Served",
-    description: "Organizations transformed",
-  },
-];
-
-// Core Services (Curated - replaces cheap marquee)
-const coreServices = [
   {
     icon: BrainCircuitIcon,
-    title: "AI Strategy & Implementation",
-    description: "End-to-end AI consulting from strategy development to production deployment. We help you identify opportunities, build roadmaps, and deliver measurable results.",
-    href: "/consulting",
-    features: ["Strategic Planning", "Custom Solutions", "ROI Optimization"],
+    stat: "Patent-Pending",
+    label: "ICDU Evaluation Pipeline",
+    description: "Our proprietary method for evaluating AI quality and intent",
+    href: "https://icdu.ai",
   },
   {
     icon: TargetIcon,
-    title: "AI Center of Excellence",
-    description: "Stand up a centralized AI capability - strategy, talent, governance, and infrastructure - that turns scattered experiments into a repeatable, scalable function.",
-    href: "/ai-center-of-excellence",
-    features: ["Strategy & Roadmap", "Team & Governance", "Scalable Infrastructure"],
-  },
-  {
-    icon: SearchCheckIcon,
-    title: "B2B Research Platform",
-    description: "AI-powered research solutions for healthcare and non-profit organizations. HIPAA-compliant, secure, and designed for impact.",
-    href: "/research",
-    features: ["HIPAA Compliant", "Advanced Analytics", "Impact Measurement"],
+    stat: "Fixed-Scope",
+    label: "Entry Engagements",
+    description: "Defined deliverables and timelines from the first engagement",
   },
   {
     icon: LayersIcon,
-    title: "Uterpi",
-    description: "Modern AI platform for businesses. Streamline workflows, automate processes, and unlock productivity with cutting-edge AI technology.",
-    href: "https://uterpi.com",
-    features: ["Advanced AI Models", "Team Collaboration", "SOC 2 Compliant"],
-  },
-  {
-    icon: GlobeIcon,
-    title: "AI-Powered Web Development",
-    description: "Custom websites with built-in AI capabilities. Intelligent chatbots, semantic search, and predictive UX — bundled into every build.",
-    href: "/web-development",
-    features: ["AI Integration", "Custom Design", "Performance Optimization"],
-    badge: "New",
+    stat: "End-to-End",
+    label: "Strategy Through Production",
+    description: "One team from roadmap to deployed, governed AI",
   },
 ];
 
@@ -106,7 +68,7 @@ export default function Home() {
     value: {
       companyName: "Overture Systems Solutions",
       tagline: "Transform Your Business With AI Solutions",
-      description: "Strategic AI consulting, implementation, and platforms built for Fortune 500 companies and innovative enterprises. We deliver measurable results, not promises.",
+      description: "Strategic AI consulting, implementation, and platforms built for enterprises and innovative organizations. Founded in 2005 and home of the patent-pending ICDU evaluation pipeline.",
       mainServices: [
         {
           name: "AI Strategy & Implementation",
@@ -122,15 +84,15 @@ export default function Home() {
         },
         {
           name: "B2B Research Platform",
-          description: "AI-powered research solutions for healthcare and non-profit organizations. HIPAA-compliant, secure, and designed for impact.",
+          description: "AI-powered research solutions for healthcare and non-profit organizations with secure, governed data handling and impact measurement.",
           link: "/research",
-          features: ["HIPAA Compliant", "Advanced Analytics", "Impact Measurement"]
+          features: ["Secure, Governed Data Handling", "Advanced Analytics", "Impact Measurement"]
         },
         {
           name: "Uterpi",
           description: "Modern AI platform for businesses. Streamline workflows, automate processes, and unlock productivity with cutting-edge AI technology.",
           link: "https://uterpi.com",
-          features: ["Advanced AI Models", "Team Collaboration", "SOC 2 Compliant"]
+          features: ["Advanced AI Models", "Team Collaboration", "Enterprise Security"]
         },
         {
           name: "AI-Powered Web Development",
@@ -139,13 +101,13 @@ export default function Home() {
           features: ["AI Integration", "Custom Design", "Performance Optimization"]
         }
       ],
-      keyStats: {
-        averageROI: "3.5x return on AI investments within 18 months",
-        timeSavings: "60% operational efficiency improvement",
-        successRate: "95% projects with measurable impact",
-        clientsServed: "200+ organizations transformed"
+      keyFacts: {
+        yearsInBusiness: "20+ years - founded in 2005, delivering systems long before the AI boom",
+        icduPipeline: "Patent-pending ICDU evaluation pipeline - our proprietary method for evaluating AI quality and intent (https://icdu.ai)",
+        engagementModel: "Fixed-scope entry engagements with defined deliverables and timelines",
+        coverage: "End-to-end delivery - one team from roadmap to deployed, governed AI"
       },
-      certifications: ["SOC 2 Type II Certified", "HIPAA Compliant", "Enterprise-Grade Security"],
+      security: ["Enterprise-Grade Security", "Privacy-First Engineering"],
       contactInfo: {
         freeConsultation: true,
         contactPage: "/contact"
@@ -189,7 +151,7 @@ export default function Home() {
           
           {/* Clear Supporting Copy */}
           <p className="mt-8 text-xl sm:text-2xl leading-relaxed text-muted-foreground max-w-4xl mx-auto">
-            Strategic AI consulting, implementation, and platforms built for Fortune 500 companies and innovative enterprises. 
+            Strategic AI consulting, implementation, and platforms built for enterprises and innovative organizations. 
             <span className="block mt-2 font-medium">We deliver measurable results, not promises.</span>
           </p>
           
@@ -197,7 +159,7 @@ export default function Home() {
           <div className="mt-10 mx-auto grid w-full max-w-6xl grid-cols-1 gap-3 px-2 sm:grid-cols-2 sm:px-0 lg:flex lg:flex-nowrap lg:items-center lg:justify-center">
             <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
               <Link href="/ai">
-                Order Your Custom AI
+                Start Your Custom AI Project
                 <BrainCircuitIcon className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
@@ -209,13 +171,13 @@ export default function Home() {
             </Button>
             <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
               <Link href="/web-development">
-                Order Your Custom Website
+                Start Your Web Project
                 <GlobeIcon className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
             <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
               <Link href="/contact">
-                Schedule Consultation
+                Schedule an Executive Briefing
                 <ArrowRight className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
@@ -225,15 +187,11 @@ export default function Home() {
           <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span>SOC 2 Certified</span>
+              <span>Founded 2005</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span>95% Success Rate</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span>200+ Clients</span>
+              <span>Patent-Pending ICDU Evaluation</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
@@ -248,25 +206,43 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              Proven Results That Drive Growth
+              Built on Two Decades of Delivery
             </h2>
             <p className="mt-3 text-lg text-muted-foreground">
-              Our track record speaks for itself
+              What you can verify before you ever sign
             </p>
           </div>
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-            {trustStats.map((stat, idx) => (
-              <div key={idx} className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                    <stat.icon className="h-7 w-7 text-primary" />
+            {trustStats.map((stat, idx) => {
+              const card = (
+                <>
+                  <div className="flex justify-center mb-4">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                      <stat.icon className="h-7 w-7 text-primary" />
+                    </div>
                   </div>
+                  <div className="text-3xl font-bold text-primary sm:text-4xl">{stat.stat}</div>
+                  <div className="mt-2 text-base font-semibold text-foreground">{stat.label}</div>
+                  <div className="mt-1 text-sm text-muted-foreground">{stat.description}</div>
+                </>
+              );
+
+              return stat.href ? (
+                <a
+                  key={idx}
+                  href={stat.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center rounded-xl transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  {card}
+                </a>
+              ) : (
+                <div key={idx} className="text-center">
+                  {card}
                 </div>
-                <div className="text-5xl font-bold text-primary">{stat.stat}</div>
-                <div className="mt-2 text-base font-semibold text-foreground">{stat.label}</div>
-                <div className="mt-1 text-sm text-muted-foreground">{stat.description}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -280,7 +256,7 @@ export default function Home() {
               The Right Solutions for Your Business
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Five core offerings designed to transform your enterprise with AI
+              Six core offerings designed to transform your enterprise with AI
             </p>
           </div>
           <BentoGrid className="auto-rows-[28rem]">
@@ -302,9 +278,20 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/15 via-accent/10 to-accent/5" />
               } 
               Icon={SearchCheckIcon} 
-              description="HIPAA-compliant AI research solutions for healthcare and non-profits. Secure, powerful, and purpose-built." 
+              description="AI research solutions for healthcare and non-profits with secure, governed data handling. Powerful and purpose-built." 
               href="/research" 
               cta="Learn More" 
+            />
+            <BentoCard 
+              name="AI Center of Excellence" 
+              className="col-span-1 md:col-span-2 lg:col-span-2" 
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/10" />
+              } 
+              Icon={TargetIcon} 
+              description="Stand up a centralized AI capability - strategy, talent, governance, and infrastructure - that turns scattered experiments into a repeatable, scalable function." 
+              href="/ai-center-of-excellence" 
+              cta="Explore the CoE" 
             />
             <BentoCard 
               name="Uterpi" 
@@ -313,7 +300,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-secondary/10 to-secondary/5" />
               } 
               Icon={LayersIcon} 
-              description="Modern AI platform for businesses. Advanced models, team collaboration, and SOC 2 compliant." 
+              description="Modern AI platform for businesses. Advanced models, team collaboration, and enterprise security." 
               href="https://uterpi.com" 
               cta="Visit Uterpi" 
             />
@@ -330,69 +317,16 @@ export default function Home() {
             />
             <BentoCard 
               name="Enterprise Compliance" 
-              className="col-span-1 md:col-span-2 lg:col-span-1" 
+              className="col-span-1 md:col-span-2 lg:col-span-2" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/5" />
               } 
               Icon={ShieldCheckIcon} 
-              description="SOC 2 Type II certified. Enterprise-grade security, compliance, and data protection built into every solution." 
+              description="Enterprise-grade security, data protection, and AI governance built into every solution." 
               href="/compliance" 
               cta="View Security" 
             />
           </BentoGrid>
-        </div>
-      </section>
-
-      {/* Featured Services - Static, Curated (Replaces Cheap Marquee) */}
-      <section className="py-24 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-4">What We Offer</Badge>
-            <h2 className="text-4xl font-bold tracking-tight text-foreground">
-              Comprehensive AI Services
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              From strategy to deployment, we provide end-to-end AI solutions tailored to your enterprise needs
-            </p>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {coreServices.map((service, idx) => (
-              <Card key={idx} className="border-2 hover:border-primary/50 transition-all hover:shadow-brand-lg group">
-                <CardHeader>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20 group-hover:bg-primary/20 group-hover:ring-primary/30 group-hover:shadow-glow transition-all duration-300">
-                      <service.icon className="h-8 w-8 text-primary" />
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="text-2xl mb-2">{service.title}</CardTitle>
-                    {"badge" in service && (service as any).badge && (
-                      <Badge className="bg-primary text-primary-foreground text-xs">
-                        {(service as any).badge}
-                      </Badge>
-                    )}
-                  </div>
-                  <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3 mb-6">
-                    {service.features.map((feature, featureIdx) => (
-                      <div key={featureIdx} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <Button asChild className="w-full shadow-brand hover:shadow-brand-lg transition-all">
-                    <Link href={service.href}>
-                      Learn More
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -433,7 +367,7 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-2">Enterprise Security</h3>
-              <p className="text-muted-foreground">SOC 2 certified with enterprise-grade compliance</p>
+              <p className="text-muted-foreground">Enterprise-grade security and privacy-first engineering</p>
             </div>
             <div className="text-center">
               <div className="flex justify-center mb-4">
@@ -441,8 +375,8 @@ export default function Home() {
                   <ZapIcon className="h-8 w-8 text-primary" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Proven Results</h3>
-              <p className="text-muted-foreground">95% success rate with measurable ROI</p>
+              <h3 className="text-xl font-semibold mb-2">Proven Longevity</h3>
+              <p className="text-muted-foreground">Two decades in business and a methodology refined across hundreds of engagements</p>
             </div>
           </div>
         </div>

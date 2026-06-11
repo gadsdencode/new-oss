@@ -80,7 +80,7 @@ const consultingServices = [
 const industryExpertise = [
   {
     name: "Healthcare",
-    description: "HIPAA-compliant AI solutions for clinical operations, patient care, and research.",
+    description: "Secure, governed AI solutions for clinical operations, patient care, and research.",
     specializations: [
       "Clinical decision support systems",
       "Patient data analysis and predictive modeling",
@@ -192,29 +192,29 @@ const processSteps = [
 ];
 
 const results = {
-  roi: {
-    stat: "3.5x",
-    label: "Average ROI",
-    description: "Clients see 3.5x return on AI investments within 18 months",
-    details: "Our clients typically achieve return on investment through increased efficiency, reduced costs, and new revenue opportunities.",
+  yearsInBusiness: {
+    stat: "20+",
+    label: "Years in Business",
+    description: "Founded in 2005, delivering systems long before the AI boom",
+    details: "Overture Systems Solutions has operated continuously since 2005, with a delivery methodology refined across two decades of engagements.",
   },
-  timeSavings: {
-    stat: "60%",
-    label: "Time Savings",
-    description: "Reduce operational costs through intelligent automation",
-    details: "On average, clients reduce operational time and costs by 60% through process automation and optimization.",
+  icduPipeline: {
+    stat: "Patent-Pending",
+    label: "ICDU Evaluation Pipeline",
+    description: "Our proprietary method for evaluating AI quality and intent",
+    details: "The patent-pending ICDU evaluation pipeline (https://icdu.ai) is our proprietary approach to assessing the quality and intent of AI systems.",
   },
-  successRate: {
-    stat: "95%",
-    label: "Success Rate",
-    description: "Project success rate with measurable business impact",
-    details: "95% of our projects deliver measurable business impact and meet or exceed client expectations.",
+  fixedScope: {
+    stat: "Fixed-Scope",
+    label: "Entry Engagements",
+    description: "Defined deliverables and timelines from the first engagement",
+    details: "Entry engagements are fixed-scope: deliverables, timelines, and outcomes are defined up front so there are no open-ended commitments.",
   },
-  clientsServed: {
-    stat: "200+",
-    label: "Clients Served",
-    description: "Organizations transformed through AI consulting",
-    details: "We've helped over 200 organizations across various industries successfully implement AI solutions.",
+  endToEnd: {
+    stat: "End-to-End",
+    label: "Strategy Through Production",
+    description: "One team from roadmap to deployed, governed AI",
+    details: "A single team carries the engagement from strategic roadmap through production deployment, with governance built into delivery.",
   },
 };
 
@@ -542,14 +542,14 @@ export function ConsultingPageTools() {
   useCopilotAction({
     name: "getConsultingResults",
     description:
-      "Get information about consulting results, success metrics, and client statistics (ROI, time savings, success rate, clients served). Use this when the user asks about results, outcomes, track record, or success metrics. This tool is ONLY available on the consulting page.",
+      "Get verifiable facts about Overture Systems Solutions' consulting track record (years in business, the patent-pending ICDU evaluation pipeline, fixed-scope entry engagements, end-to-end delivery). Use this when the user asks about results, outcomes, track record, or credentials. This tool is ONLY available on the consulting page.",
     parameters: [
       {
         name: "metric",
         type: "string",
-        description: "The specific metric to get details for (optional - if not provided, returns all metrics)",
+        description: "The specific fact to get details for (optional - if not provided, returns all)",
         required: false,
-        enum: ["roi", "timeSavings", "successRate", "clientsServed"],
+        enum: ["yearsInBusiness", "icduPipeline", "fixedScope", "endToEnd"],
       },
     ],
     available: "enabled",

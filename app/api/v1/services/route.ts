@@ -67,20 +67,20 @@ export async function GET(request: NextRequest) {
           },
         ],
         industries: ["Healthcare", "Financial Services", "Retail & E-commerce", "Manufacturing", "Technology", "Non-Profits"],
-        results: {
-          averageROI: "3.5x within 18 months",
-          costReduction: "60% reduction in operational costs",
-          successRate: "95%",
-          clientsServed: "200+",
+        trackRecord: {
+          yearsInBusiness: "20+ (founded 2005)",
+          icduPipeline: "Patent-pending ICDU evaluation pipeline (https://icdu.ai)",
+          engagementModel: "Fixed-scope entry engagements with defined deliverables and timelines",
+          coverage: "End-to-end delivery from strategy through production",
         },
       },
       {
         id: "research",
         name: "B2B Research Platform",
-        description: "AI-powered research solutions for healthcare and non-profit organizations. HIPAA-compliant, secure, and designed for impact.",
+        description: "AI-powered research solutions for healthcare and non-profit organizations with secure, governed data handling and designed for impact.",
         category: "Platform",
         href: "/research",
-        features: ["HIPAA Compliant", "Advanced Analytics", "Impact Measurement"],
+        features: ["Secure, Governed Data Handling", "Advanced Analytics", "Impact Measurement"],
         useCases: {
           healthcare: [
             "Hospital systems market analysis and competitive intelligence",
@@ -98,9 +98,6 @@ export async function GET(request: NextRequest) {
           ],
         },
         results: {
-          timeSavings: "80% reduction in research time",
-          accuracy: "95%",
-          costReduction: "70%",
           organizationsServed: "500+",
           dataPoints: "10M+",
         },
@@ -157,27 +154,27 @@ export async function GET(request: NextRequest) {
       },
       {
         id: "compliance",
-        name: "Compliance & Security",
-        description: "Enterprise-grade security and compliance services. SOC 2 Type II, HIPAA, GDPR, ISO 27001, CCPA, and FedRAMP ready.",
+        name: "Security & Data Protection",
+        description: "Enterprise-grade security and data protection built around recognized security frameworks, with privacy-first engineering.",
         category: "Compliance",
         href: "/compliance",
-        features: ["SOC 2 Type II", "HIPAA Compliance", "GDPR Ready", "ISO 27001"],
+        features: ["Framework-Aligned Controls", "Secure, Governed Data Handling", "GDPR-Aligned Privacy", "ISO 27001-Informed Practices"],
         standards: [
           {
-            name: "SOC 2 Type II",
-            description: "Comprehensive security, availability, and confidentiality controls independently audited and certified annually.",
+            name: "Security & Availability Controls",
+            description: "Security, availability, and confidentiality controls built around recognized security frameworks.",
           },
           {
-            name: "HIPAA",
-            description: "Full compliance with Health Insurance Portability and Accountability Act for handling protected health information.",
+            name: "Healthcare Data Protection",
+            description: "Secure, governed data handling designed for sensitive healthcare and research information.",
           },
           {
-            name: "GDPR",
-            description: "General Data Protection Regulation compliance for processing EU citizen data with privacy-by-design principles.",
+            name: "GDPR-Aligned Privacy",
+            description: "Privacy-by-design principles that support General Data Protection Regulation requirements for EU citizen data.",
           },
           {
-            name: "ISO 27001",
-            description: "International standard for information security management systems ensuring systematic risk management.",
+            name: "ISO 27001-Informed Practices",
+            description: "Information security management practices designed around the international standard for systematic risk management.",
           },
         ],
       },

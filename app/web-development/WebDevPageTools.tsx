@@ -62,7 +62,7 @@ const servicePackages = [
       "Headless architecture",
       "SSO / RBAC authentication",
       "API-first development",
-      "SOC 2 & HIPAA ready",
+      "Enterprise security & compliance ready",
       "SLA guarantees",
       "12 months dedicated support",
     ],

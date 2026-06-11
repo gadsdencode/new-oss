@@ -34,7 +34,7 @@ import {
 export const metadata: Metadata = {
   title: "AI-Powered Web Development | Overture Systems Solutions",
   description:
-    "Custom websites with built-in AI capabilities. From intelligent chatbots to predictive UX — every site we build is smarter from day one. Get your free consultation.",
+    "Custom websites with built-in AI capabilities: intelligent chatbots, semantic search, and predictive UX in every build.",
   keywords: [
     "web development",
     "AI website",
@@ -46,8 +46,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI-Powered Web Development | Overture Systems Solutions",
     description:
-      "Custom websites with built-in AI capabilities. Every site we build is smarter from day one.",
-    url: "https://new-oss.vercel.app/web-development",
+      "Custom websites with built-in AI capabilities: intelligent chatbots, semantic search, and predictive UX in every build.",
+    url: "https://overture-systems.com/web-development",
     type: "website",
   },
 };
@@ -62,7 +62,7 @@ const webDevServiceSchema = {
   provider: {
     "@type": "Organization",
     name: "Overture Systems Solutions",
-    url: "https://new-oss.vercel.app",
+    url: "https://overture-systems.com",
   },
   areaServed: {
     "@type": "Country",
@@ -117,7 +117,7 @@ We build custom websites with integrated AI capabilities — every site includes
 SERVICE PACKAGES:
 - Starter ($8,000+): Up to 5 pages, AI chatbot, responsive design, basic SEO, CMS integration, 30 days support
 - Business ($25,000+): Up to 15 pages, full AI suite (chatbot + intelligent search + content recommendations), custom design system, advanced SEO, analytics dashboard, CMS, 90 days support, performance optimization
-- Enterprise ($75,000+): Unlimited pages, custom AI systems, dedicated design team, headless CMS architecture, API integrations, SSO/RBAC, 12 months support, SLA guarantees, compliance (SOC 2, HIPAA ready)
+- Enterprise ($75,000+): Unlimited pages, custom AI systems, dedicated design team, headless CMS architecture, API integrations, SSO/RBAC, 12 months support, SLA guarantees, enterprise security and compliance readiness
 
 AI CAPABILITIES INCLUDED:
 - AI Chatbot: Conversational assistant trained on your business content
@@ -140,11 +140,11 @@ PROCESS:
 3. Development & AI Integration (4-8 weeks): Frontend build, AI feature development, CMS setup, testing, QA
 4. Launch & Optimization (1-2 weeks): Deployment, performance tuning, SEO audit, training, handoff
 
-RESULTS:
-- 95% project on-time delivery rate
-- 40% average increase in user engagement with AI features
-- 3x faster content discovery with intelligent search
-- 60% reduction in support tickets with AI chatbot
+WHY US:
+- Fixed-scope packages with defined deliverables and timelines
+- AI capabilities included in every package, not bolted on
+- Modern, battle-tested tech stack (Next.js, React, TypeScript)
+- Founded in 2005 - two decades of delivery experience
 `;
 
 const servicePackages = [
@@ -201,7 +201,7 @@ const servicePackages = [
       "Headless architecture",
       "SSO / RBAC authentication",
       "API-first development",
-      "SOC 2 & HIPAA ready",
+      "Enterprise security & compliance ready",
       "SLA guarantees",
       "12 months dedicated support",
     ],
@@ -411,7 +411,7 @@ export default function WebDevelopmentPage() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-primary" />
-                <span className="font-medium">95% on-time delivery</span>
+                <span className="font-medium">Fixed-scope timelines</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-primary" />

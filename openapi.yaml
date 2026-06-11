@@ -12,16 +12,16 @@ info:
     
     **Authentication**: All endpoints require an API key provided in the `X-API-Key` header.
     
-    **Base URL**: The base URL for all API requests. In production, this will be your deployed domain (e.g., `https://new-oss.vercel.app`).
+    **Base URL**: The base URL for all API requests. In production, this will be your deployed domain (e.g., `https://overture-systems.com`).
   version: 1.0.0
   contact:
     name: Overture Systems Support
-    url: https://new-oss.vercel.app/contact
+    url: https://overture-systems.com/contact
   license:
     name: Proprietary
 
 servers:
-  - url: https://new-oss.vercel.app
+  - url: https://overture-systems.com
     description: Production server
   - url: http://localhost:3000
     description: Local development server

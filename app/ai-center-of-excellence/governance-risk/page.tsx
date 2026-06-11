@@ -36,10 +36,13 @@ import {
 // Social cards only; title/description inherit from the root layout.
 // No metadataBase is set in app/layout.tsx, so URLs are absolute.
 export const metadata: Metadata = {
+  title: "Governance, Risk & Responsible AI | AI Center of Excellence | Overture Systems Solutions",
+  description:
+    "Establish governance, risk management, model monitoring, and responsible-AI practices that make enterprise AI trustworthy.",
   openGraph: {
     images: [
       {
-        url: "https://new-oss.vercel.app/images/coe/coe-governance-risk-og.jpg",
+        url: "https://overture-systems.com/images/coe/coe-governance-risk-og.jpg",
         width: 1200,
         height: 630,
       },
@@ -47,7 +50,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    images: ["https://new-oss.vercel.app/images/coe/coe-governance-risk-og.jpg"],
+    images: ["https://overture-systems.com/images/coe/coe-governance-risk-og.jpg"],
   },
 };
 
@@ -97,7 +100,7 @@ const schema = {
   name: "Governance, Risk & Responsible AI for an AI Center of Excellence",
   description:
     "A governance framework that makes AI trustworthy - board oversight, risk management, model monitoring and auditing, incident response, and responsible-AI practices.",
-  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://new-oss.vercel.app" },
+  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://overture-systems.com" },
   areaServed: { "@type": "Country", name: "United States" },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };

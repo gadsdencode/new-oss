@@ -82,22 +82,10 @@ const socialLinks = [
 
 const offices = [
   {
-    city: "San Francisco",
-    address: "123 Innovation Drive, Suite 100",
-    state: "California, 94105",
+    city: "Chesterfield",
+    address: "7305 Hancock Village Drive, Suite 223",
+    state: "Virginia, 23832",
     isPrimary: true,
-  },
-  {
-    city: "New York",
-    address: "456 Tech Avenue, Floor 15",
-    state: "New York, 10001",
-    isPrimary: false,
-  },
-  {
-    city: "Austin",
-    address: "789 Startup Lane, Building C",
-    state: "Texas, 78701",
-    isPrimary: false,
   },
 ];
 
@@ -182,26 +170,12 @@ export default function ContactPage() {
       ],
       offices: [
         {
-          city: "San Francisco",
-          address: "123 Innovation Drive, Suite 100",
-          state: "California",
-          zip: "94105",
+          city: "Chesterfield",
+          address: "7305 Hancock Village Drive, Suite 223",
+          state: "Virginia",
+          zip: "23832",
           isPrimary: true,
           label: "Headquarters"
-        },
-        {
-          city: "New York",
-          address: "456 Tech Avenue, Floor 15",
-          state: "New York",
-          zip: "10001",
-          isPrimary: false
-        },
-        {
-          city: "Austin",
-          address: "789 Startup Lane, Building C",
-          state: "Texas",
-          zip: "78701",
-          isPrimary: false
         }
       ],
       businessHours: {

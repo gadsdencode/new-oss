@@ -35,10 +35,13 @@ import {
 // Social cards only; title/description inherit from the root layout.
 // No metadataBase is set in app/layout.tsx, so URLs are absolute.
 export const metadata: Metadata = {
+  title: "Centralized AI Expertise | AI Center of Excellence | Overture Systems Solutions",
+  description:
+    "Assemble a multidisciplinary AI team - data scientists, ML engineers, domain experts, and business analysts - deployable across the organization.",
   openGraph: {
     images: [
       {
-        url: "https://new-oss.vercel.app/images/coe/coe-centralized-expertise-og.jpg",
+        url: "https://overture-systems.com/images/coe/coe-centralized-expertise-og.jpg",
         width: 1200,
         height: 630,
       },
@@ -46,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    images: ["https://new-oss.vercel.app/images/coe/coe-centralized-expertise-og.jpg"],
+    images: ["https://overture-systems.com/images/coe/coe-centralized-expertise-og.jpg"],
   },
 };
 
@@ -100,7 +103,7 @@ const schema = {
   name: "Centralized AI Expertise for an AI Center of Excellence",
   description:
     "Building a multidisciplinary AI team - data scientists, ML engineers, domain experts, and business analysts - deployable across the organization for consistent, high-quality AI delivery.",
-  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://new-oss.vercel.app" },
+  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://overture-systems.com" },
   areaServed: { "@type": "Country", name: "United States" },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };

@@ -7,6 +7,8 @@ type SiteFooterProps = {
 };
 
 export function SiteFooter({ variant = "simple", className }: SiteFooterProps) {
+  const year = new Date().getFullYear();
+
   return (
     <footer
       className={cn(
@@ -20,10 +22,10 @@ export function SiteFooter({ variant = "simple", className }: SiteFooterProps) {
         decorative
         className="mx-auto mb-3 h-8 w-8 opacity-70"
       />
-      <p>&copy; 2025 Overture Systems Solutions. All rights reserved.</p>
+      <p>&copy; {year} Overture Systems Solutions. All rights reserved.</p>
       {variant === "full" && (
         <p className="mt-2 text-xs">
-          SOC 2 Type II Certified &bull; HIPAA Compliant &bull; Enterprise-Grade Security
+          Enterprise-Grade Security &bull; Privacy-First Engineering
         </p>
       )}
     </footer>

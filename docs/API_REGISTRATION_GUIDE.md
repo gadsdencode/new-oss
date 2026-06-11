@@ -231,7 +231,7 @@ In Microsoft Copilot:
 ## Support
 
 For issues or questions:
-- Contact: https://new-oss.vercel.app/contact
+- Contact: https://overture-systems.com/contact
 - Check API status: `/api/v1/status`
 
 ---

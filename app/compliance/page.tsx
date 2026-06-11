@@ -40,39 +40,39 @@ import {
 const complianceStandards = [
   {
     icon: ShieldCheckIcon,
-    title: "SOC 2 Type II",
-    description: "Comprehensive security, availability, and confidentiality controls independently audited and certified annually.",
-    features: ["Annual audits", "Continuous monitoring", "Independent validation", "Public reports available"],
+    title: "Security & Availability Controls",
+    description: "Security, availability, and confidentiality controls built around recognized security frameworks.",
+    features: ["Framework-aligned controls", "Continuous monitoring", "Documented policies", "Documentation on request"],
   },
   {
     icon: FileCheckIcon,
-    title: "HIPAA Compliance",
-    description: "Full compliance with Health Insurance Portability and Accountability Act for handling protected health information.",
-    features: ["BAA agreements", "PHI encryption", "Access controls", "Audit logging"],
+    title: "Healthcare Data Protection",
+    description: "Secure, governed data handling designed for sensitive healthcare and research information.",
+    features: ["Data-handling agreements", "Encryption of sensitive data", "Access controls", "Audit logging"],
   },
   {
     icon: GlobeIcon,
-    title: "GDPR Ready",
-    description: "General Data Protection Regulation compliance for processing EU citizen data with privacy-by-design principles.",
+    title: "GDPR-Aligned Privacy",
+    description: "Privacy-by-design principles that support General Data Protection Regulation requirements for EU citizen data.",
     features: ["Data portability", "Right to deletion", "Consent management", "Privacy controls"],
   },
   {
     icon: DatabaseIcon,
-    title: "ISO 27001",
-    description: "International standard for information security management systems ensuring systematic risk management.",
+    title: "ISO 27001-Informed Practices",
+    description: "Information security management practices designed around the international standard for systematic risk management.",
     features: ["Risk assessment", "Security policies", "Incident response", "Business continuity"],
   },
   {
     icon: FileTextIcon,
-    title: "CCPA Compliant",
-    description: "California Consumer Privacy Act compliance protecting consumer privacy rights and data transparency.",
+    title: "CCPA-Aligned Transparency",
+    description: "Practices designed to support California Consumer Privacy Act requirements for consumer privacy rights and data transparency.",
     features: ["Data disclosure", "Opt-out rights", "Non-discrimination", "Consumer requests"],
   },
   {
     icon: NetworkIcon,
-    title: "FedRAMP Ready",
-    description: "Federal Risk and Authorization Management Program readiness for government cloud services.",
-    features: ["Security controls", "Continuous monitoring", "Government standards", "Authorization package"],
+    title: "Government-Grade Design",
+    description: "Architecture designed with federal cloud security expectations, such as FedRAMP, in mind.",
+    features: ["Security controls", "Continuous monitoring", "Government standards", "Hardened architecture"],
   },
 ];
 
@@ -140,39 +140,36 @@ const complianceProcess = [
   {
     step: "04",
     title: "Continuous Compliance",
-    description: "Ongoing monitoring, documentation, and updates to maintain compliance certification status.",
+    description: "Ongoing monitoring, documentation, and updates to maintain your compliance posture.",
     icon: EyeIcon,
     duration: "Ongoing",
   },
 ];
 
-const certifications = [
+// Frameworks our security program is designed around (no held certifications asserted)
+const frameworkAlignment = [
   {
-    name: "SOC 2 Type II",
-    issuer: "AICPA",
-    status: "Active",
-    year: "2025",
+    name: "Security & Availability",
+    framework: "Recognized audit frameworks",
+    status: "Aligned",
     icon: TrophyIcon,
   },
   {
-    name: "HIPAA",
-    issuer: "HHS",
-    status: "Compliant",
-    year: "2025",
+    name: "Healthcare Data Protection",
+    framework: "Secure, governed data handling",
+    status: "Built-in",
     icon: HeartPulseIcon,
   },
   {
-    name: "ISO 27001",
-    issuer: "ISO",
-    status: "Certified",
-    year: "2024",
+    name: "Information Security",
+    framework: "ISO 27001-informed practices",
+    status: "Aligned",
     icon: GlobeIcon,
   },
   {
-    name: "PCI DSS",
-    issuer: "PCI SSC",
-    status: "Level 1",
-    year: "2025",
+    name: "Payment Security",
+    framework: "PCI-aligned processing via Stripe",
+    status: "Delegated",
     icon: CreditCardIcon,
   },
 ];
@@ -199,32 +196,30 @@ const stats = [
   {
     icon: AwardIcon,
     stat: "4+",
-    label: "Certifications",
-    description: "Major compliance frameworks independently verified",
+    label: "Security Frameworks",
+    description: "Recognized frameworks guiding our controls and engineering",
   },
 ];
 
+// Anonymized testimonials - role and sector only, no names or company names
 const testimonials = [
   {
-    quote: "Their SOC 2 compliance and security infrastructure gave us the confidence to migrate our entire healthcare platform. The audit process was seamless.",
-    author: "Michael Torres",
+    quote: "Their security infrastructure gave us the confidence to migrate our entire healthcare platform. The security review process was seamless.",
     role: "Chief Information Security Officer",
-    company: "MedConnect Healthcare",
-    impact: "100% compliance achieved",
+    company: "Healthcare platform provider",
+    impact: "Smooth security review",
   },
   {
-    quote: "The HIPAA compliance features are best-in-class. We've passed multiple audits without issues, and their security team is incredibly responsive.",
-    author: "Dr. Lisa Wang",
+    quote: "The data-protection features are best-in-class. Their security team is incredibly responsive whenever we have questions.",
     role: "VP of Clinical Operations",
-    company: "HealthFirst Systems",
-    impact: "Zero audit findings",
+    company: "Regional health system",
+    impact: "Responsive security team",
   },
   {
-    quote: "As a financial services company, we need rigorous security. Their multi-layered approach and certifications exceed our requirements.",
-    author: "James Patterson",
+    quote: "As a financial services company, we need rigorous security. Their multi-layered approach exceeds our requirements.",
     role: "Head of Compliance",
-    company: "SecureFinance Corp",
-    impact: "Passed all audits",
+    company: "Financial services firm",
+    impact: "Requirements exceeded",
   },
 ];
 
@@ -232,113 +227,73 @@ const testimonials = [
 const complianceServiceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  "serviceType": "Enterprise Security & Compliance Services",
-  "name": "Enterprise Security & Compliance Solutions",
-  "description": "Industry-leading security standards and compliance certifications including SOC 2 Type II, HIPAA, GDPR, ISO 27001, CCPA, FedRAMP-ready, and PCI DSS Level 1. Enterprise-grade infrastructure trusted by Fortune 500 companies.",
+  "serviceType": "Enterprise Security & Data Protection Services",
+  "name": "Enterprise Security & Data Protection Solutions",
+  "description": "Enterprise-grade security and data protection built around recognized security frameworks. Encryption, access controls, monitoring, and governance designed into every engagement.",
   "provider": {
     "@type": "Organization",
     "name": "Overture Systems Solutions",
-    "url": "https://new-oss.vercel.app"
+    "url": "https://overture-systems.com"
   },
   "areaServed": {
     "@type": "Country",
     "name": "United States"
   },
   "serviceOutput": [
-    "SOC 2 Type II certification",
-    "HIPAA compliance and BAA agreements",
-    "GDPR compliance and privacy controls",
-    "ISO 27001 security management",
-    "CCPA compliance",
-    "FedRAMP-ready infrastructure",
-    "PCI DSS Level 1 certification"
+    "Framework-aligned security controls",
+    "Secure, governed data handling",
+    "Privacy-by-design architecture",
+    "Risk assessment and security policies",
+    "Encryption, access controls, and monitoring",
+    "Security documentation and governance frameworks"
   ],
   "audience": {
     "@type": "Audience",
     "audienceType": "Enterprise organizations, Healthcare providers, Financial services, Government agencies"
-  },
-  "additionalProperty": [
-    {
-      "@type": "PropertyValue",
-      "name": "SOC 2 Type II",
-      "value": "Certified (2025)"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "HIPAA",
-      "value": "Compliant (2025)"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "ISO 27001",
-      "value": "Certified (2024)"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "PCI DSS",
-      "value": "Level 1 (2025)"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "Encryption",
-      "value": "AES-256 at rest, TLS 1.3 in transit"
-    }
-  ]
+  }
 };
 
 export default function CompliancePage() {
-  // Provide context to the AI agent about security and compliance
+  // Provide context to the AI agent about security and data protection
   useCopilotReadable({
-    description: "Security and Compliance page with certifications and standards",
+    description: "Security and data protection page describing framework-aligned security practices",
     value: {
-      pageTitle: "Security & Compliance",
-      overview: "Industry-leading security standards and compliance certifications. Enterprise-grade infrastructure trusted by leading organizations.",
-      certifications: [
+      pageTitle: "Security & Data Protection",
+      overview: "Enterprise-grade security and data protection built around recognized security frameworks. Overture Systems Solutions does not currently assert any held third-party certifications; controls are designed around recognized frameworks.",
+      frameworkAlignment: [
         {
-          name: "SOC 2 Type II",
-          description: "Comprehensive security, availability, and confidentiality controls independently audited and certified annually.",
-          features: ["Annual audits", "Continuous monitoring", "Independent validation", "Public reports available"],
-          status: "Active",
-          issuer: "AICPA",
-          year: "2025"
+          name: "Security & Availability Controls",
+          description: "Security, availability, and confidentiality controls built around recognized security frameworks.",
+          features: ["Framework-aligned controls", "Continuous monitoring", "Documented policies", "Documentation on request"]
         },
         {
-          name: "HIPAA Compliance",
-          description: "Full compliance with Health Insurance Portability and Accountability Act for handling protected health information.",
-          features: ["BAA agreements", "PHI encryption", "Access controls", "Audit logging"],
-          status: "Compliant",
-          issuer: "HHS",
-          year: "2025"
+          name: "Healthcare Data Protection",
+          description: "Secure, governed data handling designed for sensitive healthcare and research information.",
+          features: ["Data-handling agreements", "Encryption of sensitive data", "Access controls", "Audit logging"]
         },
         {
-          name: "GDPR Ready",
-          description: "General Data Protection Regulation compliance for processing EU citizen data with privacy-by-design principles.",
+          name: "GDPR-Aligned Privacy",
+          description: "Privacy-by-design principles that support General Data Protection Regulation requirements for EU citizen data.",
           features: ["Data portability", "Right to deletion", "Consent management", "Privacy controls"]
         },
         {
-          name: "ISO 27001",
-          description: "International standard for information security management systems ensuring systematic risk management.",
-          features: ["Risk assessment", "Security policies", "Incident response", "Business continuity"],
-          status: "Certified",
-          issuer: "ISO",
-          year: "2024"
+          name: "ISO 27001-Informed Practices",
+          description: "Information security management practices designed around the international standard for systematic risk management.",
+          features: ["Risk assessment", "Security policies", "Incident response", "Business continuity"]
         },
         {
-          name: "CCPA Compliant",
-          description: "California Consumer Privacy Act compliance protecting consumer privacy rights and data transparency.",
+          name: "CCPA-Aligned Transparency",
+          description: "Practices designed to support California Consumer Privacy Act requirements for consumer privacy rights and data transparency.",
           features: ["Data disclosure", "Opt-out rights", "Non-discrimination", "Consumer requests"]
         },
         {
-          name: "FedRAMP Ready",
-          description: "Federal Risk and Authorization Management Program readiness for government cloud services.",
-          features: ["Security controls", "Continuous monitoring", "Government standards", "Authorization package"]
+          name: "Government-Grade Design",
+          description: "Architecture designed with federal cloud security expectations, such as FedRAMP, in mind.",
+          features: ["Security controls", "Continuous monitoring", "Government standards", "Hardened architecture"]
         },
         {
-          name: "PCI DSS",
-          description: "Payment Card Industry Data Security Standard Level 1 compliance",
-          status: "Level 1",
-          issuer: "PCI SSC",
-          year: "2025"
+          name: "Payment Security",
+          description: "Payment processing is delegated to Stripe, a PCI-aligned payment provider."
         }
       ],
       securityFeatures: [
@@ -353,7 +308,7 @@ export default function CompliancePage() {
         uptimeSLA: "99.99% uptime with multi-region redundancy",
         encryption: "256-bit AES encryption (military-grade)",
         monitoring: "24/7 security monitoring and incident response",
-        certificationsCount: "4+ major compliance frameworks independently verified"
+        frameworksCount: "4+ recognized security frameworks guiding our controls and engineering"
       },
       complianceProcess: [
         "Security Assessment (1 week) - Comprehensive evaluation of security requirements and compliance needs",
@@ -363,7 +318,7 @@ export default function CompliancePage() {
       ],
       documentation: {
         available: true,
-        includes: ["Full audit reports", "BAA agreements", "Security whitepapers", "Dedicated security support"]
+        includes: ["Security documentation", "Data-handling agreements", "Security whitepapers", "Dedicated security support"]
       },
       contactInfo: {
         securityTeam: true,
@@ -393,13 +348,13 @@ export default function CompliancePage() {
             Enterprise-Grade Security & Compliance
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
-            Security & Compliance
+            Security & Data Protection
             <span className="block mt-2 text-primary">
               You Can Trust
             </span>
           </h1>
           <p className="mt-6 text-xl sm:text-2xl leading-8 text-muted-foreground max-w-3xl mx-auto">
-            Industry-leading security standards and compliance certifications. Your data is protected by enterprise-grade infrastructure trusted by leading organizations.
+            Security built around recognized frameworks and privacy-first engineering. Your data is protected by enterprise-grade infrastructure and governance built into every engagement.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
@@ -412,15 +367,15 @@ export default function CompliancePage() {
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              <span>SOC 2 Type II Certified</span>
+              <span>Enterprise-Grade Security</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              <span>HIPAA Compliant</span>
+              <span>Secure, Governed Data Handling</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              <span>GDPR Ready</span>
+              <span>Privacy-First Engineering</span>
             </div>
           </div>
         </div>
@@ -450,12 +405,12 @@ export default function CompliancePage() {
       <section id="certifications" className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-4">Compliance Standards</Badge>
+            <Badge variant="secondary" className="mb-4">Security Standards</Badge>
             <h2 className="text-4xl font-bold tracking-tight text-foreground">
-              Industry-Leading Certifications
+              Frameworks We Build Around
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              We maintain the highest standards of security and compliance across multiple frameworks to protect your data.
+              Our security and data-protection practices are designed around recognized frameworks to protect your data.
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -561,21 +516,21 @@ export default function CompliancePage() {
         </div>
       </section>
 
-      {/* Active Certifications */}
+      {/* Framework Alignment */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-4">Active Certifications</Badge>
+            <Badge variant="secondary" className="mb-4">Framework Alignment</Badge>
             <h2 className="text-4xl font-bold tracking-tight text-foreground">
-              Current Compliance Status
+              How We Approach Security
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              All certifications are current and independently audited annually.
+              We design our controls around recognized security frameworks and review them continuously.
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {certifications.map((cert, idx) => {
-              const IconComponent = cert.icon;
+            {frameworkAlignment.map((item, idx) => {
+              const IconComponent = item.icon;
               return (
                 <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
                   <CardHeader>
@@ -584,14 +539,13 @@ export default function CompliancePage() {
                         <IconComponent className="h-6 w-6 text-primary" />
                       </div>
                       <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
-                        {cert.status}
+                        {item.status}
                       </Badge>
                     </div>
-                    <CardTitle className="text-lg">{cert.name}</CardTitle>
-                    <CardDescription>Issued by {cert.issuer}</CardDescription>
+                    <CardTitle className="text-lg">{item.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">Valid through {cert.year}</p>
+                    <p className="text-sm text-muted-foreground">{item.framework}</p>
                   </CardContent>
                 </Card>
               );
@@ -622,8 +576,7 @@ export default function CompliancePage() {
                     "{testimonial.quote}"
                   </blockquote>
                   <div className="border-t pt-4">
-                    <p className="font-semibold text-foreground">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    <p className="font-semibold text-foreground">{testimonial.role}</p>
                     <p className="text-sm text-muted-foreground">{testimonial.company}</p>
                   </div>
                 </CardContent>
@@ -656,11 +609,11 @@ export default function CompliancePage() {
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              <span>Full audit reports available</span>
+              <span>Security documentation available</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              <span>BAA agreements provided</span>
+              <span>Data-handling agreements provided</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />

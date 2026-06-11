@@ -1,4 +1,5 @@
 // app/ai/page.tsx
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +27,12 @@ import {
   BarChart3Icon,
   Calculator,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Custom AI Development | Overture Systems Solutions",
+  description:
+    "Custom LLM solutions built on leading foundation models. Scope your build with our interactive estimator and talk to our team.",
+};
 
 interface AIModel {
   name: string;

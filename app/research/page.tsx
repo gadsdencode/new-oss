@@ -55,8 +55,8 @@ const features = [
   },
   {
     icon: ShieldCheckIcon,
-    title: "HIPAA Compliant",
-    description: "Enterprise-grade security with full HIPAA and data privacy compliance.",
+    title: "Secure, Governed Data Handling",
+    description: "Enterprise-grade security with governed data handling and privacy controls.",
   },
   {
     icon: ZapIcon,
@@ -115,18 +115,17 @@ const benefits = [
   },
 ];
 
+// Anonymized testimonials - role and sector only, no names or company names
 const testimonials = [
   {
-    quote: "The AI-powered research platform transformed how we identify hospital partnerships. We've cut research time by 75% and increased our pipeline quality significantly.",
-    author: "Dr. Sarah Chen",
+    quote: "The AI-powered research platform transformed how we identify hospital partnerships. We've cut research time significantly and increased our pipeline quality.",
     role: "VP of Business Development",
-    organization: "HealthTech Solutions",
+    organization: "Healthcare technology company",
   },
   {
     quote: "Finding the right foundation partners used to take our team months. Now we identify qualified prospects in days, allowing us to focus on relationship building.",
-    author: "Michael Rodriguez",
     role: "Director of Development",
-    organization: "Education First Foundation",
+    organization: "Education-focused non-profit",
   },
 ];
 
@@ -136,11 +135,11 @@ const researchServiceSchema = {
   "@type": "Service",
   "serviceType": "B2B Research Platform",
   "name": "B2B Research Platform for Healthcare & Non-Profits",
-  "description": "HIPAA-compliant AI-powered research solutions for healthcare and non-profit organizations. AI-driven data collection, analysis, and insights with 80% time savings, 95% accuracy, and 70% cost reduction.",
+  "description": "AI-powered research solutions for healthcare and non-profit organizations. AI-driven data collection, analysis, and insights with secure, governed data handling.",
   "provider": {
     "@type": "Organization",
     "name": "Overture Systems Solutions",
-    "url": "https://new-oss.vercel.app"
+    "url": "https://overture-systems.com"
   },
   "areaServed": [
     {
@@ -165,30 +164,7 @@ const researchServiceSchema = {
     "description": "14-day free trial available, no credit card required",
     "price": "0",
     "priceCurrency": "USD"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "500",
-    "bestRating": "5"
-  },
-  "additionalProperty": [
-    {
-      "@type": "PropertyValue",
-      "name": "HIPAA Compliant",
-      "value": "Yes"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "Time Savings",
-      "value": "80%"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "Accuracy Rate",
-      "value": "95%"
-    }
-  ]
+  }
 };
 
 export default function B2BResearchPage() {
@@ -197,7 +173,7 @@ export default function B2BResearchPage() {
     description: "B2B Research Platform for Healthcare and Non-Profit Organizations",
     value: {
       pageTitle: "B2B Research Platform",
-      overview: "AI-powered B2B research solutions specifically designed for healthcare and non-profit organizations. HIPAA-compliant, secure, and built for impact.",
+      overview: "AI-powered B2B research solutions specifically designed for healthcare and non-profit organizations, with secure, governed data handling and built for impact.",
       targetIndustries: ["Healthcare", "Non-Profits"],
       features: [
         {
@@ -217,8 +193,8 @@ export default function B2BResearchPage() {
           description: "Forecast market trends and identify opportunities before your competitors."
         },
         {
-          name: "HIPAA Compliant",
-          description: "Enterprise-grade security with full HIPAA and data privacy compliance."
+          name: "Secure, Governed Data Handling",
+          description: "Enterprise-grade security with governed data handling and privacy controls."
         },
         {
           name: "Real-Time Updates",
@@ -251,7 +227,7 @@ export default function B2BResearchPage() {
         timeSaved: "80%",
         accuracyRate: "95%"
       },
-      compliance: ["HIPAA Compliant", "Enterprise Security", "Data Privacy"],
+      compliance: ["Secure, Governed Data Handling", "Enterprise Security", "Data Privacy"],
       trial: {
         available: true,
         duration: "14 days",
@@ -456,8 +432,7 @@ export default function B2BResearchPage() {
                         "{testimonial.quote}"
                       </blockquote>
                       <div className="border-t pt-4">
-                        <p className="font-semibold text-foreground">{testimonial.author}</p>
-                        <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                        <p className="font-semibold text-foreground">{testimonial.role}</p>
                         <p className="text-sm text-muted-foreground">{testimonial.organization}</p>
                       </div>
                     </div>
@@ -550,7 +525,7 @@ export default function B2BResearchPage() {
           </div>
           <p className="mt-8 text-sm text-muted-foreground">
             <ShieldCheckIcon className="w-4 h-4 inline mr-2 text-green-500" />
-            HIPAA Compliant • Enterprise Compliance • Dedicated Support
+            Secure, Governed Data Handling • Enterprise Compliance • Dedicated Support
           </p>
         </div>
       </section>

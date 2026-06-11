@@ -45,61 +45,58 @@ import { toast } from "sonner";
 // Data definitions (matching the main page)
 const complianceStandards = [
   {
-    title: "SOC 2 Type II",
-    description: "Comprehensive security, availability, and confidentiality controls independently audited and certified annually.",
-    features: ["Annual audits", "Continuous monitoring", "Independent validation", "Public reports available"],
+    title: "Security & Availability Controls",
+    description: "Security, availability, and confidentiality controls built around recognized security frameworks.",
+    features: ["Framework-aligned controls", "Continuous monitoring", "Documented policies", "Documentation on request"],
   },
   {
-    title: "HIPAA Compliance",
-    description: "Full compliance with Health Insurance Portability and Accountability Act for handling protected health information.",
-    features: ["BAA agreements", "PHI encryption", "Access controls", "Audit logging"],
+    title: "Healthcare Data Protection",
+    description: "Secure, governed data handling designed for sensitive healthcare and research information.",
+    features: ["Data-handling agreements", "Encryption of sensitive data", "Access controls", "Audit logging"],
   },
   {
-    title: "GDPR Ready",
-    description: "General Data Protection Regulation compliance for processing EU citizen data with privacy-by-design principles.",
+    title: "GDPR-Aligned Privacy",
+    description: "Privacy-by-design principles that support General Data Protection Regulation requirements for EU citizen data.",
     features: ["Data portability", "Right to deletion", "Consent management", "Privacy controls"],
   },
   {
-    title: "ISO 27001",
-    description: "International standard for information security management systems ensuring systematic risk management.",
+    title: "ISO 27001-Informed Practices",
+    description: "Information security management practices designed around the international standard for systematic risk management.",
     features: ["Risk assessment", "Security policies", "Incident response", "Business continuity"],
   },
   {
-    title: "CCPA Compliant",
-    description: "California Consumer Privacy Act compliance protecting consumer privacy rights and data transparency.",
+    title: "CCPA-Aligned Transparency",
+    description: "Practices designed to support California Consumer Privacy Act requirements for consumer privacy rights and data transparency.",
     features: ["Data disclosure", "Opt-out rights", "Non-discrimination", "Consumer requests"],
   },
   {
-    title: "FedRAMP Ready",
-    description: "Federal Risk and Authorization Management Program readiness for government cloud services.",
-    features: ["Security controls", "Continuous monitoring", "Government standards", "Authorization package"],
+    title: "Government-Grade Design",
+    description: "Architecture designed with federal cloud security expectations, such as FedRAMP, in mind.",
+    features: ["Security controls", "Continuous monitoring", "Government standards", "Hardened architecture"],
   },
 ];
 
-const certifications = [
+// Frameworks our security program is designed around (no held certifications asserted)
+const frameworkAlignment = [
   {
-    name: "SOC 2 Type II",
-    issuer: "AICPA",
-    status: "Active",
-    year: "2025",
+    name: "Security & Availability",
+    framework: "Recognized audit frameworks",
+    status: "Aligned",
   },
   {
-    name: "HIPAA",
-    issuer: "HHS",
-    status: "Compliant",
-    year: "2025",
+    name: "Healthcare Data Protection",
+    framework: "Secure, governed data handling",
+    status: "Built-in",
   },
   {
-    name: "ISO 27001",
-    issuer: "ISO",
-    status: "Certified",
-    year: "2024",
+    name: "Information Security",
+    framework: "ISO 27001-informed practices",
+    status: "Aligned",
   },
   {
-    name: "PCI DSS",
-    issuer: "PCI SSC",
-    status: "Level 1",
-    year: "2025",
+    name: "Payment Security",
+    framework: "PCI-aligned processing via Stripe",
+    status: "Delegated",
   },
 ];
 
@@ -168,7 +165,7 @@ export function CompliancePageTools() {
   useCopilotAction({
     name: "getComplianceStandardDetails",
     description:
-      "Get detailed information about a specific compliance standard (SOC 2 Type II, HIPAA Compliance, GDPR Ready, ISO 27001, CCPA Compliant, FedRAMP Ready). Use this when the user asks about specific compliance standards, certifications, or regulatory requirements. This tool is ONLY available on the compliance page.",
+      "Get detailed information about a specific security practice area (Security & Availability Controls, Healthcare Data Protection, GDPR-Aligned Privacy, ISO 27001-Informed Practices, CCPA-Aligned Transparency, Government-Grade Design). Use this when the user asks about security standards, frameworks, or regulatory alignment. Note: Overture Systems Solutions designs its controls around recognized frameworks and does not currently assert held third-party certifications. This tool is ONLY available on the compliance page.",
     parameters: [
       {
         name: "standardName",
@@ -258,14 +255,14 @@ export function CompliancePageTools() {
   useCopilotAction({
     name: "getCertificationStatus",
     description:
-      "Get the current status and details for security certifications (SOC 2 Type II, HIPAA, ISO 27001, PCI DSS). Use this when the user asks about certification status, audit history, or compliance verification. This tool is ONLY available on the compliance page.",
+      "Get the current framework-alignment status of Overture Systems Solutions' security program (Security & Availability, Healthcare Data Protection, Information Security, Payment Security). Use this when the user asks about certification status or compliance verification. Important: no held third-party certifications are asserted; the program is designed around recognized frameworks. This tool is ONLY available on the compliance page.",
     parameters: [
       {
         name: "certificationName",
         type: "string",
-        description: "The name of the certification to check status for (optional - if not provided, returns all certifications)",
+        description: "The framework-alignment area to check status for (optional - if not provided, returns all areas)",
         required: false,
-        enum: certifications.map((c) => c.name),
+        enum: frameworkAlignment.map((c) => c.name),
       },
     ],
     available: "enabled",
@@ -295,11 +292,7 @@ export function CompliancePageTools() {
             <CardHeader>
               <div className="flex items-center gap-3">
                 <AwardIcon className="h-5 w-5 text-blue-600" />
-                <CardTitle className="text-lg">
-                  {result.certifications && result.certifications.length > 1
-                    ? "Certifications Status"
-                    : "Certification Status"}
-                </CardTitle>
+                <CardTitle className="text-lg">Framework Alignment</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -310,9 +303,7 @@ export function CompliancePageTools() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <p className="font-medium text-sm text-foreground">{cert.name}</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Issuer: {cert.issuer} • Year: {cert.year}
-                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">{cert.framework}</p>
                         </div>
                         <Badge variant="outline" className="ml-2">
                           {cert.status}
@@ -332,9 +323,9 @@ export function CompliancePageTools() {
     handler: async ({ certificationName }) => {
       try {
         if (certificationName) {
-          const cert = certifications.find((c) => c.name === certificationName);
+          const cert = frameworkAlignment.find((c) => c.name === certificationName);
           if (!cert) {
-            throw new Error(`Certification "${certificationName}" not found`);
+            throw new Error(`Framework-alignment area "${certificationName}" not found`);
           }
           return {
             success: true,
@@ -342,10 +333,10 @@ export function CompliancePageTools() {
           };
         }
 
-        // Return all certifications
+        // Return all framework-alignment areas
         return {
           success: true,
-          certifications,
+          certifications: frameworkAlignment,
         };
       } catch (error) {
         console.error("Error getting certification status:", error);

@@ -34,7 +34,7 @@ const elements: TreeViewElement[] = [
         type: "folder",
         name: "Compliance",
         children: [
-          { id: "hipaa", name: "hipaa-policies" },
+          { id: "privacy", name: "privacy-policies" },
           { id: "audit", name: "audit-logs" },
         ],
       },

@@ -29,10 +29,13 @@ import {
 // Social cards only; title/description inherit from the root layout.
 // No metadataBase is set in app/layout.tsx, so URLs are absolute.
 export const metadata: Metadata = {
+  title: "Culture of Adoption & Continuous Learning | AI Center of Excellence | Overture Systems Solutions",
+  description:
+    "Drive cross-functional collaboration, training, and continuous learning so AI adoption spreads across the organization.",
   openGraph: {
     images: [
       {
-        url: "https://new-oss.vercel.app/images/coe/coe-adoption-culture-og.jpg",
+        url: "https://overture-systems.com/images/coe/coe-adoption-culture-og.jpg",
         width: 1200,
         height: 630,
       },
@@ -40,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    images: ["https://new-oss.vercel.app/images/coe/coe-adoption-culture-og.jpg"],
+    images: ["https://overture-systems.com/images/coe/coe-adoption-culture-og.jpg"],
   },
 };
 
@@ -71,7 +74,7 @@ const schema = {
   name: "Culture of Adoption & Continuous Learning for an AI Center of Excellence",
   description:
     "Driving org-wide AI adoption and keeping teams at the frontier through cross-functional collaboration, comprehensive training, showcased wins, innovation labs, and a continuous-improvement feedback loop.",
-  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://new-oss.vercel.app" },
+  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://overture-systems.com" },
   areaServed: { "@type": "Country", name: "United States" },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };

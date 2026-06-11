@@ -1,5 +1,6 @@
 // app/consulting/page.tsx
 // NO "use client;" directive - this is now a Server Component!
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +14,6 @@ import {
   BrainCircuitIcon,
   RocketIcon,
   TrendingUpIcon,
-  UsersIcon,
   TargetIcon,
   LightbulbIcon,
   LineChartIcon,
@@ -33,6 +33,12 @@ import {
   LaptopIcon,
   HeartIcon,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "AI Strategy and Implementation Consulting | Overture Systems Solutions",
+  description:
+    "End-to-end AI consulting from roadmap to production. Strategy, implementation, operations, training, and governance for enterprise teams.",
+};
 
 const consultingServices = [
   {
@@ -76,7 +82,7 @@ const consultingServices = [
 const industryExpertise = [
   {
     name: "Healthcare",
-    description: "HIPAA-compliant AI solutions for clinical operations, patient care, and research.",
+    description: "Secure, governed AI solutions for clinical operations, patient care, and research.",
     icon: HeartPulseIcon,
   },
   {
@@ -137,54 +143,56 @@ const processSteps = [
   },
 ];
 
-const benefits = [
-  {
-    icon: TrendingUpIcon,
-    stat: "3.5x",
-    label: "Average ROI",
-    description: "Clients see 3.5x return on AI investments within 18 months",
-  },
-  {
-    icon: ClockIcon,
-    stat: "60%",
-    label: "Time Savings",
-    description: "Reduce operational costs through intelligent automation",
-  },
+const benefits: {
+  icon: React.ElementType;
+  stat: string;
+  label: string;
+  description: string;
+  href?: string;
+}[] = [
   {
     icon: AwardIcon,
-    stat: "95%",
-    label: "Success Rate",
-    description: "Project success rate with measurable business impact",
+    stat: "20+",
+    label: "Years in Business",
+    description: "Founded in 2005, delivering systems long before the AI boom",
   },
   {
-    icon: UsersIcon,
-    stat: "200+",
-    label: "Clients Served",
-    description: "Organizations transformed through AI consulting",
+    icon: BrainCircuitIcon,
+    stat: "Patent-Pending",
+    label: "ICDU Evaluation Pipeline",
+    description: "Our proprietary method for evaluating AI quality and intent",
+    href: "https://icdu.ai",
+  },
+  {
+    icon: TargetIcon,
+    stat: "Fixed-Scope",
+    label: "Entry Engagements",
+    description: "Defined deliverables and timelines from the first engagement",
+  },
+  {
+    icon: LayersIcon,
+    stat: "End-to-End",
+    label: "Strategy Through Production",
+    description: "One team from roadmap to deployed, governed AI",
   },
 ];
 
-const testimonials = [
+// Illustrative engagement scenarios - composites, not named clients
+const engagementScenarios = [
   {
-    quote: "The AI strategy they developed transformed our operations. We've seen a 40% increase in efficiency and significant cost savings within the first year.",
-    author: "Jennifer Martinez",
-    role: "CTO",
-    company: "HealthCore Systems",
-    impact: "40% efficiency gain",
+    title: "Healthcare Operations",
+    icon: HeartPulseIcon,
+    body: "A regional healthcare organization needed to move from scattered AI pilots to a governed program. We assessed readiness across the six CoE pillars, prioritized two high-impact workflows, and stood up governance so the team could expand with confidence.",
   },
   {
-    quote: "Their expertise in AI implementation was invaluable. They guided us through every step and delivered a solution that exceeded our expectations.",
-    author: "David Chen",
-    role: "VP of Innovation",
-    company: "FinTech Solutions",
-    impact: "Deployed in 3 months",
+    title: "Financial Services",
+    icon: DollarSignIcon,
+    body: "A financial services firm wanted AI in production without compliance surprises. We paired implementation with a governance framework from day one: model documentation, risk review, and monitoring built into the delivery itself.",
   },
   {
-    quote: "The training program they provided empowered our entire data science team. We're now building and deploying AI models independently.",
-    author: "Sarah Johnson",
-    role: "Head of Analytics",
-    company: "RetailMax Inc",
-    impact: "Team fully enabled",
+    title: "Enterprise Enablement",
+    icon: GraduationCapIcon,
+    body: "An enterprise analytics team needed to own its AI capability rather than rent it. We delivered hands-on training alongside the build, so the internal team could maintain and extend the system independently after handoff.",
   },
 ];
 
@@ -205,11 +213,11 @@ Services:
 
 6. AI Analytics & Insights - Transform data into actionable insights using advanced AI analytics and predictive modeling techniques. Features: Predictive analytics, Data strategy, Business intelligence, Performance metrics.
 
-Industries: Healthcare (HIPAA-compliant AI), Financial Services (fraud detection, risk assessment), Retail & E-commerce (personalization, demand forecasting), Manufacturing (predictive maintenance, quality control), Technology (MLOps, AI product development), Non-Profits (donor management, impact analysis).
+Industries: Healthcare (secure, governed AI), Financial Services (fraud detection, risk assessment), Retail & E-commerce (personalization, demand forecasting), Manufacturing (predictive maintenance, quality control), Technology (MLOps, AI product development), Non-Profits (donor management, impact analysis).
 
 Process: Discovery & Assessment (1-2 weeks), Strategy & Planning (2-3 weeks), Implementation & Integration (8-16 weeks), Optimization & Support (Ongoing).
 
-Results: 3.5x average ROI within 18 months, 60% reduction in operational costs, 95% success rate, 200+ clients served.
+What you can verify before signing: 20+ years in business (founded 2005), the patent-pending ICDU evaluation pipeline (https://icdu.ai), fixed-scope entry engagements with defined deliverables and timelines, and end-to-end delivery from strategy through production.
 
 Contact: Free consultation available at /contact page.
 `;
@@ -220,11 +228,11 @@ const consultingServiceSchema = {
   "@type": "Service",
   "serviceType": "AI Strategy & Implementation Consulting",
   "name": "AI Strategy & Implementation Consulting",
-  "description": "End-to-end AI consulting services from strategy development to production deployment. We help Fortune 500 companies and innovative enterprises identify opportunities, build roadmaps, and deliver measurable results with 3.5x average ROI within 18 months.",
+  "description": "End-to-end AI consulting services from strategy development to production deployment. We help enterprises identify opportunities, build roadmaps, and deliver AI systems with governance built in.",
   "provider": {
     "@type": "Organization",
     "name": "Overture Systems Solutions",
-    "url": "https://new-oss.vercel.app"
+    "url": "https://overture-systems.com"
   },
   "areaServed": {
     "@type": "Country",
@@ -241,19 +249,13 @@ const consultingServiceSchema = {
   ],
   "audience": {
     "@type": "Audience",
-    "audienceType": "Fortune 500 companies, Enterprise organizations, Technology companies"
+    "audienceType": "Enterprise organizations, Technology companies"
   },
   "offers": {
     "@type": "Offer",
     "description": "Free 30-minute consultation available",
     "price": "0",
     "priceCurrency": "USD"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "200",
-    "bestRating": "5"
   }
 };
 
@@ -291,7 +293,7 @@ export default function AIConsultingPage() {
         <div className="relative z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-24">
           <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
-            Enterprise AI Consulting • Fortune 500 Trusted
+            Enterprise AI Consulting • Founded 2005
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
             Accelerate Enterprise Growth
@@ -325,11 +327,11 @@ export default function AIConsultingPage() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span className="font-medium">3.5x average ROI</span>
+              <span className="font-medium">Fixed-scope entry points</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span className="font-medium">95% success rate</span>
+              <span className="font-medium">Defined timelines</span>
             </div>
           </div>
         </div>
@@ -338,19 +340,45 @@ export default function AIConsultingPage() {
       {/* Benefits Stats */}
       <section className="py-16 border-b bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
+              Built on Two Decades of Delivery
+            </h2>
+            <p className="mt-3 text-lg text-muted-foreground">
+              What you can verify before you ever sign
+            </p>
+          </div>
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-            {benefits.map((benefit, idx) => (
-              <div key={idx} className="text-center">
-                <div className="flex justify-center mb-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                    <benefit.icon className="h-6 w-6 text-primary" />
+            {benefits.map((benefit, idx) => {
+              const card = (
+                <>
+                  <div className="flex justify-center mb-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                      <benefit.icon className="h-6 w-6 text-primary" />
+                    </div>
                   </div>
+                  <div className="text-2xl font-bold text-foreground sm:text-3xl">{benefit.stat}</div>
+                  <div className="mt-2 text-sm font-medium text-foreground">{benefit.label}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">{benefit.description}</div>
+                </>
+              );
+
+              return benefit.href ? (
+                <a
+                  key={idx}
+                  href={benefit.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center rounded-xl transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  {card}
+                </a>
+              ) : (
+                <div key={idx} className="text-center">
+                  {card}
                 </div>
-                <div className="text-4xl font-bold text-foreground">{benefit.stat}</div>
-                <div className="mt-2 text-sm font-medium text-foreground">{benefit.label}</div>
-                <div className="mt-1 text-xs text-muted-foreground">{benefit.description}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -476,32 +504,32 @@ export default function AIConsultingPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Representative engagement scenarios (illustrative composites, not testimonials) */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-4">Client Success</Badge>
+            <Badge variant="secondary" className="mb-4">Representative Scenarios</Badge>
             <h2 className="text-4xl font-bold tracking-tight text-foreground">
-              What Our Clients Say
+              How Engagements Typically Unfold
             </h2>
+            <p className="mt-4 text-sm text-muted-foreground max-w-2xl mx-auto">
+              The scenarios below are illustrative composites that reflect common engagement patterns.
+              They do not describe specific named clients.
+            </p>
           </div>
           <div className="grid gap-8 lg:grid-cols-3">
-            {testimonials.map((testimonial, idx) => (
+            {engagementScenarios.map((scenario, idx) => (
               <Card key={idx} className="border-2">
-                <CardContent className="pt-6">
-                  <div className="mb-4">
-                    <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
-                      {testimonial.impact}
-                    </Badge>
+                <CardHeader>
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20">
+                      <scenario.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">{scenario.title}</CardTitle>
                   </div>
-                  <blockquote className="text-base text-muted-foreground italic mb-6">
-                    &quot;{testimonial.quote}&quot;
-                  </blockquote>
-                  <div className="border-t pt-4">
-                    <p className="font-semibold text-foreground">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.company}</p>
-                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-base text-muted-foreground">{scenario.body}</p>
                 </CardContent>
               </Card>
             ))}

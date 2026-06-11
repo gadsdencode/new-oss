@@ -26,69 +26,43 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Overture Systems Solutions - Revolutionizing Intelligence",
-  description: "Empowering businesses with cutting-edge AI-powered solutions.",
+  metadataBase: new URL("https://overture-systems.com"),
+  title: "Overture Systems Solutions | Enterprise AI Consulting and Implementation",
+  description:
+    "AI strategy, implementation, and governance for enterprises. Founded in 2005. Home of the patent-pending ICDU evaluation pipeline and the AI Center of Excellence practice.",
   icons: {
     icon: "/images/Overture_icon_transparent_32.png",
     apple: "/images/Overture_icon_transparent_128.png",
   },
 };
 
-// Organization Schema for all pages - Bing and Google love this!
+// Organization Schema for all pages
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Overture Systems Solutions",
-  "url": "https://new-oss.vercel.app",
-  "logo": "https://new-oss.vercel.app/images/Overture_logo_square_dark_1254.png",
-  "description": "Enterprise AI solutions for business intelligence, strategy, implementation, and compliance. We deliver 3.5x average ROI within 18 months, 60% operational time savings, and 95% project success rates.",
-  "foundingDate": "2020",
+  "url": "https://overture-systems.com",
+  "logo": "https://overture-systems.com/images/Overture_icon_transparent_512.png",
+  "description": "Enterprise AI consulting, implementation, and governance. Founded in 2005, Overture Systems Solutions helps organizations build AI Centers of Excellence and deploy custom AI solutions, and is the home of the patent-pending ICDU evaluation pipeline.",
+  "foundingDate": "2005",
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+1-888-716-3360",
     "contactType": "Customer Service",
     "email": "jordan.martens@osscontact.com",
     "areaServed": "US",
     "availableLanguage": ["English"]
   },
-  "address": [
-    {
-      "@type": "PostalAddress",
-      "streetAddress": "123 Innovation Drive, Suite 100",
-      "addressLocality": "San Francisco",
-      "addressRegion": "CA",
-      "postalCode": "94105",
-      "addressCountry": "US"
-    },
-    {
-      "@type": "PostalAddress",
-      "streetAddress": "456 Tech Avenue, Floor 15",
-      "addressLocality": "New York",
-      "addressRegion": "NY",
-      "postalCode": "10001",
-      "addressCountry": "US"
-    },
-    {
-      "@type": "PostalAddress",
-      "streetAddress": "789 Startup Lane, Building C",
-      "addressLocality": "Austin",
-      "addressRegion": "TX",
-      "postalCode": "78701",
-      "addressCountry": "US"
-    }
-  ],
-  "sameAs": [
-    "https://linkedin.com",
-    "https://twitter.com",
-    "https://github.com"
-  ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "200",
-    "bestRating": "5",
-    "worstRating": "1"
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "7305 Hancock Village Drive, Suite 223",
+    "addressLocality": "Chesterfield",
+    "addressRegion": "VA",
+    "postalCode": "23832",
+    "addressCountry": "US"
   },
+  "sameAs": [
+    "https://www.linkedin.com/company/overture-systems-solutions"
+  ],
   "areaServed": {
     "@type": "Country",
     "name": "United States"
