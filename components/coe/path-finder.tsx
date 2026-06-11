@@ -192,6 +192,22 @@ export function PathFinder() {
               <p className="mt-2 text-muted-foreground">
                 Check everything that exists today. Gaps are normal - they shape the recommendation.
               </p>
+              {/* Echo the stage so deep-linked visitors (readiness check, stage
+                  chips) can see - and correct - what was pre-selected for them. */}
+              {stageInfo && (
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Your stage:{" "}
+                  <span className="font-semibold text-foreground">{stageInfo.label}</span>
+                  {" · "}
+                  <button
+                    type="button"
+                    onClick={() => setStep("stage")}
+                    className="font-medium text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                  >
+                    change
+                  </button>
+                </p>
+              )}
             </div>
             <div className="space-y-3">
               {GETTING_STARTED.prerequisites.map((req, idx) => {

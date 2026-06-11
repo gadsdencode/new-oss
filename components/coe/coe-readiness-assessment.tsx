@@ -137,7 +137,7 @@ interface Tier {
 // Highest tier whose `min` the total meets, evaluated top-down.
 const TIERS: Tier[] = [
   { min: 21, name: "Leading", blurb: "You're operating at a high level. We can help you optimize, govern at scale, and stay at the frontier of AI capability.", ctaLabel: "Schedule an Optimization Review", stageId: "scaling", entryTierName: "CoE Build & Scale" },
-  { min: 17, name: "Operational", blurb: "You have a working foundation. The opportunity now is consistency and scale across the whole organization.", ctaLabel: "Schedule a Scaling Assessment", stageId: "building", entryTierName: "Foundation Pilot" },
+  { min: 17, name: "Operational", blurb: "You have a working foundation. The opportunity now is consistency and scale across the whole organization.", ctaLabel: "Schedule a Scaling Session", stageId: "building", entryTierName: "Foundation Pilot" },
   { min: 12, name: "Developing", blurb: "You have momentum in places. Centralizing expertise and governance will turn pilots into a repeatable capability.", ctaLabel: "Schedule a Strategy Session", stageId: "planning", entryTierName: "Readiness Diagnostic" },
   { min: 0, name: "Foundational", blurb: "You're at the starting line. A structured assessment and roadmap will give you the fastest path to value.", ctaLabel: "Schedule a Discovery Call", stageId: "exploring", entryTierName: "Readiness Diagnostic" },
 ];
@@ -303,19 +303,21 @@ export function CoEReadinessAssessment() {
                   {/* Entry-tier recommendation: connects the maturity result to
                       the getting-started funnel instead of dead-ending here. */}
                   <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
-                    <p className="text-xs font-medium text-muted-foreground mb-1">Your recommended starting point</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-1">Your recommended entry tier</p>
                     <p className="font-semibold text-foreground">{tier.entryTierName}</p>
                   </div>
+                  {/* Primary action continues the journey to Step 2 (tier finder)
+                      with the stage pre-selected; contact is the direct shortcut. */}
                   <div className="space-y-3">
-                    <Button className="w-full shadow-brand" asChild>
-                      <Link href="/contact">
-                        {tier.ctaLabel}
+                    <Button className="w-full whitespace-normal shadow-brand" asChild>
+                      <Link href={`${GETTING_STARTED_PATH}?stage=${tier.stageId}`}>
+                        Continue to Step 2: Confirm Your Tier
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                     <Button variant="outline" className="w-full whitespace-normal" asChild>
-                      <Link href={`${GETTING_STARTED_PATH}?stage=${tier.stageId}`}>
-                        See your recommended starting point
+                      <Link href="/contact">
+                        {tier.ctaLabel}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -338,7 +340,8 @@ export function CoEReadinessAssessment() {
           </Card>
 
           <p className="text-xs text-muted-foreground text-center px-4">
-            This is a self-assessment for orientation only. A full OSS assessment evaluates each pillar in depth.
+            This free self-check is for orientation only. It is not the Readiness Diagnostic - that is a formal
+            2-3 week engagement in which we evaluate each pillar in depth.
           </p>
         </div>
       </div>

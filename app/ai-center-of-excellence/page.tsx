@@ -179,7 +179,7 @@ const coeServiceSchema = {
 };
 
 // ---- Plain-text context for the AI assistant ----
-const pageContent = `Overture Systems Solutions helps organizations build an AI Center of Excellence (CoE) from the ground up - a centralized capability that turns scattered AI experiments into a repeatable, scalable function. The six CoE pillars are: Strategic Vision & Leadership, Centralized AI Expertise (a multidisciplinary team of data scientists, ML engineers, domain experts, and business analysts), Scalable AI Infrastructure (cloud-native, containerized, autoscaling, observable), Data Management & Governance, Governance/Risk/Responsible AI (governance board, risk assessment, model monitoring and auditing, incident response, compliance), and a Culture of Adoption & Continuous Learning. We develop the AI capability model in five steps: assess current maturity, define maturity levels, identify capability gaps, develop a growth roadmap, and implement continuous improvement. A CoE drives operational efficiency, better customer experience, data-driven decisions, product innovation, resource utilization, and compliance/risk management. OSS engages advisor-led: comprehensive assessment, strategic AI roadmap, standing up the CoE, then operate and continuously improve. Industry research cited on the page: AI can reduce manufacturing costs 10-20% (McKinsey); generative AI can cut customer-support costs by about one-third; some supply-chain AI implementations achieved 41% cost reduction (McKinsey); 54% of executives expect AI cost savings, half anticipating over 10% (BCG).`;
+const pageContent = `Overture Systems Solutions helps organizations build an AI Center of Excellence (CoE) from the ground up - a centralized capability that turns scattered AI experiments into a repeatable, scalable function. The six CoE pillars are: Strategic Vision & Leadership, Centralized AI Expertise (a multidisciplinary team of data scientists, ML engineers, domain experts, and business analysts), Scalable AI Infrastructure (cloud-native, containerized, autoscaling, observable), Data Management & Governance, Governance/Risk/Responsible AI (governance board, risk assessment, model monitoring and auditing, incident response, compliance), and a Culture of Adoption & Continuous Learning. We develop the AI capability model in five steps: assess current maturity, define maturity levels, identify capability gaps, develop a growth roadmap, and implement continuous improvement. A CoE drives operational efficiency, better customer experience, data-driven decisions, product innovation, resource utilization, and compliance/risk management. OSS engages advisor-led: comprehensive assessment, strategic AI roadmap, standing up the CoE, then operate and continuously improve. HOW THE FLOW FITS TOGETHER: Step 1 is the free 5-minute readiness self-check on this page (the "How Ready Is Your Organization?" section) - it produces a maturity profile and a recommended entry tier, and is for orientation only. Step 2 is the tier finder on the getting-started page - two quick questions that match you to one of three entry tiers (Readiness Diagnostic, Foundation Pilot, or CoE Build & Scale); the self-check result deep-links there with the stage pre-selected. Step 3 is booking a readiness workshop via the contact page to scope the formal engagement. Note: the free self-check is NOT the Readiness Diagnostic - the Diagnostic is the formal, fixed-scope 2-3 week engagement tier. Industry research cited on the page: AI can reduce manufacturing costs 10-20% (McKinsey); generative AI can cut customer-support costs by about one-third; some supply-chain AI implementations achieved 41% cost reduction (McKinsey); 54% of executives expect AI cost savings, half anticipating over 10% (BCG).`;
 
 export default function AICenterOfExcellencePage() {
   return (
@@ -222,16 +222,16 @@ export default function AICenterOfExcellencePage() {
             </p>
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/ai-center-of-excellence/getting-started">
-                  How to Get Started
+                <Link href="#assessment">
+                  Start the 5-Minute Readiness Check
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/contact">Schedule a CoE Consultation</Link>
+                <Link href="/ai-center-of-excellence/getting-started">See How to Get Started</Link>
               </Button>
               <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="#assessment">Assess Your Readiness</Link>
+                <Link href="/contact">Schedule a CoE Consultation</Link>
               </Button>
             </div>
           </div>
@@ -309,13 +309,16 @@ export default function AICenterOfExcellencePage() {
           </div>
         </section>
 
-        {/* AI Readiness Assessment - signature interactive */}
-        <section id="assessment" className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
+        {/* AI Readiness Assessment - signature interactive (Step 1 of the journey) */}
+        <section id="assessment" className="scroll-mt-24 py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
+              <Badge variant="secondary" className="mb-4">Step 1 · Free 5-Minute Self-Check</Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">How Ready Is Your Organization?</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                Rate yourself across the six pillars to see your AI maturity profile and where a Center of Excellence would move the needle first.
+                Rate yourself across the six pillars to see your live AI maturity profile, your biggest gap, and a
+                recommended entry tier. When you finish, carry your result straight into the tier finder - your
+                stage will be pre-filled.
               </p>
             </div>
             <CoEReadinessAssessment />

@@ -139,11 +139,11 @@ export const GETTING_STARTED = {
   ],
 
   cta: {
-    title: "Start with a readiness diagnostic",
+    title: "Start with the Readiness Diagnostic",
     body: "The lowest-risk first step. We give you an objective baseline and a clear recommendation, no commitment to a full build.",
     primaryLabel: "Book a readiness workshop",
     primaryHref: "/contact",
-    secondaryLabel: "Take the 5-minute readiness assessment",
+    secondaryLabel: "Not sure yet? Take the free 5-minute readiness check",
     // Anchor verified against app/ai-center-of-excellence/page.tsx (section id="assessment").
     secondaryHref: "/ai-center-of-excellence#assessment",
   },
