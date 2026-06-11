@@ -152,7 +152,7 @@ export default function Home() {
           {/* Clear Supporting Copy */}
           <p className="mt-8 text-xl sm:text-2xl leading-relaxed text-muted-foreground max-w-4xl mx-auto">
             Strategic AI consulting, implementation, and platforms built for enterprises and innovative organizations. 
-            <span className="block mt-2 font-medium">We deliver measurable results, not promises.</span>
+            <span className="block mt-2 font-medium">We deliver measurable results.</span>
           </p>
           
           {/* Clear CTAs - stack on mobile, 2-up on small screens, single row on large */}
@@ -396,7 +396,7 @@ export default function Home() {
             Ready to Transform Your Business?
           </h2>
           <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
-            Schedule a free consultation with our AI experts. Let's discuss how we can help you achieve measurable results and competitive advantage through AI.
+            Schedule a free consultation with our AI experts. &apos;Let&apos;s discuss how we can help you achieve measurable results and competitive advantage through AI.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
