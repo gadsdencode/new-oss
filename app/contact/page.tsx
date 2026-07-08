@@ -53,10 +53,10 @@ const contactMethods = [
 ];
 
 const phoneExtensions = [
-  { ext: "1", department: "Sales", contact: "Brian Frerichs" },
-  { ext: "2", department: "HR", contact: "Brian Frerichs" },
-  { ext: "4", department: "Legal", contact: "Brian Frerichs" },
-  { ext: "5", department: "Consulting Services", contact: "Brian Frerichs" },
+  { ext: "1", department: "Sales", contact: "Brian Conrad" },
+  { ext: "2", department: "HR", contact: "Brian Conrad" },
+  { ext: "4", department: "Legal", contact: "Brian Conrad" },
+  { ext: "5", department: "Consulting Services", contact: "Brian Conrad" },
   { ext: "8", department: "All Other Services", contact: "Jordan Martens" },
   { ext: "103", department: "AI Research", contact: "Samuel Conrad" },
   { ext: "300", department: "Technical Services", contact: "Jordan Martens" },
