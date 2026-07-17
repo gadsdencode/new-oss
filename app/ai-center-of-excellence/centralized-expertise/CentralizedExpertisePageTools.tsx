@@ -6,19 +6,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 const capabilities = [
-  { title: "Data Scientists", description: "Design, train, and validate models grounded in the organization's real problems and data." },
-  { title: "ML Engineers", description: "Productionize and scale models so they run reliably and efficiently in production." },
-  { title: "Domain Experts", description: "Translate business context - in supply chain, healthcare, finance, and more - into effective AI solutions." },
-  { title: "Business Analysts", description: "Connect AI initiatives to measurable business outcomes and keep work tied to value." },
-  { title: "Shared-Services Model", description: "A central team deployable across business units so expertise reaches every initiative that needs it." },
-  { title: "Cross-Functional Collaboration", description: "Bring data scientists, analysts, and domain experts together on shared initiatives." },
+  { title: "Domain Leaders & Strong Practitioners", description: "Surface the people whose judgment already works — and make that judgment reusable." },
+  { title: "AI Product & Process Owners", description: "Owners who keep initiatives tied to outcomes, workflows, and operating accountability." },
+  { title: "Agent & Application Engineers", description: "Builders who assemble agents, applications, and integrations for dependable use." },
+  { title: "Data & Knowledge Engineers", description: "Engineers who ground AI in trusted structured and unstructured organizational context." },
+  { title: "Evaluation & Quality Specialists", description: "Specialists who make quality measurable, repeatable, and improvable before and after release." },
+  { title: "Platform, Security & Governance Specialists", description: "Roles that keep platforms safe, portable, and policy-aligned as usage grows." },
+  { title: "Adoption & Enablement Leaders", description: "Leaders who redesign work, coach champions, and keep humans accountable in the loop." },
 ];
 
 export function CentralizedExpertisePageTools() {
   useCopilotAction({
     name: "getCentralizedExpertiseCapability",
     description:
-      "Get details about a Centralized AI Expertise capability for an AI Center of Excellence. ONLY available on the Centralized AI Expertise pillar page.",
+      "Get details about a Centralized AI Expertise capability. Emphasize multidisciplinary roles and that the CoE captures/reuses expertise without removing it from business units or requiring a large permanent hire wave. ONLY available on the Centralized Expertise pillar page.",
     parameters: [
       { name: "capabilityName", type: "string", description: "The capability", required: true, enum: capabilities.map((c) => c.title) },
     ],

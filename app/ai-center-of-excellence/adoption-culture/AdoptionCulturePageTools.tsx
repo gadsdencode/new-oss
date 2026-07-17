@@ -6,19 +6,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 const capabilities = [
-  { title: "Cross-Functional Collaboration", description: "Bring IT, data science, and business units together to break down silos and build shared understanding." },
-  { title: "Comprehensive Training", description: "Programs covering AI, machine learning, and data-science fundamentals to equip every employee." },
-  { title: "Showcase Use Cases", description: "Highlight real wins - efficiency, cost savings, better CX - to inspire and motivate wider adoption." },
-  { title: "Continuous Learning Program", description: "Ongoing training and certification, workshops and seminars, and regular knowledge-sharing sessions." },
-  { title: "AI Innovation Labs", description: "A space to experiment with new tools and techniques and promote a culture of innovation." },
-  { title: "Continuous Feedback Loop", description: "Capture insights from AI projects and use them to refine strategy and implementation." },
+  { title: "Role-Based Enablement", description: "Train people for the work they do — not generic fundamentals for everyone at once." },
+  { title: "Workflow Redesign", description: "Change how work actually runs so AI is embedded, not bolted on as optional novelty." },
+  { title: "AI Champions", description: "Cultivate local leaders who coach peers and surface issues early." },
+  { title: "Reusable Operating Practices", description: "Capture patterns that travel — playbooks, prompts, checklists, and exception handling." },
+  { title: "Capturing Strong-Performer Judgment", description: "Make the judgment of high performers available more consistently across the organization." },
+  { title: "Human-AI Collaboration", description: "Design clear handoffs so people remain accountable for decisions that matter." },
+  { title: "Adoption Measures", description: "Track whether capability is used, trusted, and improving outcomes — not vanity usage alone." },
+  { title: "Feedback Loops", description: "Route frontline signal back into product, evaluation, and enablement." },
+  { title: "Continuous Evaluation & Improvement", description: "Keep quality and fit under review as workflows and models change." },
+  { title: "Responsible Internal Ownership", description: "Ensure business owners — not only the CoE — own outcomes and safe use." },
 ];
 
 export function AdoptionCulturePageTools() {
   useCopilotAction({
     name: "getAdoptionCultureCapability",
     description:
-      "Get details about a Culture of Adoption & Continuous Learning capability for an AI Center of Excellence. ONLY available on the Adoption Culture pillar page.",
+      "Get details about an Adoption & Continuous Learning capability. Emphasize role-based enablement, workflow redesign, judgment capture, and human accountability — not generic company-wide fundamentals training. ONLY available on the Adoption Culture pillar page.",
     parameters: [
       { name: "capabilityName", type: "string", description: "The capability", required: true, enum: capabilities.map((c) => c.title) },
     ],

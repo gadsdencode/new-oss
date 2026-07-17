@@ -64,6 +64,41 @@ export const contactFormSchema = z.object({
     .min(10, 'Message must be at least 10 characters')
     .max(5000, 'Message must not exceed 5000 characters')
     .trim(),
+
+  /** Normalized CoE (or general) intent from the handoff. */
+  intent: z
+    .string()
+    .max(64)
+    .trim()
+    .optional()
+    .transform((val) => (val && val.length > 0 ? val : undefined)),
+
+  /** Journey origin marker, e.g. ai-coe. */
+  source: z
+    .string()
+    .max(64)
+    .trim()
+    .optional()
+    .transform((val) => (val && val.length > 0 ? val : undefined)),
+
+  /** Non-sensitive Snapshot JSON (band, tier, opportunity, stage). */
+  coe_context: z
+    .string()
+    .max(2000)
+    .trim()
+    .optional()
+    .transform((val) => (val && val.length > 0 ? val : undefined)),
+
+  /**
+   * Honeypot — must stay empty. Bots that fill it are rejected.
+   * Field name is intentionally generic ("website").
+   */
+  website: z
+    .string()
+    .optional()
+    .refine((val) => !val || val.length === 0, {
+      message: 'Invalid submission',
+    }),
 });
 
 /**
@@ -91,6 +126,10 @@ export function validateContactForm(formData: FormData): {
     phone: formData.get('phone')?.toString().trim() || '',
     subject: formData.get('subject')?.toString().trim() || '',
     message: formData.get('message')?.toString().trim() || '',
+    intent: formData.get('intent')?.toString().trim() || '',
+    source: formData.get('source')?.toString().trim() || '',
+    coe_context: formData.get('coe_context')?.toString().trim() || '',
+    website: formData.get('website')?.toString() || '',
   };
 
   // Validate using Zod schema

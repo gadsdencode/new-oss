@@ -1,5 +1,7 @@
 // app/ai-center-of-excellence/scalable-infrastructure/page.tsx
 import type { Metadata } from "next";
+import { coePageMetadata } from "@/lib/coe/page-seo";
+import { absoluteUrl } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,89 +12,125 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { ScalableInfrastructurePageTools } from "./ScalableInfrastructurePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
-import { StartHereBlock } from "@/components/coe/start-here-block";
+import { PillarNextSteps } from "@/components/coe/pillar-next-steps";
 import { ScaleRipple } from "@/components/coe/visuals/scale-ripple";
 import { HeroBackdrop } from "@/components/coe/hero-backdrop";
 import { SectionBand } from "@/components/coe/section-band";
-import { CtaTexture } from "@/components/coe/cta-texture";
 import { SectionWash } from "@/components/coe/section-wash";
 import { VignetteLayer } from "@/components/coe/vignette-layer";
 import {
+  ShareIcon,
+  BookOpenIcon,
+  BotIcon,
+  RulerIcon,
+  ActivityIcon,
+  ShieldIcon,
+  UserCheckIcon,
+  KeyRoundIcon,
+  GaugeIcon,
+  LayersIcon,
+  RocketIcon,
   CloudIcon,
   BoxesIcon,
-  ShareIcon,
-  GaugeIcon,
-  ActivityIcon,
   ArrowRight,
   SparklesIcon,
+  Link2Icon,
+  FileCheckIcon,
 } from "lucide-react";
 
-// Social cards only; title/description inherit from the root layout.
-// No metadataBase is set in app/layout.tsx, so URLs are absolute.
-export const metadata: Metadata = {
+export const metadata: Metadata = coePageMetadata({
   title: "Scalable AI Infrastructure | AI Center of Excellence | Overture Systems Solutions",
   description:
-    "Cloud-native, containerized AI infrastructure with autoscaling and full observability so models deploy and scale reliably.",
-  openGraph: {
-    images: [
-      {
-        url: "https://overture-systems.com/images/coe/coe-scalable-infrastructure-og.jpg",
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["https://overture-systems.com/images/coe/coe-scalable-infrastructure-og.jpg"],
-  },
-};
+    "A model-agnostic capability layer: gateways, retrieval, orchestration, evaluation, guardrails, approvals, security, cost controls, and portable production deployment.",
+  path: "/ai-center-of-excellence/scalable-infrastructure",
+  ogImage: "/images/coe/coe-scalable-infrastructure-og.jpg",
+});
 
 const capabilities = [
-  { icon: CloudIcon, title: "Cloud-Native Architecture", description: "Dynamically scale resources on demand and leverage managed services for seamless deployment." },
-  { icon: BoxesIcon, title: "Containerization & Orchestration", description: "Use Docker and Kubernetes for consistent, reproducible deployments across environments." },
-  { icon: ShareIcon, title: "Distributed Training & Inference", description: "Handle large workloads and run multiple models in parallel with distributed setups." },
-  { icon: GaugeIcon, title: "Autoscaling & Load Balancing", description: "Scale up or down with demand for high availability and efficient resource utilization." },
-  { icon: ActivityIcon, title: "Monitoring & Observability", description: "Track health, performance, and utilization to enable proactive troubleshooting and optimization." },
+  { icon: ShareIcon, title: "Model & Agent Gateways", description: "Controlled entry points for model and agent traffic with consistent policy and oversight." },
+  { icon: BookOpenIcon, title: "Enterprise Retrieval & Knowledge Grounding", description: "Ground responses in approved organizational knowledge — not unbounded web noise." },
+  { icon: BotIcon, title: "Agent Orchestration", description: "Coordinate multi-step agent workflows with clear boundaries and failure handling." },
+  { icon: RulerIcon, title: "Evaluation Pipelines", description: "Test quality, intent alignment, and regressions before and after release." },
+  { icon: ActivityIcon, title: "Observability & Traceability", description: "See what ran, what was retrieved, and what changed when something goes wrong." },
+  { icon: ShieldIcon, title: "Guardrails & Policy Enforcement", description: "Apply organizational rules at runtime — not only in slide decks." },
+  { icon: UserCheckIcon, title: "Human Approval Points", description: "Require human decision where risk, reputation, or regulation demands it." },
+  { icon: KeyRoundIcon, title: "Identity, Permissions & Security", description: "Control who and what can invoke capabilities, and what they may access." },
+  { icon: GaugeIcon, title: "Cost & Usage Controls", description: "Govern spend and consumption so scale does not become surprise." },
+  { icon: LayersIcon, title: "Model & Cloud Portability", description: "Keep the operating model portable across models and environments." },
+  { icon: RocketIcon, title: "Production Deployment & Continuous Improvement", description: "Ship, monitor, and improve — oriented to dependable business operation." },
 ];
 
 const approach = [
-  { step: "01", icon: CloudIcon, title: "Design the Platform", description: "Choose a cloud-native foundation and managed services that fit the organization's needs." },
-  { step: "02", icon: BoxesIcon, title: "Containerize & Automate", description: "Package models for reproducible deployment and automate the delivery pipeline." },
-  { step: "03", icon: ActivityIcon, title: "Scale & Observe", description: "Add autoscaling, load balancing, and full observability for reliable production operation." },
+  { step: "01", icon: CloudIcon, title: "Design for Operation", description: "Define the capability layer around business workflows, risk, and portability — not a training lab stack." },
+  { step: "02", icon: BoxesIcon, title: "Wire Gateways & Controls", description: "Stand up gateways, retrieval, orchestration, approvals, and security boundaries." },
+  { step: "03", icon: ActivityIcon, title: "Evaluate, Observe, Improve", description: "Run evaluation pipelines and observability so production stays measurable and improvable." },
 ];
 
-// Industry vignettes: keyword-matched per the Stage 2 mapping; items with no
-// industry keyword stay imageless on purpose.
-const applications: {
+const evidence = [
+  { icon: FileCheckIcon, title: "Reference architecture for the AI capability layer" },
+  { icon: ShareIcon, title: "Gateway and policy patterns for model/agent access" },
+  { icon: RulerIcon, title: "Evaluation and observability hooks in the release path" },
+  { icon: GaugeIcon, title: "Cost/usage and approval controls for production paths" },
+];
+
+const connections = [
+  { pillar: "Strategy", href: "/ai-center-of-excellence/strategic-vision", note: "Which workloads deserve platform investment" },
+  { pillar: "Expertise", href: "/ai-center-of-excellence/centralized-expertise", note: "Who builds and operates on the platform" },
+  { pillar: "Data & Context", href: "/ai-center-of-excellence/data-governance", note: "What retrieval may ground on" },
+  { pillar: "Governance", href: "/ai-center-of-excellence/governance-risk", note: "How evaluation and evidence attach" },
+  { pillar: "Adoption", href: "/ai-center-of-excellence/adoption-culture", note: "How people use production paths safely" },
+];
+
+const examples: {
   title: string;
   description: string;
   image?: string;
   imagePosition?: string;
 }[] = [
-  { title: "Fraud Detection at Scale", description: "Deploy and scale fraud-detection models that handle high transaction volumes in financial services.", image: "/images/coe/coe-industry-financial.webp", imagePosition: "object-center" },
-  { title: "Multi-Model Deployment", description: "Run diverse AI applications in parallel on a single elastic platform." },
+  {
+    title: "Example: Governed agent gateway",
+    description:
+      "Business applications call a shared gateway that enforces identity, retrieval scope, approval rules, and cost limits before an agent acts.",
+  },
+  {
+    title: "Example: Portable evaluation path",
+    description:
+      "The same evaluation and observability hooks run whether a workload uses one model family or another — so the operating model is not locked to a single vendor.",
+    image: "/images/coe/coe-industry-financial.webp",
+    imagePosition: "object-center",
+  },
 ];
 
-// Colored version of the section's matched vignette, washed behind the whole
-// Applications section; the card copies render greyscale for chromatic contrast.
-const sectionVignette = applications.find((a) => a.image)?.image;
+const sectionVignette = examples.find((a) => a.image)?.image;
 
-const stack = ["Docker", "Kubernetes", "AWS SageMaker", "Google AI Platform", "TensorFlow Serving", "Prometheus", "Grafana", "Elasticsearch"];
+const capabilityCategories = [
+  "Model and agent gateways",
+  "Enterprise retrieval and knowledge grounding",
+  "Agent orchestration",
+  "Evaluation pipelines",
+  "Observability and traceability",
+  "Guardrails and policy enforcement",
+  "Human approval points",
+  "Identity, permissions, and security",
+  "Cost and usage controls",
+  "Model and cloud portability",
+  "Production deployment and continuous improvement",
+];
 
 const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   serviceType: "Scalable AI Infrastructure",
   name: "Scalable AI Infrastructure for an AI Center of Excellence",
+  url: absoluteUrl("/ai-center-of-excellence/scalable-infrastructure"),
   description:
-    "Cloud-native, containerized infrastructure with distributed training, autoscaling, and full observability so AI models deploy and scale reliably as demand grows.",
-  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://overture-systems.com" },
+    "A model-agnostic AI capability layer spanning gateways, retrieval, agent orchestration, evaluation, observability, guardrails, human approvals, identity and security, cost controls, portability, and production continuous improvement.",
+  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: absoluteUrl("/") },
   areaServed: { "@type": "Country", name: "United States" },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };
 
-const pageContent = `Scalable AI Infrastructure is the third pillar of an AI Center of Excellence. Cloud-native architecture enables dynamic resource scaling and managed services for seamless deployment. Containerization and orchestration via Docker and Kubernetes ensure consistent, reproducible deployments. Distributed training and inference with TensorFlow Serving and AWS SageMaker handle large workloads and parallel model execution. Autoscaling and load balancing maintain high availability, while monitoring and observability via Prometheus, Grafana, and Elasticsearch enable proactive troubleshooting. Real-world applications include fraud detection at scale for financial services and multi-model deployment on a single elastic platform.`;
+const pageContent = `Scalable AI Infrastructure is pillar 3 of Overture's AI Center of Excellence. It is a modern, model-agnostic capability layer for dependable business operation — not a legacy training stack and not infrastructure for its own sake. Capabilities include: model and agent gateways; enterprise retrieval and knowledge grounding; agent orchestration; evaluation pipelines; observability and traceability; guardrails and policy enforcement; human approval points; identity, permissions, and security; cost and usage controls; model and cloud portability; production deployment and continuous improvement. Vendor products are secondary implementation choices. Do not invent results. Examples are illustrative.`;
 
 export default function ScalableInfrastructurePage() {
   return (
@@ -104,7 +142,6 @@ export default function ScalableInfrastructurePage() {
       <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
         <HomeButton />
 
-        {/* Hero */}
         <header className="relative isolate flex min-h-[60vh] items-center justify-center overflow-hidden bg-gradient-to-br from-secondary/10 via-secondary/5 to-background dark:from-secondary/5 dark:via-secondary/5 dark:to-background">
           <HeroBackdrop src="/images/coe/coe-scalable-infrastructure-hero.webp" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -120,12 +157,12 @@ export default function ScalableInfrastructurePage() {
               </span>
             </h1>
             <p className="mt-6 text-xl leading-relaxed text-muted-foreground max-w-3xl mx-auto">
-              Cloud-native, containerized infrastructure that deploys and scales AI reliably as demand grows.
+              A model-agnostic capability layer built for dependable business operation — gateways, retrieval, evaluation, controls, and portable production paths.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/contact">
-                  Schedule a Consultation
+                <Link href="/contact?intent=readiness-workshop">
+                  Request a Readiness Workshop
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -136,39 +173,36 @@ export default function ScalableInfrastructurePage() {
           </div>
         </header>
 
-        {/* Signature visual */}
         <section className="py-16">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <ScaleRipple />
           </div>
         </section>
 
-        {/* Why it matters */}
         <section className="py-20 border-b">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             <Badge variant="secondary" className="mb-4">Why It Matters</Badge>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">Infrastructure That Grows With You</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">Infrastructure Serves Operation</h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Brittle, hand-configured infrastructure is the hidden bottleneck in most AI programs. Cloud-native, containerized platforms eliminate that ceiling - so models that work in the lab also work reliably at production scale, without heroic effort every time demand spikes.
+              Labs can run without a capability layer. Enterprises cannot. Gateways, retrieval, evaluation, approvals, and cost controls exist so AI work can be trusted in production — across models and environments.
             </p>
           </div>
         </section>
 
-        {/* Capabilities */}
         <section className="py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">What We Build</Badge>
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">Core Capabilities</h2>
+              <Badge variant="secondary" className="mb-4">What Overture Helps Establish</Badge>
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">Capability Layer</h2>
             </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {capabilities.map((c, idx) => (
-                <Card key={idx} className="h-full border-2 hover:border-primary/50 transition-colors">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {capabilities.map((c) => (
+                <Card key={c.title} className="h-full border-2 hover:border-primary/50 transition-colors">
                   <CardHeader>
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 mb-4">
-                      <c.icon className="h-6 w-6 text-primary" />
+                      <c.icon className="h-6 w-6 text-primary" aria-hidden="true" />
                     </div>
-                    <CardTitle className="text-xl">{c.title}</CardTitle>
+                    <CardTitle className="text-lg">{c.title}</CardTitle>
                     <CardDescription>{c.description}</CardDescription>
                   </CardHeader>
                 </Card>
@@ -177,27 +211,25 @@ export default function ScalableInfrastructurePage() {
           </div>
         </section>
 
-        {/* Mid-page breather band - echoes the hero artwork */}
         <SectionBand src="/images/coe/coe-scalable-infrastructure-hero.webp">
-          Brittle, hand-configured infrastructure is the hidden bottleneck in most AI programs.
+          Portable by design — the operating model is not locked to one model family or cloud.
         </SectionBand>
 
-        {/* Approach */}
         <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">Our Approach</Badge>
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">How We Establish It</h2>
+              <Badge variant="secondary" className="mb-4">How We Establish It</Badge>
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">From Design to Continuous Improvement</h2>
             </div>
             <div className="grid gap-8 md:grid-cols-3">
               {approach.map((step, idx) => (
-                <div key={idx} className="relative">
+                <div key={step.step} className="relative">
                   <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-4">
                         <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary/20">{step.step}</span>
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                          <step.icon className="h-6 w-6 text-primary" />
+                          <step.icon className="h-6 w-6 text-primary" aria-hidden="true" />
                         </div>
                       </div>
                       <CardTitle className="text-xl">{step.title}</CardTitle>
@@ -208,7 +240,7 @@ export default function ScalableInfrastructurePage() {
                   </Card>
                   {idx < approach.length - 1 && (
                     <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                      <ArrowRight className="h-8 w-8 text-primary/50" />
+                      <ArrowRight className="h-8 w-8 text-primary/50" aria-hidden="true" />
                     </div>
                   )}
                 </div>
@@ -217,23 +249,56 @@ export default function ScalableInfrastructurePage() {
           </div>
         </section>
 
-        {/* Applications */}
+        <section className="py-20 border-b">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-4">Evidence of Progress</Badge>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground">What You Can Point To Afterward</h2>
+            </div>
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {evidence.map((item) => (
+                <li key={item.title} className="flex items-start gap-3 rounded-xl border-2 p-4">
+                  <item.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" aria-hidden="true" />
+                  <span className="text-sm font-medium text-foreground">{item.title}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="py-16">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <Badge variant="secondary" className="mb-4">Connected Operating Model</Badge>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">How This Pillar Links to the Others</h2>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {connections.map((c) => (
+                <Link
+                  key={c.pillar}
+                  href={c.href}
+                  className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm hover:border-primary hover:bg-primary/5 transition-colors"
+                >
+                  <Link2Icon className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                  <span className="font-medium text-foreground">{c.pillar}</span>
+                  <span className="text-muted-foreground">· {c.note}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="relative overflow-hidden py-20">
-          {/* Colored section field: full-color vignette washes the section and
-              fades at both edges; the greyscale card copy above it supplies the
-              chromatic figure-ground contrast. */}
           {sectionVignette && <SectionWash src={sectionVignette} />}
           <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">In Practice</Badge>
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">Real-World Applications</h2>
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-4">Examples</Badge>
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">Operating Examples</h2>
+              <p className="mt-3 text-sm text-muted-foreground">Illustrative scenarios — not client case studies or measured results.</p>
             </div>
             <div className="grid gap-8 md:grid-cols-2">
-              {applications.map((a, idx) => (
-                <Card key={idx} className="h-full border-2">
-                  {/* Industry vignette as an edge-bleed backdrop: anchored to the
-                      right periphery and masked toward the text, so reading
-                      anchors top-left while the image registers as atmosphere. */}
+              {examples.map((a) => (
+                <Card key={a.title} className="h-full border-2">
                   {a.image && <VignetteLayer src={a.image} position={a.imagePosition} edge="right" />}
                   <CardHeader>
                     <div className="h-2 w-16 rounded-full bg-gradient-to-r from-primary to-accent mb-4" />
@@ -246,53 +311,24 @@ export default function ScalableInfrastructurePage() {
           </div>
         </section>
 
-        {/* Technology Stack */}
-        <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
+        <section className="py-16 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">Technology Stack</Badge>
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">Battle-Tested Tools</h2>
-              <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                We build on proven, open-standard platforms so your infrastructure is portable and future-proof.
-              </p>
+            <div className="text-center mb-10">
+              <Badge variant="secondary" className="mb-4">Capability Categories</Badge>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">Defined by Capabilities, Not a Legacy Stack</h2>
             </div>
-            <div className="flex flex-wrap justify-center gap-3">
-              {stack.map((tech) => (
-                <Badge key={tech} variant="secondary" className="px-4 py-2 text-sm font-medium">
-                  {tech}
+            <div className="flex flex-wrap justify-center gap-2">
+              {capabilityCategories.map((category) => (
+                <Badge key={category} variant="secondary" className="px-3 py-1.5 text-sm font-medium">
+                  {category}
                 </Badge>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Sibling pillars */}
         <PillarNav current="scalable-infrastructure" />
-
-        {/* Start Here entry point */}
-        <StartHereBlock />
-
-        {/* CTA */}
-        <section className="relative py-24 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
-          <CtaTexture />
-          <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Ready to scale your AI platform?
-            </h2>
-            <p className="mt-6 text-xl text-muted-foreground">
-              Let&apos;s design and deploy a cloud-native AI infrastructure that grows reliably with your ambitions.
-            </p>
-            <div className="mt-8">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/contact">
-                  Schedule a Consultation
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-
+        <PillarNextSteps prompt="See whether your current stack supports governed, portable operation — or scope the capability layer with our team." />
         <SiteFooter />
       </div>
     </>

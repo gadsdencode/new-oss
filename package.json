@@ -6,7 +6,8 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "npx tsx --test lib/coe/readiness-snapshot.test.ts lib/coe/recommend-tier.test.ts lib/contact/coe-intent.test.ts lib/site.test.ts"
   },
   "dependencies": {
     "@copilotkit/react-core": "1.10.6",

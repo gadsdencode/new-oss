@@ -4,7 +4,20 @@ import { Ripple } from "@/components/ui/ripple";
 import { Badge } from "@/components/ui/badge";
 import { ServerIcon } from "lucide-react";
 
-const stack = ["Docker", "Kubernetes", "AWS SageMaker", "Google AI Platform", "TensorFlow Serving", "Prometheus", "Grafana", "Elasticsearch"];
+/** Durable capability categories — vendors are not the offering. */
+const capabilities = [
+  "Model and agent gateways",
+  "Enterprise retrieval",
+  "Agent orchestration",
+  "Evaluation pipelines",
+  "Observability",
+  "Guardrails",
+  "Human approvals",
+  "Identity & security",
+  "Cost controls",
+  "Model portability",
+  "Production CI",
+];
 
 export function ScaleRipple() {
   return (
@@ -15,15 +28,17 @@ export function ScaleRipple() {
             <ServerIcon className="h-8 w-8" />
           </div>
           <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-            Scales out to meet demand &mdash; and back in to control cost.
+            Built for dependable operation &mdash; not infrastructure for its own sake.
           </p>
         </div>
         <Ripple mainCircleSize={180} numCircles={6} />
       </div>
 
       <div className="flex flex-wrap justify-center gap-2">
-        {stack.map((s) => (
-          <Badge key={s} variant="secondary" className="px-3 py-1 text-sm">{s}</Badge>
+        {capabilities.map((s) => (
+          <Badge key={s} variant="secondary" className="px-3 py-1 text-sm">
+            {s}
+          </Badge>
         ))}
       </div>
     </div>

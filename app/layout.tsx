@@ -11,6 +11,7 @@ import { ThemeToggleWrapper } from "./components/theme-toggle-wrapper";
 import { GlobalAITools } from "@/components/global-ai-tools";
 import { StructuredData } from "@/components/structured-data";
 import { Analytics } from '@vercel/analytics/next';
+import { absoluteUrl, SITE_ORIGIN } from "@/lib/site";
 
 // Fallback: Inter ≈ Geist Sans, JetBrains Mono ≈ Geist Mono
 const inter = Inter({
@@ -26,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://overture-systems.com"),
+  metadataBase: new URL(SITE_ORIGIN),
   title: "Overture Systems Solutions | Enterprise AI Consulting and Implementation",
   description:
     "AI strategy, implementation, and governance for enterprises. Founded in 2005. Home of the patent-pending ICDU evaluation pipeline and the AI Center of Excellence practice.",
@@ -41,8 +42,8 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Overture Systems Solutions",
-  "url": "https://overture-systems.com",
-  "logo": "https://overture-systems.com/images/Overture_icon_transparent_512.png",
+  "url": absoluteUrl("/"),
+  "logo": absoluteUrl("/images/Overture_icon_transparent_512.png"),
   "description": "Enterprise AI consulting, implementation, and governance. Founded in 2005, Overture Systems Solutions helps organizations build AI Centers of Excellence and deploy custom AI solutions, and is the home of the patent-pending ICDU evaluation pipeline.",
   "foundingDate": "2005",
   "contactPoint": {

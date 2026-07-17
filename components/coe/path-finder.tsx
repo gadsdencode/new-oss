@@ -1,14 +1,10 @@
 "use client";
 
 // components/coe/path-finder.tsx
-// Guided "find your path" wizard for the getting-started funnel.
-// 2-3 clicks: journey stage -> prerequisites in place -> recommended entry tier.
-// Reuses GETTING_STARTED copy verbatim; only the questions, stage labels, and
-// "why this fits" blurbs are new microcopy.
-//
-// Deep links: reads ?stage=<JourneyStageId> (from StartHereBlock chips and the
-// readiness assessment) to preselect step 1 and jump straight to step 2.
-// Render inside <Suspense> - useSearchParams requires it under static prerender.
+// Guided tier finder for the getting-started funnel.
+// Stage → foundations → recommended entry tier.
+// Reads Snapshot handoff (session) + optional ?stage= deep link.
+// Does not re-ask the stage when already supplied; visitor can still change it.
 
 import * as React from "react";
 import Link from "next/link";
@@ -23,11 +19,16 @@ import { cn } from "@/lib/utils";
 import {
   GETTING_STARTED,
   JOURNEY_STAGES,
-  recommendTier,
+  explainTierRecommendation,
   isJourneyStageId,
   type JourneyStageId,
   type TierId,
 } from "@/lib/coe/getting-started-data";
+import {
+  readSnapshotHandoff,
+  writeSnapshotHandoff,
+  type SnapshotHandoff,
+} from "@/lib/coe/snapshot-handoff";
 import {
   SearchCheckIcon,
   RocketIcon,
@@ -48,21 +49,18 @@ const TIER_ICONS: Record<TierId, React.ElementType> = {
   scale: TrendingUpIcon,
 };
 
-// Which engagement phases each tier covers (rendered as a mini tailored timeline).
+// Which engagement phases each tier primarily covers (highlighted chips).
+// Diagnostic = phase 01 only. Pilot = 02–03. Build & Scale spans the broader path.
 const TIER_PHASE_STEPS: Record<TierId, readonly string[]> = {
   diagnostic: ["01"],
-  pilot: ["01", "02", "03"],
+  pilot: ["02", "03"],
   scale: ["01", "02", "03", "04"],
 };
 
-// "Why this fits" microcopy, keyed by recommended tier.
-const TIER_FIT_BLURBS: Record<TierId, string> = {
-  diagnostic:
-    "The diagnostic gives you an objective baseline and a clear roadmap before you commit budget or headcount - the lowest-risk way to turn intent into a plan.",
-  pilot:
-    "You're already building. The pilot proves value on one real use case while standing up the governance and data baseline everything else will run on.",
-  scale:
-    "AI already works in pockets of your organization. Build & Scale turns those pockets into one durable, organization-wide capability.",
+const JOURNEY_HEADING: Record<TierId, string> = {
+  diagnostic: "How this starting point connects to the broader journey",
+  pilot: "Where the broader CoE journey can lead",
+  scale: "Where the broader CoE journey can lead",
 };
 
 type Step = "stage" | "prereqs" | "result";
@@ -76,22 +74,52 @@ const STEP_LABELS: { id: Step; label: string }[] = [
 export function PathFinder() {
   const searchParams = useSearchParams();
   const stageParam = searchParams.get("stage");
-  const initialStage: JourneyStageId | null = isJourneyStageId(stageParam) ? stageParam : null;
+  const urlStage: JourneyStageId | null = isJourneyStageId(stageParam) ? stageParam : null;
 
-  const [step, setStep] = React.useState<Step>(initialStage ? "prereqs" : "stage");
-  const [stage, setStage] = React.useState<JourneyStageId | null>(initialStage);
-  const [checked, setChecked] = React.useState<boolean[]>(
-    () => GETTING_STARTED.prerequisites.map(() => false)
+  const [handoff, setHandoff] = React.useState<SnapshotHandoff | null>(null);
+  const [hydrated, setHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    const stored = readSnapshotHandoff();
+    setHandoff(stored);
+    setHydrated(true);
+  }, []);
+
+  const [step, setStep] = React.useState<Step>("stage");
+  const [stage, setStage] = React.useState<JourneyStageId | null>(null);
+  const [checked, setChecked] = React.useState<boolean[]>(() =>
+    GETTING_STARTED.prerequisites.map(() => false)
   );
+  const [initializedFromHandoff, setInitializedFromHandoff] = React.useState(false);
 
-  const prerequisitesMet = checked.filter(Boolean).length;
-  const recommendedId = stage ? recommendTier(stage, prerequisitesMet) : "diagnostic";
+  // After hydration, apply stage + foundation preselection once.
+  React.useEffect(() => {
+    if (!hydrated || initializedFromHandoff) return;
+    const resolvedStage = urlStage ?? handoff?.stageId ?? null;
+    if (resolvedStage) {
+      setStage(resolvedStage);
+      setStep("prereqs");
+    }
+    if (handoff?.foundationIndexes?.length) {
+      setChecked(
+        GETTING_STARTED.prerequisites.map((_, idx) =>
+          handoff.foundationIndexes!.includes(idx)
+        )
+      );
+    }
+    setInitializedFromHandoff(true);
+  }, [hydrated, handoff, urlStage, initializedFromHandoff]);
+
+  const foundationsMet = checked.filter(Boolean).length;
+  const recommendation = stage
+    ? explainTierRecommendation(stage, foundationsMet)
+    : null;
+  const recommendedId = recommendation?.tierId ?? "diagnostic";
   const tier = GETTING_STARTED.tiers.find((t) => t.id === recommendedId) ?? GETTING_STARTED.tiers[0];
   const stageInfo = stage ? JOURNEY_STAGES.find((s) => s.id === stage) : null;
-  // The rule downgraded the stage's natural tier because foundations are missing.
-  const downgraded = stageInfo ? stageInfo.tierId !== recommendedId : false;
   const TierIcon = TIER_ICONS[tier.id];
   const stepIndex = STEP_LABELS.findIndex((s) => s.id === step);
+  const fromSnapshot = Boolean(handoff);
 
   const handleStage = (id: JourneyStageId) => {
     setStage(id);
@@ -100,6 +128,35 @@ export function PathFinder() {
 
   const togglePrereq = (idx: number) => {
     setChecked((prev) => prev.map((v, i) => (i === idx ? !v : v)));
+  };
+
+  const handleSeeResult = () => {
+    if (!stage || !recommendation) return;
+    const indexes = checked
+      .map((on, idx) => (on ? idx : -1))
+      .filter((idx) => idx >= 0);
+    const tierMeta = GETTING_STARTED.tiers.find((t) => t.id === recommendation.tierId);
+    const existing = readSnapshotHandoff();
+    writeSnapshotHandoff({
+      version: 1,
+      createdAt: existing?.createdAt ?? new Date().toISOString(),
+      maturityBandId: existing?.maturityBandId ?? "foundational",
+      maturityBandName: existing?.maturityBandName ?? "Foundational",
+      largestGapId: existing?.largestGapId ?? "vision",
+      largestGapLabel: existing?.largestGapLabel ?? "Strategic Vision & Leadership",
+      strongestId: existing?.strongestId ?? "vision",
+      strongestLabel: existing?.strongestLabel ?? "Strategic Vision & Leadership",
+      percent: existing?.percent ?? 0,
+      foundationIndexes: indexes,
+      recommendedTierId: recommendation.tierId,
+      recommendedTierName: tierMeta?.name ?? "Readiness Diagnostic",
+      stageId: stage,
+    });
+    setHandoff(readSnapshotHandoff());
+    window.dispatchEvent(
+      new CustomEvent("coe-tier-recommendation", { detail: { tierId: recommendation.tierId } })
+    );
+    setStep("result");
   };
 
   const handleReset = () => {
@@ -118,7 +175,6 @@ export function PathFinder() {
         <BorderBeam size={140} duration={8} colorFrom="#0B7CFF" colorTo="#00D6C9" />
       )}
       <CardContent className="p-6 sm:p-10">
-        {/* Step indicator */}
         <ol className="mb-8 flex items-center justify-center gap-2 sm:gap-3" aria-label="Path finder progress">
           {STEP_LABELS.map((s, i) => (
             <li key={s.id} className="flex items-center gap-2 sm:gap-3">
@@ -148,7 +204,6 @@ export function PathFinder() {
           ))}
         </ol>
 
-        {/* Step 1: journey stage */}
         {step === "stage" && (
           <div>
             <div className="mb-6 text-center">
@@ -157,7 +212,7 @@ export function PathFinder() {
               </div>
               <h3 className="text-2xl font-bold tracking-tight text-foreground">Where are you today?</h3>
               <p className="mt-2 text-muted-foreground">
-                One click - we&apos;ll point you to the right starting tier.
+                One click — we&apos;ll point you to the right starting tier.
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -179,7 +234,6 @@ export function PathFinder() {
           </div>
         )}
 
-        {/* Step 2: prerequisites in place */}
         {step === "prereqs" && (
           <div>
             <div className="mb-6 text-center">
@@ -190,10 +244,8 @@ export function PathFinder() {
                 What do you already have in place?
               </h3>
               <p className="mt-2 text-muted-foreground">
-                Check everything that exists today. Gaps are normal - they shape the recommendation.
+                Check everything that exists today. Gaps are normal — they shape the recommendation.
               </p>
-              {/* Echo the stage so deep-linked visitors (readiness check, stage
-                  chips) can see - and correct - what was pre-selected for them. */}
               {stageInfo && (
                 <p className="mt-3 text-sm text-muted-foreground">
                   Your stage:{" "}
@@ -207,6 +259,19 @@ export function PathFinder() {
                     change
                   </button>
                 </p>
+              )}
+              {fromSnapshot && handoff && (
+                <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-left text-sm">
+                  <p className="text-xs font-medium text-muted-foreground mb-1">From your AI CoE Readiness Snapshot</p>
+                  <p className="text-foreground">
+                    <span className="font-semibold">{handoff.maturityBandName}</span>
+                    {" band · largest opportunity: "}
+                    <span className="font-semibold">{handoff.largestGapLabel}</span>
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Confirm foundations below — we won&apos;t ask you to re-rate the pillars.
+                  </p>
+                </div>
               )}
             </div>
             <div className="space-y-3">
@@ -241,7 +306,7 @@ export function PathFinder() {
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back
               </Button>
-              <Button onClick={() => setStep("result")} className="shadow-brand">
+              <Button onClick={handleSeeResult} className="shadow-brand">
                 See my starting point
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -249,8 +314,7 @@ export function PathFinder() {
           </div>
         )}
 
-        {/* Result: recommended tier */}
-        {step === "result" && (
+        {step === "result" && recommendation && (
           <div>
             <div className="mb-6 text-center">
               <Badge className="mb-4">Your recommended starting point</Badge>
@@ -270,11 +334,7 @@ export function PathFinder() {
             <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-4">
               <p className="flex items-start gap-2 text-sm text-foreground">
                 <SparklesIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>
-                  {downgraded
-                    ? GETTING_STARTED.prerequisitesNote
-                    : TIER_FIT_BLURBS[tier.id]}
-                </span>
+                <span>{recommendation.reason}</span>
               </p>
             </div>
 
@@ -292,11 +352,16 @@ export function PathFinder() {
               </ul>
             </div>
 
-            {/* Tailored mini-timeline: which engagement phases this tier covers */}
             <div className="mt-6">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Your engagement covers
+                {JOURNEY_HEADING[tier.id]}
               </p>
+              {tier.id === "diagnostic" && (
+                <p className="mb-3 text-xs text-muted-foreground">
+                  The Readiness Diagnostic itself is limited to Discovery &amp; Readiness (estimated 2–3 weeks). Later
+                  phases belong to subsequent tiers.
+                </p>
+              )}
               <div className="flex flex-wrap gap-2">
                 {GETTING_STARTED.phases.map((phase) => {
                   const included = TIER_PHASE_STEPS[tier.id].includes(phase.step);
@@ -321,7 +386,7 @@ export function PathFinder() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Button size="lg" className="shadow-brand whitespace-normal" asChild>
                 <Link href={`/contact?intent=${tier.id}`}>
-                  Start with the {tier.name}
+                  Request the {tier.name}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -329,6 +394,14 @@ export function PathFinder() {
                 Compare all three tiers
               </Button>
             </div>
+            {(tier.id === "pilot" || tier.id === "scale") && (
+              <p className="mt-4 text-center text-sm text-muted-foreground">
+                Prefer a lower-commitment start?{" "}
+                <Link href="/contact?intent=diagnostic" className="font-medium text-primary underline underline-offset-2">
+                  Request a Readiness Diagnostic
+                </Link>
+              </p>
+            )}
             <div className="mt-3 text-center">
               <Button variant="ghost" size="sm" onClick={handleReset}>
                 <RotateCcw className="mr-2 h-4 w-4" />

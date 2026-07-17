@@ -2,6 +2,8 @@
 // NO "use client" directive - this is a Server Component (matches the pillar pages).
 // Interactive islands (PathFinder, EngagementPhases) are client components.
 import type { Metadata } from "next";
+import { coePageMetadata } from "@/lib/coe/page-seo";
+import { absoluteUrl } from "@/lib/site";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,11 +11,11 @@ import { Badge } from "@/components/ui/badge";
 import { HomeButton } from "@/components/ui/home-button";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
-import { CtaTexture } from "@/components/coe/cta-texture";
 import { SectionWash } from "@/components/coe/section-wash";
 import { VignetteLayer } from "@/components/coe/vignette-layer";
 import { PathFinder } from "@/components/coe/path-finder";
 import { EngagementPhases } from "@/components/coe/engagement-phases";
+import { GettingStartedCta } from "@/components/coe/getting-started-cta";
 import { GETTING_STARTED } from "@/lib/coe/getting-started-data";
 import { PageAiContext } from "@/components/page-ai-context";
 import { StructuredData } from "@/components/structured-data";
@@ -35,24 +37,13 @@ import {
   SparklesIcon,
 } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = coePageMetadata({
   title: "Getting Started with Your AI CoE | Overture Systems Solutions",
   description:
-    "Three entry tiers from readiness diagnostic to full CoE build. See prerequisites, timelines, and what you walk away with at each tier.",
-  openGraph: {
-    images: [
-      {
-        url: "https://overture-systems.com/images/coe/coe-getting-started-og.jpg",
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["https://overture-systems.com/images/coe/coe-getting-started-og.jpg"],
-  },
-};
+    "Three entry tiers from Readiness Diagnostic to full CoE build. See prerequisites, estimated timelines, and what you walk away with at each tier.",
+  path: "/ai-center-of-excellence/getting-started",
+  ogImage: "/images/coe/coe-getting-started-og.jpg",
+});
 
 // GETTING_STARTED copy lives in lib/coe/getting-started-data.ts (shared with
 // the PathFinder wizard, the phase stepper, and the readiness assessment).
@@ -73,6 +64,7 @@ const gettingStartedSchema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
   name: "How to start an AI Center of Excellence",
+  url: absoluteUrl("/ai-center-of-excellence/getting-started"),
   description:
     "A phased path to launching an AI Center of Excellence: begin with a readiness diagnostic, prove value with a foundation pilot, then build and scale across all six pillars.",
   step: GETTING_STARTED.phases.map((p) => ({
@@ -81,12 +73,12 @@ const gettingStartedSchema = {
     name: p.title,
     text: p.ossDoes,
   })),
-  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://overture-systems.com" },
+  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: absoluteUrl("/") },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };
 
 // ---- Plain-text context for the AI assistant ----
-const pageContent = `This page explains HOW to get started with an Overture Systems Solutions AI Center of Excellence (CoE). Teams do not have to commit to a full build; most start with a short, fixed-scope diagnostic and scale as value is proven. There are three entry tiers: (1) Readiness Diagnostic - 2 to 3 weeks, a structured assessment across all six CoE pillars benchmarked against a maturity model; you walk away with a maturity score, a prioritized gap analysis, and a recommended roadmap and starting point; best for teams exploring or planning a CoE who want an objective baseline. This is the recommended, lowest-risk first step. (2) Foundation Pilot - 8 to 12 weeks, stand up the governance and infrastructure baseline and deliver one high-value use case end to end; you walk away with a production-ready pilot, a governance and data baseline, and a measured outcome; best for teams ready to build who want to de-risk the full investment. (3) CoE Build & Scale - phased, typically 6 months and up, full operationalization across all six pillars with the operating model, enablement, and governance to scale AI organization-wide; you walk away with a running Center of Excellence, an operating model and governance framework, and an enabled internal team and adoption plan; best for teams committed to a durable, organization-wide capability. What you'll need to begin: an executive sponsor accountable for outcomes; a defined, high-value business problem to anchor the work; reasonable access to relevant data, tools, and stakeholders; and a cross-functional point of contact to coordinate. Teams that don't yet have all of these should start with the Readiness Diagnostic. How an engagement runs, in four phases: 01 Discovery & Readiness (2 to 3 weeks) - OSS assesses maturity, identifies gaps, and defines success metrics while you connect stakeholders and provide context; deliverable is a maturity baseline and prioritized roadmap. 02 Foundation (4 to 6 weeks) - OSS stands up governance, data, and infrastructure baselines while you review and approve the operating model; deliverable is a governance framework and technical foundation. 03 Pilot & Prove (4 to 8 weeks) - OSS builds and deploys one high-value use case while you provide subject-matter input and validate outcomes; deliverable is a production-ready pilot with measured results. 04 Scale & Enable (ongoing) - OSS expands across the pillars and enables your team while you grow internal ownership and adoption; deliverable is a self-sustaining Center of Excellence. Every engagement opens with a rigorous readiness diagnostic - defined scope, a measured baseline, and clear success metrics keep projects on track. HOW THE FLOW FITS TOGETHER: Step 1 is the free 5-minute readiness self-check on the AI Center of Excellence overview page (orientation only - it produces a maturity profile and a recommended entry tier). Step 2 is the tier finder on this page (two quick questions that match you to one of the three entry tiers; if you arrive from the self-check or a stage chip, your stage is pre-selected). Step 3 is booking a readiness workshop via the contact page to scope the formal engagement. The free self-check is NOT the Readiness Diagnostic - the Diagnostic is the formal, fixed-scope 2-3 week engagement tier. Pricing is scoped during the diagnostic; to begin, book a readiness workshop via the contact page or take the free 5-minute readiness check on the AI Center of Excellence overview page.`;
+const pageContent = `This page explains HOW to get started with an Overture Systems Solutions AI Center of Excellence (CoE). NAMING: the free tool is the "AI CoE Readiness Snapshot"; the formal paid engagement is the "Readiness Diagnostic". Do not call both an assessment or both a diagnostic. The Snapshot is orientation only — not an objective or validated organizational maturity score. The Diagnostic is estimated 2–3 weeks and is diagnostic scope only — it does not include Foundation, Pilot & Prove, or Scale & Enable work. ${GETTING_STARTED.durationDisclaimer} Three entry tiers: (1) Readiness Diagnostic — estimated 2–3 weeks — discovery across six CoE pillars, prioritized gaps, success measures, recommended roadmap. (2) Foundation Pilot — estimated 8–12 weeks — minimum governance/data/technical foundation plus one production-ready pilot. (3) CoE Build & Scale — phased, generally 6 months or more — full CoE operating model. Prerequisites: executive sponsor; defined high-value business problem; access to data/systems/stakeholders; cross-functional point of contact. TIER-FINDER LOGIC: journey stage maps Exploring/Planning → Diagnostic, Building → Pilot, Scaling → Build & Scale; if fewer than 2 foundations are in place, always recommend the Readiness Diagnostic. Recommendations explain why the tier was selected. Later phases are not included in the Diagnostic. Do not invent statistics. FLOW: Snapshot (hub) → tier finder (this page; stage/handoff carried in session, not sensitive URL data) → request via /contact with intent.`;
 
 export default function GettingStartedPage() {
   return (
@@ -147,7 +139,7 @@ export default function GettingStartedPage() {
               <h2 className="text-4xl font-bold tracking-tight text-foreground">Find Your Starting Point</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 Two quick questions match you to one of the three entry tiers below - no form, no commitment.
-                Arriving from the 5-minute readiness check? Your stage is already pre-selected.
+                Arriving from the AI CoE Readiness Snapshot? Your stage is already pre-selected.
               </p>
             </div>
 
@@ -162,19 +154,22 @@ export default function GettingStartedPage() {
             <div id="compare-tiers" className="scroll-mt-24 text-center mt-24 mb-16">
               <h3 className="text-3xl font-bold tracking-tight text-foreground">Three Ways to Begin</h3>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                These are the three entry tiers the tier finder above chooses between. Start small and scale as the
-                value is proven - most teams begin with the Readiness Diagnostic, a formal fixed-scope engagement
-                (distinct from the free 5-minute self-check on the overview page).
+                These are the three entry tiers the tier finder above chooses between. Start where the path fits —
+                Diagnostic, Pilot, or Build & Scale — and scale as value is proven. The free AI CoE Readiness Snapshot
+                on the overview page is orientation only; the Readiness Diagnostic is the formal fixed-scope engagement.
               </p>
             </div>
+            <p className="mb-10 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
+              {GETTING_STARTED.durationDisclaimer}
+            </p>
             <div className="grid gap-8 md:grid-cols-3 items-stretch">
               {GETTING_STARTED.tiers.map((tier, idx) => {
                 const Icon = tierIcons[idx];
                 return (
                   <Link
                     key={tier.id}
-                    href="/contact"
-                    aria-label={`Get started with the ${tier.name} - contact us`}
+                    href={`/contact?intent=${tier.id}`}
+                    aria-label={`Request the ${tier.name} — contact form`}
                     className="group block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   >
                   <Card
@@ -284,10 +279,13 @@ export default function GettingStartedPage() {
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold tracking-tight text-foreground">How an Engagement Runs</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                A clear, phased path - with both sides of the work spelled out at every step.
+                A clear, phased path — with both sides of the work spelled out at every step. The Readiness Diagnostic covers Discovery & Readiness only; Foundation and Pilot & Prove belong to the Foundation Pilot; Scale & Enable is CoE Build & Scale.
               </p>
             </div>
             <EngagementPhases />
+            <p className="mt-8 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
+              {GETTING_STARTED.durationDisclaimer}
+            </p>
           </div>
         </section>
 
@@ -295,39 +293,17 @@ export default function GettingStartedPage() {
         <section className="py-20 border-y bg-linear-to-b from-background to-primary/5 dark:to-primary/5">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-2xl font-medium leading-relaxed text-foreground">
-              Every engagement opens with a rigorous readiness diagnostic. That discipline -{" "}
+              Every structured engagement begins with clarity. That discipline —{" "}
               <span className="bg-linear-to-r from-primary to-chart-2 bg-clip-text text-transparent font-bold">
                 defined scope, a measured baseline, and clear success metrics
               </span>{" "}
-              - keeps projects on track where the industry average struggles.
+              — helps teams move from isolated experiments to an operating model they can sustain.
             </p>
           </div>
         </section>
 
-        {/* 6. Primary CTA */}
-        <section className="relative py-24 overflow-hidden bg-linear-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
-          <CtaTexture />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[14px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
-          <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              {GETTING_STARTED.cta.title}
-            </h2>
-            <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
-              {GETTING_STARTED.cta.body}
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href={GETTING_STARTED.cta.primaryHref}>
-                  {GETTING_STARTED.cta.primaryLabel}
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href={GETTING_STARTED.cta.secondaryHref}>{GETTING_STARTED.cta.secondaryLabel}</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+        {/* 6. Primary CTA — tier-aware (client island) */}
+        <GettingStartedCta />
 
         {/* 7. Cross-navigation */}
         <PillarNav current="getting-started" />

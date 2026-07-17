@@ -1,5 +1,7 @@
 // app/ai-center-of-excellence/data-governance/page.tsx
 import type { Metadata } from "next";
+import { coePageMetadata } from "@/lib/coe/page-seo";
+import { absoluteUrl } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,90 +12,110 @@ import { PageAiContext } from "@/components/page-ai-context";
 import { DataGovernancePageTools } from "./DataGovernancePageTools";
 import { StructuredData } from "@/components/structured-data";
 import { PillarNav } from "@/components/coe/pillar-nav";
-import { StartHereBlock } from "@/components/coe/start-here-block";
+import { PillarNextSteps } from "@/components/coe/pillar-next-steps";
 import { DataCatalogTree } from "@/components/coe/visuals/data-catalog-tree";
 import { HeroBackdrop } from "@/components/coe/hero-backdrop";
 import { SectionBand } from "@/components/coe/section-band";
-import { CtaTexture } from "@/components/coe/cta-texture";
 import { SectionWash } from "@/components/coe/section-wash";
 import { VignetteLayer } from "@/components/coe/vignette-layer";
 import {
+  LayersIcon,
+  BookOpenIcon,
+  KeyRoundIcon,
+  RefreshCwIcon,
+  SearchIcon,
   FolderTreeIcon,
+  GitBranchIcon,
   CheckCircle2,
   LockIcon,
-  FileCheckIcon,
-  LayersIcon,
+  ShieldIcon,
+  FileSearchIcon,
   SearchCheckIcon,
   RocketIcon,
   ArrowRight,
   SparklesIcon,
+  Link2Icon,
+  FileCheckIcon,
 } from "lucide-react";
 
-// Social cards only; title/description inherit from the root layout.
-// No metadataBase is set in app/layout.tsx, so URLs are absolute.
-export const metadata: Metadata = {
+export const metadata: Metadata = coePageMetadata({
   title: "Data Management & Governance | AI Center of Excellence | Overture Systems Solutions",
   description:
-    "Build a robust data ecosystem with cataloging, quality assurance, and secure storage - the governed foundation effective AI depends on.",
-  openGraph: {
-    images: [
-      {
-        url: "https://overture-systems.com/images/coe/coe-data-governance-og.jpg",
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["https://overture-systems.com/images/coe/coe-data-governance-og.jpg"],
-  },
-};
+    "Trusted AI requires trusted context — structured and unstructured knowledge, permissions, freshness, retrieval quality, lineage, and evidence of what influenced an output.",
+  path: "/ai-center-of-excellence/data-governance",
+  ogImage: "/images/coe/coe-data-governance-og.jpg",
+});
 
 const capabilities = [
-  { icon: FolderTreeIcon, title: "Data Cataloging", description: "Make data discoverable, documented, and usable across teams and AI initiatives." },
-  { icon: CheckCircle2, title: "Data Quality Management", description: "Ensure the accuracy and reliability that effective model training depends on." },
-  { icon: LockIcon, title: "Privacy & Security", description: "Securely store and process data and protect sensitive information end to end." },
-  { icon: FileCheckIcon, title: "Compliance Monitoring", description: "Keep data use aligned with regulations across regulated domains like healthcare and finance." },
-  { icon: LayersIcon, title: "Robust Data Ecosystem", description: "Combine governance, quality assurance, and secure processing into a scalable foundation." },
+  { icon: LayersIcon, title: "Structured & Unstructured Information", description: "Treat tables, documents, tickets, and knowledge bases as first-class context — not an afterthought." },
+  { icon: BookOpenIcon, title: "Knowledge Sources", description: "Identify which sources are authoritative for which questions and workflows." },
+  { icon: KeyRoundIcon, title: "Data Permissions", description: "Ensure AI can only retrieve what the user and use case are allowed to see." },
+  { icon: RefreshCwIcon, title: "Context Freshness", description: "Keep grounding material current so answers do not lag reality." },
+  { icon: SearchIcon, title: "Retrieval Quality", description: "Measure whether the right context is retrieved for the task — not merely that something was retrieved." },
+  { icon: FolderTreeIcon, title: "Cataloging & Lineage", description: "Know what exists, where it came from, and how it flows into AI systems." },
+  { icon: CheckCircle2, title: "Data Quality", description: "Improve completeness, accuracy, and consistency for the contexts AI depends on." },
+  { icon: LockIcon, title: "Privacy & Security", description: "Protect sensitive information across storage, retrieval, and generation paths." },
+  { icon: ShieldIcon, title: "Approved Use Boundaries", description: "Define what information may be used for which AI purposes." },
+  { icon: FileSearchIcon, title: "Influence Evidence", description: "Preserve evidence of which information influenced an AI output when accountability requires it." },
 ];
 
 const approach = [
-  { step: "01", icon: SearchCheckIcon, title: "Assess the Data Estate", description: "Map sources, quality, and gaps across the organization's data." },
-  { step: "02", icon: FolderTreeIcon, title: "Stand Up Governance", description: "Implement cataloging, quality management, and compliance monitoring." },
-  { step: "03", icon: RocketIcon, title: "Enable AI Workloads", description: "Deliver a reliable, secure data foundation that AI initiatives can build on." },
+  { step: "01", icon: SearchCheckIcon, title: "Map Trusted Context", description: "Inventory structured and unstructured sources, permissions, and freshness risks for priority workflows." },
+  { step: "02", icon: FolderTreeIcon, title: "Govern Access & Quality", description: "Stand up cataloging, lineage, retrieval quality, privacy controls, and approved-use boundaries." },
+  { step: "03", icon: RocketIcon, title: "Enable Grounded Operation", description: "Connect trusted context to production paths with influence evidence where required." },
 ];
 
-// Industry vignettes: keyword-matched per the Stage 2 mapping; items with no
-// industry keyword stay imageless on purpose. Healthcare's stethoscope sits
-// right of center, hence object-right so it survives the right-edge bleed.
-const applications: {
+const evidence = [
+  { icon: FileCheckIcon, title: "Context map for priority AI workflows" },
+  { icon: KeyRoundIcon, title: "Permission and approved-use rules for retrieval" },
+  { icon: GitBranchIcon, title: "Catalog/lineage coverage for grounding sources" },
+  { icon: FileSearchIcon, title: "Pattern for recording what influenced an output" },
+];
+
+const connections = [
+  { pillar: "Strategy", href: "/ai-center-of-excellence/strategic-vision", note: "Which contexts matter for outcomes" },
+  { pillar: "Expertise", href: "/ai-center-of-excellence/centralized-expertise", note: "Who curates and stewards knowledge" },
+  { pillar: "Infrastructure", href: "/ai-center-of-excellence/scalable-infrastructure", note: "Where retrieval and grounding run" },
+  { pillar: "Governance", href: "/ai-center-of-excellence/governance-risk", note: "How misuse and drift are controlled" },
+  { pillar: "Adoption", href: "/ai-center-of-excellence/adoption-culture", note: "How people trust and correct outputs" },
+];
+
+const examples: {
   title: string;
   description: string;
   image?: string;
   imagePosition?: string;
 }[] = [
-  { title: "Healthcare Diagnostics", description: "Ensure accurate, secure patient data for AI-driven diagnostic tools and clinical decision support.", image: "/images/coe/coe-industry-healthcare.webp", imagePosition: "object-right" },
-  { title: "Governed Analytics", description: "Provide a trustworthy, compliant data foundation for analytics and model training across the business." },
+  {
+    title: "Example: Permission-aware retrieval",
+    description:
+      "A support assistant retrieves only policy and case context the requesting role is allowed to see — and logs which sources grounded the answer.",
+    image: "/images/coe/coe-industry-healthcare.webp",
+    imagePosition: "object-right",
+  },
+  {
+    title: "Example: Freshness for operating decisions",
+    description:
+      "A workflow that depends on current procedures refuses stale documents and routes owners to update the knowledge source before generation proceeds.",
+  },
 ];
 
-// Colored version of the section's matched vignette, washed behind the whole
-// Applications section; the card copies render greyscale for chromatic contrast.
-const sectionVignette = applications.find((a) => a.image)?.image;
+const sectionVignette = examples.find((a) => a.image)?.image;
 
 const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   serviceType: "AI Data Management & Governance",
   name: "Data Management & Governance for an AI Center of Excellence",
+  url: absoluteUrl("/ai-center-of-excellence/data-governance"),
   description:
-    "Building a robust data ecosystem with cataloging, quality assurance, and secure storage - the high-quality, well-governed foundation effective AI depends on.",
-  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: "https://overture-systems.com" },
+    "Trusted organizational context for AI — structured and unstructured information, knowledge sources, permissions, freshness, retrieval quality, cataloging and lineage, quality, privacy, approved use, and influence evidence.",
+  provider: { "@type": "Organization", name: "Overture Systems Solutions", url: absoluteUrl("/") },
   areaServed: { "@type": "Country", name: "United States" },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };
 
-const pageContent = `Data Management & Governance is the fourth pillar of an AI Center of Excellence. High-quality, well-governed data is the foundation that effective AI depends on. Overture Systems Solutions implements data cataloging to make data discoverable and documented, data quality management to ensure accuracy and reliability for model training, privacy and security controls to protect sensitive information end to end, and compliance monitoring to keep data use aligned with regulations in healthcare, finance, and other regulated domains. The approach: assess the data estate, stand up governance, and enable AI workloads. Real-world applications include ensuring accurate and secure patient data for healthcare diagnostics and clinical decision support, and providing a trustworthy compliant data foundation for analytics and model training.`;
+const pageContent = `Data Management & Governance is pillar 4 of Overture's AI Center of Excellence. Headline concept: Trusted AI requires trusted context. This is not primarily "data storage for model training." It covers structured and unstructured information; knowledge sources; data permissions; context freshness; retrieval quality; cataloging and lineage; data quality; privacy and security; approved use boundaries; and evidence of which information influenced an AI output. Do not invent results or unsupported industry statistics. Examples are illustrative.`;
 
 export default function DataGovernancePage() {
   return (
@@ -105,7 +127,6 @@ export default function DataGovernancePage() {
       <div className="flex min-h-screen flex-col overflow-x-hidden bg-background font-sans">
         <HomeButton />
 
-        {/* Hero */}
         <header className="relative isolate flex min-h-[60vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/5 dark:via-secondary/5 dark:to-accent/5">
           <HeroBackdrop src="/images/coe/coe-data-governance-hero.webp" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -115,18 +136,18 @@ export default function DataGovernancePage() {
               AI Center of Excellence &bull; Pillar 4 of 6
             </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Data Management
+              Trusted AI Requires
               <span className="block mt-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
-                &amp; Governance
+                Trusted Context
               </span>
             </h1>
             <p className="mt-6 text-xl leading-relaxed text-muted-foreground max-w-3xl mx-auto">
-              A robust, well-governed data ecosystem - the high-quality foundation effective AI depends on.
+              Data management for enterprise AI is about permissions, freshness, retrieval quality, and evidence — not storage for training alone.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/contact">
-                  Schedule a Consultation
+                <Link href="/contact?intent=readiness-workshop">
+                  Request a Readiness Workshop
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -137,40 +158,37 @@ export default function DataGovernancePage() {
           </div>
         </header>
 
-        {/* Signature visual */}
         <section className="py-16">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-sm font-medium text-muted-foreground mb-6">A cataloged, governed data estate</p>
+            <p className="text-sm font-medium text-muted-foreground mb-6">Cataloged, permissioned, retrieval-ready context</p>
             <DataCatalogTree />
           </div>
         </section>
 
-        {/* Why it matters */}
         <section className="py-20 border-b">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             <Badge variant="secondary" className="mb-4">Why It Matters</Badge>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">No Model Is Better Than Its Data</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">Context Is the Product Input</h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Even the most sophisticated AI model produces unreliable outputs when trained on poor-quality or ungoverned data. A well-cataloged, quality-managed, and compliant data foundation is not a nice-to-have - it is the prerequisite for every AI initiative that needs to be trusted in production.
+              Generative and agentic systems inherit the quality, permissions, and freshness of what they can retrieve. Without trusted context, outputs are clever guesses — not organizational capability.
             </p>
           </div>
         </section>
 
-        {/* Capabilities */}
         <section className="py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">What We Build</Badge>
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">Core Capabilities</h2>
+              <Badge variant="secondary" className="mb-4">What Overture Helps Establish</Badge>
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">Trusted Context Capabilities</h2>
             </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {capabilities.map((c, idx) => (
-                <Card key={idx} className="h-full border-2 hover:border-primary/50 transition-colors">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {capabilities.map((c) => (
+                <Card key={c.title} className="h-full border-2 hover:border-primary/50 transition-colors">
                   <CardHeader>
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 mb-4">
-                      <c.icon className="h-6 w-6 text-primary" />
+                      <c.icon className="h-6 w-6 text-primary" aria-hidden="true" />
                     </div>
-                    <CardTitle className="text-xl">{c.title}</CardTitle>
+                    <CardTitle className="text-lg">{c.title}</CardTitle>
                     <CardDescription>{c.description}</CardDescription>
                   </CardHeader>
                 </Card>
@@ -179,27 +197,25 @@ export default function DataGovernancePage() {
           </div>
         </section>
 
-        {/* Mid-page breather band - echoes the hero artwork */}
         <SectionBand src="/images/coe/coe-data-governance-hero.webp">
-          A well-cataloged, quality-managed, and compliant data foundation is not a nice-to-have - it is the prerequisite for every AI initiative that needs to be trusted in production.
+          Know what influenced an output — when accountability requires it.
         </SectionBand>
 
-        {/* Approach */}
         <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">Our Approach</Badge>
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">How We Establish It</h2>
+              <Badge variant="secondary" className="mb-4">How We Establish It</Badge>
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">From Estate Map to Grounded Operation</h2>
             </div>
             <div className="grid gap-8 md:grid-cols-3">
               {approach.map((step, idx) => (
-                <div key={idx} className="relative">
+                <div key={step.step} className="relative">
                   <Card className="h-full border-2 hover:border-primary/50 transition-colors">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-4">
                         <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary/20">{step.step}</span>
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                          <step.icon className="h-6 w-6 text-primary" />
+                          <step.icon className="h-6 w-6 text-primary" aria-hidden="true" />
                         </div>
                       </div>
                       <CardTitle className="text-xl">{step.title}</CardTitle>
@@ -210,7 +226,7 @@ export default function DataGovernancePage() {
                   </Card>
                   {idx < approach.length - 1 && (
                     <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                      <ArrowRight className="h-8 w-8 text-primary/50" />
+                      <ArrowRight className="h-8 w-8 text-primary/50" aria-hidden="true" />
                     </div>
                   )}
                 </div>
@@ -219,23 +235,56 @@ export default function DataGovernancePage() {
           </div>
         </section>
 
-        {/* Applications */}
+        <section className="py-20 border-b">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-4">Evidence of Progress</Badge>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground">What You Can Point To Afterward</h2>
+            </div>
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {evidence.map((item) => (
+                <li key={item.title} className="flex items-start gap-3 rounded-xl border-2 p-4">
+                  <item.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" aria-hidden="true" />
+                  <span className="text-sm font-medium text-foreground">{item.title}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="py-16">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <Badge variant="secondary" className="mb-4">Connected Operating Model</Badge>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">How This Pillar Links to the Others</h2>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {connections.map((c) => (
+                <Link
+                  key={c.pillar}
+                  href={c.href}
+                  className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm hover:border-primary hover:bg-primary/5 transition-colors"
+                >
+                  <Link2Icon className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                  <span className="font-medium text-foreground">{c.pillar}</span>
+                  <span className="text-muted-foreground">· {c.note}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="relative overflow-hidden py-20">
-          {/* Colored section field: full-color vignette washes the section and
-              fades at both edges; the greyscale card copy above it supplies the
-              chromatic figure-ground contrast. */}
           {sectionVignette && <SectionWash src={sectionVignette} />}
           <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">In Practice</Badge>
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">Real-World Applications</h2>
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-4">Examples</Badge>
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">Operating Examples</h2>
+              <p className="mt-3 text-sm text-muted-foreground">Illustrative scenarios — not client case studies or measured results.</p>
             </div>
             <div className="grid gap-8 md:grid-cols-2">
-              {applications.map((a, idx) => (
-                <Card key={idx} className="h-full border-2">
-                  {/* Industry vignette as an edge-bleed backdrop: anchored to the
-                      right periphery and masked toward the text, so reading
-                      anchors top-left while the image registers as atmosphere. */}
+              {examples.map((a) => (
+                <Card key={a.title} className="h-full border-2">
                   {a.image && <VignetteLayer src={a.image} position={a.imagePosition} edge="right" />}
                   <CardHeader>
                     <div className="h-2 w-16 rounded-full bg-gradient-to-r from-primary to-accent mb-4" />
@@ -248,33 +297,8 @@ export default function DataGovernancePage() {
           </div>
         </section>
 
-        {/* Sibling pillars */}
         <PillarNav current="data-governance" />
-
-        {/* Start Here entry point */}
-        <StartHereBlock />
-
-        {/* CTA */}
-        <section className="relative py-24 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
-          <CtaTexture />
-          <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Ready to govern your data?
-            </h2>
-            <p className="mt-6 text-xl text-muted-foreground">
-              Let&apos;s build the cataloging, quality management, and compliance foundation your AI initiatives depend on.
-            </p>
-            <div className="mt-8">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/contact">
-                  Schedule a Consultation
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-
+        <PillarNextSteps prompt="See how ready your context layer is for governed AI — or scope trusted-context work in a Readiness Workshop." />
         <SiteFooter />
       </div>
     </>

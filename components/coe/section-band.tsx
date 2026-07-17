@@ -14,8 +14,8 @@ interface SectionBandProps {
 
 export function SectionBand({ src, children }: SectionBandProps) {
   return (
-    <section aria-hidden="false" className="relative overflow-hidden py-16 md:py-20 my-4">
-      <div className="absolute inset-0 -z-10">
+    <section className="relative overflow-hidden py-16 md:py-20 my-4">
+      <div className="absolute inset-0 -z-10" aria-hidden="true">
         <Image
           src={src}
           alt=""

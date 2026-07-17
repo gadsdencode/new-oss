@@ -22,7 +22,10 @@ Expert AI consulting taking enterprises from strategy development to production 
 
 ### [AI Center of Excellence](https://overture-systems.com/ai-center-of-excellence)
 End-to-end advisory and build services for establishing a centralized AI Center of Excellence - uniting strategy, talent, scalable infrastructure, data governance, responsible-AI practices, and an adoption culture.
-- **Entry Tiers**: Readiness Diagnostic (2-3 weeks), Foundation Pilot (8-12 weeks), CoE Build & Scale (phased, 6+ months).
+- **Entry Tiers** (durations are estimates; actual timelines depend on readiness, access, use-case complexity, stakeholders, security, and existing infrastructure):
+  - **Readiness Diagnostic** (estimated 2–3 weeks): discovery, six-pillar maturity assessment, prioritized gaps, success measures, recommended roadmap. Diagnostic scope only — does not include Foundation, Pilot & Prove, or Scale & Enable.
+  - **Foundation Pilot** (estimated 8–12 weeks): minimum governance, data, and technical foundation plus one production-ready pilot.
+  - **CoE Build & Scale** (phased, generally 6 months or more): operationalize and expand the full CoE operating model, ownership, adoption, and continuous improvement.
 
 ### [Custom LLM Solutions](https://overture-systems.com/ai)
 We fine-tune and deploy custom AI systems using the latest foundation models, tailored for specific business needs including **Enterprise Search**, **Coding Assistance**, and **Complex Reasoning**.

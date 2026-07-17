@@ -3,12 +3,12 @@
 // GETTING_STARTED — single source of truth for ALL copy in the getting-started
 // funnel. Consumed by:
 //   - app/ai-center-of-excellence/getting-started/page.tsx (page + JSON-LD)
+//   - app/ai-center-of-excellence/page.tsx (hub engagement section)
 //   - components/coe/path-finder.tsx (interactive wizard)
 //   - components/coe/engagement-phases.tsx (phase stepper)
 //   - components/coe/coe-readiness-assessment.tsx (entry-tier recommendation)
-// Editorial defaults: timelines SHOWN (as ranges), pricing NOT shown.
-// To show pricing later: add a `price` field per tier here and render one line
-// in the tier card. No other file changes required.
+//   - app/ai-center-of-excellence/CoEPageTools.tsx (assistant context)
+// Editorial defaults: timelines SHOWN as estimates, pricing NOT shown.
 // ---------------------------------------------------------------------------
 export const GETTING_STARTED = {
   hero: {
@@ -18,7 +18,13 @@ export const GETTING_STARTED = {
       "You don't have to commit to a full build to begin. Most teams start with a short, fixed-scope diagnostic, then scale as the value is proven.",
   },
 
-  // Three entry tiers (crawl / walk / run). Maps to journey stages:
+  /**
+   * Shown near every timeline surface. Durations are estimates, not commitments.
+   */
+  durationDisclaimer:
+    "All durations are estimates. Actual timelines depend on organizational readiness, access to data and systems, use-case complexity, stakeholder availability, security requirements, and existing infrastructure.",
+
+  // Three entry tiers. Maps to journey stages:
   // Diagnostic = Exploring/Planning, Pilot = Building, Build & Scale = Scaling.
   tiers: [
     {
@@ -26,26 +32,26 @@ export const GETTING_STARTED = {
       name: "Readiness Diagnostic",
       tagline: "Find out where you stand",
       image: "/images/coe/coe-tier-diagnostic.webp",
-      duration: "2 to 3 weeks",
+      duration: "Estimated 2–3 weeks",
       whatItIs:
-        "A structured assessment across all six CoE pillars, benchmarked against a maturity model.",
+        "Discovery across the six CoE pillars: a substantiated maturity profile, prioritized gaps, success measures, and a recommended roadmap. This engagement is the Readiness Diagnostic only — estimated 2–3 weeks — and does not include Foundation, Pilot & Prove, or Scale & Enable work.",
       walkAwayWith: [
-        "A maturity score across the six pillars",
+        "A maturity profile across the six pillars",
         "A prioritized gap analysis",
-        "A recommended roadmap and starting point",
+        "Success measures and a recommended roadmap",
       ],
       bestFor:
         "Teams exploring or planning a CoE who want an objective baseline before committing.",
-      featured: true, // primary, lowest-barrier entry point
+      featured: true,
     },
     {
       id: "pilot",
       name: "Foundation Pilot",
       tagline: "Prove value on one real use case",
       image: "/images/coe/coe-tier-pilot.webp",
-      duration: "8 to 12 weeks",
+      duration: "Estimated 8–12 weeks",
       whatItIs:
-        "We stand up the governance and infrastructure baseline and deliver one high-value use case end to end.",
+        "Establish the minimum governance, data, and technical foundation, and deliver one high-value use case through a production-ready pilot.",
       walkAwayWith: [
         "A production-ready pilot",
         "A governance and data baseline",
@@ -60,9 +66,9 @@ export const GETTING_STARTED = {
       name: "CoE Build & Scale",
       tagline: "Operationalize the full Center of Excellence",
       image: "/images/coe/coe-tier-scale.webp",
-      duration: "Phased, typically 6 months and up",
+      duration: "Phased, generally 6 months or more",
       whatItIs:
-        "Full operationalization across all six pillars, with the operating model, enablement, and governance to scale AI organization-wide.",
+        "Operationalize and expand the full CoE operating model — internal ownership, adoption, and continuous improvement across the six pillars.",
       walkAwayWith: [
         "A running Center of Excellence",
         "An operating model and governance framework",
@@ -100,39 +106,48 @@ export const GETTING_STARTED = {
   prerequisitesNote:
     "Don't have all of these in place yet? That is exactly what the Readiness Diagnostic is for.",
 
-  // Engagement phases — shows BOTH sides of the work (this is what converts).
+  // Engagement phases — how work progresses across tiers.
+  // Phase 01 = Diagnostic scope only.
+  // Phases 02–03 together = Foundation Pilot (estimated 8–12 weeks total).
+  // Phase 04 = Build & Scale.
   phases: [
     {
       step: "01",
       title: "Discovery & Readiness",
-      duration: "2 to 3 weeks",
+      duration: "Estimated 2–3 weeks",
+      tierLabel: "Readiness Diagnostic",
       ossDoes:
-        "Assess maturity across the six pillars, identify gaps, and define success metrics.",
+        "Run discovery and a six-pillar readiness baseline, identify prioritized gaps, and define success measures with a recommended roadmap.",
       youDo: "Connect us with stakeholders and provide access to context.",
-      deliverable: "Maturity baseline and prioritized roadmap.",
+      deliverable: "Maturity baseline, prioritized gaps, and recommended roadmap.",
     },
     {
       step: "02",
       title: "Foundation",
-      duration: "4 to 6 weeks",
-      ossDoes: "Stand up governance, data, and infrastructure baselines.",
+      duration: "Within Foundation Pilot (est. 8–12 weeks total)",
+      tierLabel: "Foundation Pilot",
+      ossDoes:
+        "Establish the minimum governance, data, and technical foundation the pilot will run on.",
       youDo: "Review and approve the operating model and guardrails.",
       deliverable: "Governance framework and technical foundation.",
     },
     {
       step: "03",
       title: "Pilot & Prove",
-      duration: "4 to 8 weeks",
-      ossDoes: "Build and deploy one high-value use case end to end.",
+      duration: "Within Foundation Pilot (est. 8–12 weeks total)",
+      tierLabel: "Foundation Pilot",
+      ossDoes:
+        "Deliver one high-value use case through a production-ready pilot.",
       youDo: "Provide subject-matter input and validate outcomes.",
       deliverable: "Production-ready pilot with measured results.",
     },
     {
       step: "04",
       title: "Scale & Enable",
-      duration: "Ongoing",
+      duration: "Phased, generally 6 months or more",
+      tierLabel: "CoE Build & Scale",
       ossDoes:
-        "Expand across the pillars, enable your team, and operationalize the CoE.",
+        "Operationalize and expand the full CoE operating model, enable internal ownership, and drive adoption and continuous improvement.",
       youDo: "Grow internal ownership and adoption.",
       deliverable: "A self-sustaining Center of Excellence.",
     },
@@ -141,9 +156,9 @@ export const GETTING_STARTED = {
   cta: {
     title: "Start with the Readiness Diagnostic",
     body: "The lowest-risk first step. We give you an objective baseline and a clear recommendation, no commitment to a full build.",
-    primaryLabel: "Book a readiness workshop",
-    primaryHref: "/contact",
-    secondaryLabel: "Not sure yet? Take the free 5-minute readiness check",
+    primaryLabel: "Request a Readiness Diagnostic",
+    primaryHref: "/contact?intent=diagnostic",
+    secondaryLabel: "Not sure yet? Take the free AI CoE Readiness Snapshot",
     // Anchor verified against app/ai-center-of-excellence/page.tsx (section id="assessment").
     secondaryHref: "/ai-center-of-excellence#assessment",
   },
@@ -194,14 +209,117 @@ export function isJourneyStageId(value: string | null | undefined): value is Jou
 }
 
 /**
- * The Path Finder recommendation rule:
- * - The chosen stage maps to a base tier.
- * - Fewer than 2 prerequisites in place always recommends the Diagnostic
- *   (mirrors GETTING_STARTED.prerequisitesNote), since the diagnostic is
- *   exactly how missing foundations get identified and planned.
+ * Path Finder / tier-finder recommendation matrix
+ * ---------------------------------------------------------------------------
+ * Inputs:
+ *   - Journey stage (Exploring | Planning | Building | Scaling)
+ *   - Foundations met count (0–4 checkboxes from GETTING_STARTED.prerequisites)
+ *
+ * Base stage → tier (when foundations are sufficient):
+ *   Exploring → Readiness Diagnostic
+ *   Planning  → Readiness Diagnostic
+ *   Building  → Foundation Pilot
+ *   Scaling   → CoE Build & Scale
+ *
+ * Foundation gate:
+ *   If foundationsMet < 2 → always Readiness Diagnostic
+ *   (matches prerequisitesNote: missing foundations are what the Diagnostic is for)
+ *
+ * Matrix (foundationsMet → tier):
+ *               | 0–1          | 2–4
+ *   ------------|--------------|----------------
+ *   Exploring   | Diagnostic   | Diagnostic
+ *   Planning    | Diagnostic   | Diagnostic
+ *   Building    | Diagnostic   | Foundation Pilot
+ *   Scaling     | Diagnostic   | CoE Build & Scale
+ *
+ * Boundary: foundationsMet === 2 is the first count that unlocks Pilot/Scale
+ * for Building/Scaling stages.
  */
-export function recommendTier(stageId: JourneyStageId, prerequisitesMet: number): TierId {
+export const FOUNDATION_UNLOCK_COUNT = 2;
+
+export function recommendTier(stageId: JourneyStageId, foundationsMet: number): TierId {
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId) ?? JOURNEY_STAGES[0];
-  if (prerequisitesMet < 2) return "diagnostic";
+  if (foundationsMet < FOUNDATION_UNLOCK_COUNT) return "diagnostic";
   return stage.tierId;
+}
+
+export interface TierRecommendation {
+  tierId: TierId;
+  /** True when foundations gate overrode the stage's natural tier. */
+  downgraded: boolean;
+  /** Short explanation shown in the tier finder result. */
+  reason: string;
+}
+
+export function explainTierRecommendation(
+  stageId: JourneyStageId,
+  foundationsMet: number
+): TierRecommendation {
+  const stage = JOURNEY_STAGES.find((s) => s.id === stageId) ?? JOURNEY_STAGES[0];
+  const tierId = recommendTier(stageId, foundationsMet);
+  const downgraded = stage.tierId !== tierId;
+
+  if (downgraded) {
+    return {
+      tierId,
+      downgraded: true,
+      reason: GETTING_STARTED.prerequisitesNote,
+    };
+  }
+
+  const reasons: Record<TierId, string> = {
+    diagnostic:
+      "Based on your stage, a Readiness Diagnostic (estimated 2–3 weeks) is the right starting point — a substantiated baseline and roadmap before Foundation, Pilot & Prove, or Scale & Enable work.",
+    pilot:
+      "Based on your stage and foundations in place, a Foundation Pilot (estimated 8–12 weeks) fits — prove value on one use case while establishing the minimum operating baseline.",
+    scale:
+      "Based on your stage and foundations in place, CoE Build & Scale fits — operationalize organization-wide capability across the six pillars.",
+  };
+
+  return { tierId, downgraded: false, reason: reasons[tierId] };
+}
+
+/** CTA copy for the getting-started page footer, keyed by recommended tier. */
+export function ctaForRecommendedTier(tierId: TierId | null | undefined): {
+  title: string;
+  body: string;
+  primaryLabel: string;
+  primaryHref: string;
+  secondaryLabel: string;
+  secondaryHref: string;
+  showDiagnosticAlternative: boolean;
+} {
+  if (tierId === "pilot") {
+    return {
+      title: "Continue with a Foundation Pilot",
+      body: "Your path points to proving value on one real use case. Prefer a lower-commitment start? A Readiness Diagnostic remains available.",
+      primaryLabel: "Request a Foundation Pilot conversation",
+      primaryHref: "/contact?intent=pilot",
+      secondaryLabel: "Or request a Readiness Diagnostic",
+      secondaryHref: "/contact?intent=diagnostic",
+      showDiagnosticAlternative: true,
+    };
+  }
+  if (tierId === "scale") {
+    return {
+      title: "Continue with CoE Build & Scale",
+      body: "Your path points to operationalizing a durable CoE. Prefer a lower-commitment start? A Readiness Diagnostic remains available.",
+      primaryLabel: "Request a Build & Scale conversation",
+      primaryHref: "/contact?intent=scale",
+      secondaryLabel: "Or request a Readiness Diagnostic",
+      secondaryHref: "/contact?intent=diagnostic",
+      showDiagnosticAlternative: true,
+    };
+  }
+  // Default / diagnostic / unknown — Diagnostic-first CTA is appropriate.
+  return {
+    title: GETTING_STARTED.cta.title,
+    body: GETTING_STARTED.cta.body,
+    primaryLabel: GETTING_STARTED.cta.primaryLabel,
+    primaryHref: GETTING_STARTED.cta.primaryHref,
+    secondaryLabel: GETTING_STARTED.cta.secondaryLabel,
+    secondaryHref: GETTING_STARTED.cta.secondaryHref,
+    showDiagnosticAlternative: false,
+  };
 }

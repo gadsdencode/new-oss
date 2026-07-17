@@ -6,19 +6,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 const capabilities = [
-  { title: "Forward-Looking Vision", description: "Craft a vision that inspires, emphasizes innovation, and aligns with strategic goals." },
-  { title: "Measurable Objectives", description: "Clear, quantifiable objectives that map to the vision and drive business value." },
-  { title: "Executive Sponsorship", description: "Secure sponsorship to unlock resources, drive adoption, and overcome barriers." },
-  { title: "Dedicated AI Leadership", description: "Appoint a Chief AI Officer or Head of CoE to drive the mission." },
-  { title: "Business-Goal Alignment", description: "Link AI projects and investments to strategic priorities." },
-  { title: "Governance & Oversight", description: "Oversight that keeps the CoE aligned with evolving needs and ethics." },
+  { title: "Business Priorities & Outcomes", description: "Tie AI work to measurable business outcomes — not activity metrics or vague aspiration." },
+  { title: "Sponsorship & Decision Rights", description: "Name executive sponsors and clarify who decides scope, funding, risk acceptance, and go-live." },
+  { title: "Use-Case Portfolio Management", description: "Intake, prioritize, and sequence initiatives so capacity follows value rather than noise." },
+  { title: "Resource & Usage Governance", description: "Set expectations for spend, model usage, and capacity so pilots do not become uncontrolled cost centers." },
+  { title: "Success Measures & Value Realization", description: "Define what good looks like before build starts, and how value will be reviewed after launch." },
+  { title: "Sequenced Roadmap with Credible Wins", description: "Plan a path with early, defensible wins that build confidence without skipping foundations." },
+  { title: "Evaluation-to-Operation Ownership", description: "Assign clear ownership for moving work from evaluation into dependable operation." },
 ];
 
 export function StrategicVisionPageTools() {
   useCopilotAction({
     name: "getStrategicVisionCapability",
     description:
-      "Get details about a Strategic Vision & Leadership capability for an AI Center of Excellence. ONLY available on the Strategic Vision pillar page.",
+      "Get details about a Strategic Vision & Leadership capability for an AI Center of Excellence. Emphasize operating mechanisms (portfolio, sponsorship, ownership), not inspirational vision alone. ONLY available on the Strategic Vision pillar page.",
     parameters: [
       { name: "capabilityName", type: "string", description: "The capability", required: true, enum: capabilities.map((c) => c.title) },
     ],

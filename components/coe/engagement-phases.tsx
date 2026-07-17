@@ -84,6 +84,9 @@ export function EngagementPhases() {
               {phase.duration}
             </Badge>
           </div>
+          <p className="mt-2 text-xs font-medium text-muted-foreground">
+            Entry tier: <span className="text-foreground">{phase.tierLabel}</span>
+          </p>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-3">

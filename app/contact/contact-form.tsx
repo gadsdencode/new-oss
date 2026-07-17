@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,9 +12,15 @@ import {
   CheckCircle2,
   Loader2Icon,
   XCircleIcon,
-  AlertTriangleIcon,
 } from "lucide-react";
 import { submitContactForm } from "./actions";
+import {
+  buildPrefillMessage,
+  getCoeIntentCopy,
+  serializeCoeContextForSubmit,
+  type ResolvedCoeIntentId,
+} from "@/lib/contact/coe-intent";
+import { readSnapshotHandoff } from "@/lib/coe/snapshot-handoff";
 
 interface FormError {
   type: "error" | "warning";
@@ -28,108 +34,103 @@ interface FormState {
   error?: string;
 }
 
-export function ContactForm() {
+interface ContactFormProps {
+  /** Resolved intent from ?intent= (already normalized by the page). */
+  intentId?: ResolvedCoeIntentId;
+}
+
+function readHandoffSafe() {
+  if (typeof window === "undefined") return null;
+  return readSnapshotHandoff();
+}
+
+export function ContactForm({ intentId = "general" }: ContactFormProps) {
+  const intentCopy = getCoeIntentCopy(intentId === "general" ? null : intentId);
+  const fromCoe = intentId !== "general";
+
   const initialState: FormState = { success: false };
   const [state, formAction, isPending] = useActionState<FormState, FormData>(
     submitContactForm,
     initialState
   );
-  const [error, setError] = useState<FormError | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Debug: Log state changes
-  useEffect(() => {
-    console.log('[Contact Form Client] State changed:', state);
-    console.log('[Contact Form Client] isPending:', isPending);
-  }, [state, isPending]);
+  // Prefill once on mount. Parent remounts with key={intentId} when intent changes.
+  const [subject, setSubject] = useState(() => intentCopy.subject);
+  const [message, setMessage] = useState(() =>
+    buildPrefillMessage(intentId, readHandoffSafe())
+  );
+  const [coeContext] = useState(() => serializeCoeContextForSubmit(readHandoffSafe()));
+  const [dismissedError, setDismissedError] = useState(false);
 
-  // Handle server action response
-  useEffect(() => {
-    console.log('[Contact Form Client] Processing state:', state);
-    
-    if (state.success) {
-      console.log('[Contact Form Client] Success - showing success message');
-      setIsSubmitted(true);
-      setError(null);
-      
-      // Reset form after 5 seconds
-      const timer = setTimeout(() => {
-        setIsSubmitted(false);
-        // Reset form by clearing it
-        const form = document.querySelector('form') as HTMLFormElement;
-        if (form) {
-          form.reset();
-        }
-      }, 5000);
-      
-      return () => clearTimeout(timer);
-    } else if (state.error) {
-      console.log('[Contact Form Client] Error:', state.error);
-      setError({
-        type: "error",
-        title: "Submission Failed",
-        message: state.error,
-      });
-      setIsSubmitted(false);
-    }
-  }, [state]);
+  const error: FormError | null =
+    !dismissedError && state.error
+      ? { type: "error", title: "Submission Failed", message: state.error }
+      : null;
 
-  const handleRetry = () => {
-    setError(null);
-    setIsSubmitted(false);
-  };
+  const isSubmitted = state.success;
 
   return (
-    <Card className="border-2">
+    <Card className="border-2" id="contact-form">
       <CardContent className="pt-6">
-        {/* Error Alert */}
         {error && (
-          <Alert variant={error.type === "error" ? "destructive" : "default"} className="mb-6">
+          <Alert variant="destructive" className="mb-6">
             <div className="flex items-start gap-2">
-              {error.type === "error" ? (
-                <XCircleIcon className="h-5 w-5 mt-0.5" />
-              ) : (
-                <AlertTriangleIcon className="h-5 w-5 mt-0.5" />
-              )}
+              <XCircleIcon className="h-5 w-5 mt-0.5" aria-hidden="true" />
               <div className="flex-1">
                 <AlertTitle className="font-semibold">{error.title}</AlertTitle>
                 <AlertDescription className="mt-1">{error.message}</AlertDescription>
               </div>
             </div>
-            {error.type === "error" && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRetry}
-                className="mt-4 w-full"
-              >
-                Try Again
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDismissedError(true)}
+              className="mt-4 w-full"
+              type="button"
+            >
+              Try Again
+            </Button>
           </Alert>
         )}
 
         {isSubmitted ? (
-          <div className="flex flex-col items-center justify-center py-12">
+          <div className="flex flex-col items-center justify-center py-12" role="status" aria-live="polite">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 mb-4">
-              <CheckCircle2 className="h-8 w-8 text-green-500" />
+              <CheckCircle2 className="h-8 w-8 text-green-500" aria-hidden="true" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">
-              Message Sent!
-            </h3>
-            <p className="text-muted-foreground text-center">
-              Thank you for contacting us. We'll get back to you soon.
+            <h3 className="text-xl font-semibold text-foreground mb-2">Message received</h3>
+            <p className="text-muted-foreground text-center max-w-sm">
+              Thank you for contacting us. We&apos;ve received your inquiry and will follow up — this
+              confirmation does not schedule a meeting.
             </p>
           </div>
         ) : (
-          <form 
+          <form
             action={formAction}
             className="space-y-6"
-            onSubmit={(e) => {
-              console.log('[Contact Form Client] Form submit triggered');
-              // Don't prevent default - let Next.js handle it
-            }}
+            onSubmit={() => setDismissedError(false)}
           >
+            {/* Honeypot — visually hidden; must remain empty */}
+            <div className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+              <Label htmlFor="website">Website</Label>
+              <Input
+                id="website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                defaultValue=""
+              />
+            </div>
+
+            {fromCoe && (
+              <>
+                <input type="hidden" name="intent" value={intentCopy.normalizedIntent} />
+                <input type="hidden" name="source" value="ai-coe" />
+                {coeContext ? <input type="hidden" name="coe_context" value={coeContext} /> : null}
+              </>
+            )}
+
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">
@@ -138,9 +139,10 @@ export function ContactForm() {
                 <Input
                   id="name"
                   name="name"
-                  placeholder="John Doe"
+                  placeholder="Jordan Martens"
                   required
                   disabled={isPending}
+                  autoComplete="name"
                 />
               </div>
               <div className="space-y-2">
@@ -151,9 +153,10 @@ export function ContactForm() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="john@company.com"
+                  placeholder="you@company.com"
                   required
                   disabled={isPending}
+                  autoComplete="email"
                 />
               </div>
             </div>
@@ -164,8 +167,9 @@ export function ContactForm() {
                 <Input
                   id="company"
                   name="company"
-                  placeholder="Your Company"
+                  placeholder="Your organization"
                   disabled={isPending}
+                  autoComplete="organization"
                 />
               </div>
               <div className="space-y-2">
@@ -176,6 +180,7 @@ export function ContactForm() {
                   type="tel"
                   placeholder="+1 (555) 000-0000"
                   disabled={isPending}
+                  autoComplete="tel"
                 />
               </div>
             </div>
@@ -190,7 +195,14 @@ export function ContactForm() {
                 placeholder="How can we help you?"
                 required
                 disabled={isPending}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
               />
+              {fromCoe && (
+                <p className="text-xs text-muted-foreground">
+                  Prefilled from your AI CoE path — you can edit this before sending.
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -201,28 +213,30 @@ export function ContactForm() {
                 id="message"
                 name="message"
                 placeholder="Tell us more about your needs..."
-                rows={6}
+                rows={8}
                 required
                 disabled={isPending}
-                className="resize-none"
+                className="resize-y min-h-[140px]"
                 minLength={10}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
               />
+              {fromCoe && (
+                <p className="text-xs text-muted-foreground">
+                  Prefilled for a scoping conversation. Editable. Snapshot details are orientation only.
+                </p>
+              )}
             </div>
 
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full"
-              disabled={isPending}
-            >
+            <Button type="submit" size="lg" className="w-full" disabled={isPending}>
               {isPending ? (
                 <>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                   Sending...
                 </>
               ) : (
                 <>
-                  <SendIcon className="mr-2 h-4 w-4" />
+                  <SendIcon className="mr-2 h-4 w-4" aria-hidden="true" />
                   Send Message
                 </>
               )}
@@ -233,4 +247,3 @@ export function ContactForm() {
     </Card>
   );
 }
-

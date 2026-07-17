@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   RadarChart,
   PolarGrid,
@@ -25,20 +24,26 @@ import {
   GaugeIcon,
   RotateCcw,
   ArrowRight,
+  TrendingUpIcon,
+  AlertCircleIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { BorderBeam } from "@/components/ui/border-beam";
-import { GETTING_STARTED_PATH, type JourneyStageId } from "@/lib/coe/getting-started-data";
-
-type PillarId = "vision" | "expertise" | "infrastructure" | "data" | "governance" | "adoption";
+import { GETTING_STARTED_PATH } from "@/lib/coe/getting-started-data";
+import {
+  computeSnapshotResult,
+  type SnapshotLevel,
+  type SnapshotPillarId,
+} from "@/lib/coe/readiness-snapshot";
+import { createSnapshotHandoff, writeSnapshotHandoff } from "@/lib/coe/snapshot-handoff";
 
 interface Pillar {
-  id: PillarId;
-  label: string; // short label for the radar axis
+  id: SnapshotPillarId;
+  label: string;
   title: string;
   icon: React.ElementType;
   question: string;
-  options: { score: number; label: string }[];
+  options: { level: SnapshotLevel; label: string }[];
 }
 
 const PILLARS: Pillar[] = [
@@ -49,10 +54,10 @@ const PILLARS: Pillar[] = [
     icon: TargetIcon,
     question: "How defined is your AI vision and leadership?",
     options: [
-      { score: 1, label: "No formal AI vision or executive sponsor" },
-      { score: 2, label: "Informal interest, but no roadmap or owner" },
-      { score: 3, label: "Documented vision with an executive sponsor" },
-      { score: 4, label: "Board-level AI strategy with measurable objectives" },
+      { level: 0, label: "No formal AI vision or executive sponsor" },
+      { level: 1, label: "Informal interest, but no roadmap or owner" },
+      { level: 2, label: "Documented vision with an executive sponsor" },
+      { level: 3, label: "Board-level AI strategy with measurable objectives" },
     ],
   },
   {
@@ -60,12 +65,12 @@ const PILLARS: Pillar[] = [
     label: "Expertise",
     title: "Centralized AI Expertise",
     icon: UsersIcon,
-    question: "How is your AI talent organized?",
+    question: "How is AI expertise organized and reused?",
     options: [
-      { score: 1, label: "No dedicated AI/ML talent" },
-      { score: 2, label: "A few individuals scattered across teams" },
-      { score: 3, label: "A forming central team or shared resource" },
-      { score: 4, label: "A multidisciplinary CoE deployable across the org" },
+      { level: 0, label: "No dedicated AI capability or shared practices" },
+      { level: 1, label: "A few individuals scattered across teams" },
+      { level: 2, label: "A forming shared capability or multidisciplinary group" },
+      { level: 3, label: "Reusable multidisciplinary expertise across the org" },
     ],
   },
   {
@@ -73,12 +78,12 @@ const PILLARS: Pillar[] = [
     label: "Infrastructure",
     title: "Scalable AI Infrastructure",
     icon: ServerIcon,
-    question: "What does your AI infrastructure look like?",
+    question: "What does your AI operating layer look like?",
     options: [
-      { score: 1, label: "Ad-hoc, local experiments only" },
-      { score: 2, label: "Some cloud usage with manual deployment" },
-      { score: 3, label: "Cloud-native with repeatable deployments" },
-      { score: 4, label: "Autoscaling, containerized, and fully observable" },
+      { level: 0, label: "Ad-hoc experiments only" },
+      { level: 1, label: "Some cloud or API usage with manual paths" },
+      { level: 2, label: "Repeatable deployment with basic controls" },
+      { level: 3, label: "Governed, observable, portable production paths" },
     ],
   },
   {
@@ -86,12 +91,12 @@ const PILLARS: Pillar[] = [
     label: "Data",
     title: "Data Management & Governance",
     icon: DatabaseIcon,
-    question: "How mature is your data foundation?",
+    question: "How trusted is the context AI systems can use?",
     options: [
-      { score: 1, label: "Siloed, ungoverned data" },
-      { score: 2, label: "Basic storage with limited quality controls" },
-      { score: 3, label: "Cataloged data with quality and access controls" },
-      { score: 4, label: "A governed ecosystem with compliance monitoring" },
+      { level: 0, label: "Siloed, ungoverned information" },
+      { level: 1, label: "Basic storage with limited quality controls" },
+      { level: 2, label: "Cataloged sources with quality and access controls" },
+      { level: 3, label: "Trusted context with freshness, permissions, and influence evidence" },
     ],
   },
   {
@@ -99,12 +104,12 @@ const PILLARS: Pillar[] = [
     label: "Governance",
     title: "Governance, Risk & Responsible AI",
     icon: ShieldCheckIcon,
-    question: "How do you govern AI risk?",
+    question: "How do you govern AI risk in operation?",
     options: [
-      { score: 1, label: "No governance or risk process" },
-      { score: 2, label: "Aware of risks, but nothing formalized" },
-      { score: 3, label: "A governance board and risk reviews in place" },
-      { score: 4, label: "Continuous model monitoring, auditing & incident response" },
+      { level: 0, label: "No governance or risk process" },
+      { level: 1, label: "Aware of risks, but nothing formalized" },
+      { level: 2, label: "Intake, ownership, and risk reviews in place" },
+      { level: 3, label: "Evaluation, approvals, monitoring, and incident paths in production" },
     ],
   },
   {
@@ -112,41 +117,16 @@ const PILLARS: Pillar[] = [
     label: "Adoption",
     title: "Culture of Adoption & Continuous Learning",
     icon: GraduationCapIcon,
-    question: "How widely is AI adopted across your organization?",
+    question: "How is AI adopted and improved in the work?",
     options: [
-      { score: 1, label: "Little awareness or adoption" },
-      { score: 2, label: "Pockets of experimentation" },
-      { score: 3, label: "Cross-functional adoption with training" },
-      { score: 4, label: "Org-wide adoption with continuous learning" },
+      { level: 0, label: "Little awareness or adoption" },
+      { level: 1, label: "Pockets of experimentation" },
+      { level: 2, label: "Role-based enablement and workflow change underway" },
+      { level: 3, label: "Org-wide practices with feedback and continuous improvement" },
     ],
   },
 ];
 
-interface Tier {
-  min: number; // minimum total score (out of 24) for this tier
-  name: string;
-  blurb: string;
-  ctaLabel: string;
-  /** Journey stage preselected in the getting-started PathFinder (deep link). */
-  stageId: JourneyStageId;
-  /** Entry tier the maturity result maps to (Foundational/Developing -> Diagnostic,
-   *  Operational -> Pilot, Leading -> Build & Scale). */
-  entryTierName: string;
-}
-
-// Highest tier whose `min` the total meets, evaluated top-down.
-const TIERS: Tier[] = [
-  { min: 21, name: "Leading", blurb: "You're operating at a high level. We can help you optimize, govern at scale, and stay at the frontier of AI capability.", ctaLabel: "Schedule an Optimization Review", stageId: "scaling", entryTierName: "CoE Build & Scale" },
-  { min: 17, name: "Operational", blurb: "You have a working foundation. The opportunity now is consistency and scale across the whole organization.", ctaLabel: "Schedule a Scaling Session", stageId: "building", entryTierName: "Foundation Pilot" },
-  { min: 12, name: "Developing", blurb: "You have momentum in places. Centralizing expertise and governance will turn pilots into a repeatable capability.", ctaLabel: "Schedule a Strategy Session", stageId: "planning", entryTierName: "Readiness Diagnostic" },
-  { min: 0, name: "Foundational", blurb: "You're at the starting line. A structured assessment and roadmap will give you the fastest path to value.", ctaLabel: "Schedule a Discovery Call", stageId: "exploring", entryTierName: "Readiness Diagnostic" },
-];
-
-function getTier(total: number): Tier {
-  return TIERS.find((t) => total >= t.min) ?? TIERS[TIERS.length - 1];
-}
-
-// Brand palette
 const C = {
   blue: "#0B7CFF",
   cyan: "#11B7FF",
@@ -155,45 +135,72 @@ const C = {
   axis: "#64748B",
 };
 
+type Answers = Record<SnapshotPillarId, SnapshotLevel | null>;
+
+const EMPTY_ANSWERS: Answers = {
+  vision: null,
+  expertise: null,
+  infrastructure: null,
+  data: null,
+  governance: null,
+  adoption: null,
+};
+
 export function CoEReadinessAssessment() {
-  const [answers, setAnswers] = React.useState<Record<PillarId, number>>({
-    vision: 0,
-    expertise: 0,
-    infrastructure: 0,
-    data: 0,
-    governance: 0,
-    adoption: 0,
-  });
+  const [answers, setAnswers] = React.useState<Answers>(EMPTY_ANSWERS);
 
-  const answeredCount = PILLARS.filter((p) => answers[p.id] > 0).length;
+  const answeredCount = PILLARS.filter((p) => answers[p.id] !== null).length;
   const allAnswered = answeredCount === PILLARS.length;
-  const total = PILLARS.reduce((sum, p) => sum + answers[p.id], 0);
-  const maxTotal = PILLARS.length * 4;
-  const readiness = Math.round((total / maxTotal) * 100);
-  const tier = getTier(total);
 
-  // Lowest-scoring answered pillar = biggest opportunity
-  const opportunity = allAnswered
-    ? [...PILLARS].sort((a, b) => answers[a.id] - answers[b.id])[0]
-    : null;
+  const result = React.useMemo(() => {
+    if (!allAnswered) return null;
+    return computeSnapshotResult(
+      PILLARS.map((p) => ({
+        id: p.id,
+        level: answers[p.id] as SnapshotLevel,
+        title: p.title,
+        label: p.label,
+      }))
+    );
+  }, [allAnswered, answers]);
+
+  // Persist handoff whenever a complete result is available.
+  React.useEffect(() => {
+    if (!result) return;
+    writeSnapshotHandoff(
+      createSnapshotHandoff({
+        maturityBandId: result.band.id,
+        maturityBandName: result.band.name,
+        recommendedTierId: result.band.entryTierId,
+        recommendedTierName: result.band.entryTierName,
+        stageId: result.band.stageId,
+        largestGapId: result.opportunity.id,
+        largestGapLabel: result.opportunity.title,
+        strongestId: result.strongest.id,
+        strongestLabel: result.strongest.title,
+        percent: result.percent,
+      })
+    );
+  }, [result]);
 
   const radarData = PILLARS.map((p) => ({
     pillar: p.label,
-    score: answers[p.id],
-    fullMark: 4,
+    score: answers[p.id] ?? 0,
+    fullMark: 3,
   }));
 
-  const handleSelect = (id: PillarId, value: string) => {
-    setAnswers((prev) => ({ ...prev, [id]: Number(value) }));
+  const progressValue = allAnswered && result ? result.percent : Math.round((answeredCount / PILLARS.length) * 100);
+
+  const handleSelect = (id: SnapshotPillarId, value: string) => {
+    setAnswers((prev) => ({ ...prev, [id]: Number(value) as SnapshotLevel }));
   };
 
   const handleReset = () => {
-    setAnswers({ vision: 0, expertise: 0, infrastructure: 0, data: 0, governance: 0, adoption: 0 });
+    setAnswers(EMPTY_ANSWERS);
   };
 
   return (
     <div className="grid gap-8 lg:grid-cols-5">
-      {/* Left Column - Questions */}
       <div className="lg:col-span-3 space-y-6">
         <Card className="overflow-hidden">
           <CardHeader className="pb-6">
@@ -204,51 +211,53 @@ export function CoEReadinessAssessment() {
               <CardTitle className="text-lg">Rate Your Organization</CardTitle>
             </div>
             <CardDescription>
-              Choose the statement that best matches your current state for each of the six CoE pillars.
+              AI CoE Readiness Snapshot — choose the statement that best matches your current state for each pillar.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-8">
             {PILLARS.map((p, idx) => (
-              <div key={p.id}>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
-                    <p.icon className="h-5 w-5 text-primary" />
+              <fieldset key={p.id} className="min-w-0">
+                <legend className="mb-3 w-full">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
+                      <p.icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <span className="block text-sm font-semibold text-foreground">{p.title}</span>
+                      <span className="block text-xs text-muted-foreground font-normal">{p.question}</span>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">{p.title}</p>
-                    <p className="text-xs text-muted-foreground">{p.question}</p>
-                  </div>
-                </div>
+                </legend>
                 <RadioGroup
-                  value={answers[p.id] ? String(answers[p.id]) : ""}
+                  value={answers[p.id] !== null ? String(answers[p.id]) : ""}
                   onValueChange={(v) => handleSelect(p.id, v)}
                   className="gap-2 pl-1"
+                  aria-label={p.question}
                 >
                   {p.options.map((opt) => {
-                    const optId = `${p.id}-${opt.score}`;
-                    const selected = answers[p.id] === opt.score;
+                    const optId = `${p.id}-${opt.level}`;
+                    const selected = answers[p.id] === opt.level;
                     return (
                       <Label
                         key={optId}
                         htmlFor={optId}
-                        className={`flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${
+                        className={`flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors focus-within:ring-2 focus-within:ring-primary ${
                           selected ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
                         }`}
                       >
-                        <RadioGroupItem id={optId} value={String(opt.score)} className="mt-0.5" />
+                        <RadioGroupItem id={optId} value={String(opt.level)} className="mt-0.5" />
                         <span className="text-sm text-foreground leading-snug">{opt.label}</span>
                       </Label>
                     );
                   })}
                 </RadioGroup>
                 {idx < PILLARS.length - 1 && <Separator className="mt-8" />}
-              </div>
+              </fieldset>
             ))}
           </CardContent>
         </Card>
       </div>
 
-      {/* Right Column - Sticky Result Summary */}
       <div className="lg:col-span-2">
         <div className="sticky top-24 space-y-6">
           <Card className="relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-[#0B7CFF]/5 via-card to-[#00D6C9]/5">
@@ -257,30 +266,53 @@ export function CoEReadinessAssessment() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#0B7CFF] to-[#00D6C9]">
                   <GaugeIcon className="h-5 w-5 text-white" />
                 </div>
-                <CardTitle className="text-lg">Your AI Readiness</CardTitle>
+                <CardTitle className="text-lg">Your Snapshot Profile</CardTitle>
               </div>
-              <CardDescription>Live profile based on your answers</CardDescription>
+              <CardDescription>Orientation from your six-pillar answers — not a validated maturity score</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Score */}
-              <div className="text-center py-2">
-                <p className="text-sm text-muted-foreground mb-2">Readiness Score</p>
-                <div className="text-5xl font-bold bg-gradient-to-r from-[#0B7CFF] via-[#11B7FF] to-[#00D6C9] bg-clip-text text-transparent">
-                  {answeredCount > 0 ? `${readiness}%` : "—"}
-                </div>
-                {allAnswered ? (
-                  <Badge variant="outline" className="mt-3 border-primary/50 text-primary">
-                    {tier.name} Maturity
-                  </Badge>
+              <div
+                className="text-center py-2"
+                aria-live="polite"
+                aria-atomic="true"
+                role="status"
+              >
+                {allAnswered && result ? (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-2">Maturity band</p>
+                    <p className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">{result.band.name}</p>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      Indicative profile index{" "}
+                      <span className="font-medium text-foreground/80">{result.percent}%</span>
+                      <span className="block mt-0.5">(self-reported · for orientation)</span>
+                    </p>
+                  </>
                 ) : (
-                  <p className="text-xs text-muted-foreground mt-3">{answeredCount}/6 pillars answered</p>
+                  <>
+                    <p className="text-sm text-muted-foreground mb-2">Progress</p>
+                    <div className="text-5xl font-bold bg-gradient-to-r from-[#0B7CFF] via-[#11B7FF] to-[#00D6C9] bg-clip-text text-transparent">
+                      {answeredCount}/6
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-3">pillars answered</p>
+                  </>
                 )}
               </div>
 
-              <Progress value={readiness} className="h-2" />
+              <Progress
+                value={progressValue}
+                className="h-2"
+                aria-label={
+                  allAnswered
+                    ? `Indicative profile index ${result?.percent ?? 0} percent`
+                    : `Snapshot progress ${answeredCount} of 6 pillars answered`
+                }
+              />
 
-              {/* Radar */}
-              <div className="h-[240px] w-full">
+              <div
+                className="h-[240px] w-full"
+                role="img"
+                aria-label="Six-pillar readiness radar chart reflecting your current answers"
+              >
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData} outerRadius="72%">
                     <PolarGrid stroke={C.grid} strokeOpacity={0.3} />
@@ -290,34 +322,48 @@ export function CoEReadinessAssessment() {
                 </ResponsiveContainer>
               </div>
 
-              {allAnswered ? (
+              {allAnswered && result ? (
                 <>
                   <Separator className="bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-                  {opportunity && (
-                    <div className="text-sm">
-                      <p className="text-xs font-medium text-muted-foreground mb-1">Your biggest opportunity</p>
-                      <p className="font-semibold text-foreground">{opportunity.title}</p>
+
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    <div className="rounded-lg border border-border/80 p-3 text-sm">
+                      <p className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                        <TrendingUpIcon className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                        Strongest current capability
+                      </p>
+                      <p className="font-semibold text-foreground">{result.strongest.title}</p>
                     </div>
-                  )}
-                  <p className="text-sm text-muted-foreground leading-relaxed">{tier.blurb}</p>
-                  {/* Entry-tier recommendation: connects the maturity result to
-                      the getting-started funnel instead of dead-ending here. */}
-                  <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
-                    <p className="text-xs font-medium text-muted-foreground mb-1">Your recommended entry tier</p>
-                    <p className="font-semibold text-foreground">{tier.entryTierName}</p>
+                    <div className="rounded-lg border border-border/80 p-3 text-sm">
+                      <p className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                        <AlertCircleIcon className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                        Largest opportunity
+                      </p>
+                      <p className="font-semibold text-foreground">{result.opportunity.title}</p>
+                    </div>
                   </div>
-                  {/* Primary action continues the journey to Step 2 (tier finder)
-                      with the stage pre-selected; contact is the direct shortcut. */}
+
+                  <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm space-y-2">
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">Recommended entry tier</p>
+                      <p className="font-semibold text-foreground">{result.band.entryTierName}</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{result.band.whyTier}</p>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground leading-relaxed">{result.band.blurb}</p>
+
                   <div className="space-y-3">
+                    <p className="text-xs font-medium text-muted-foreground text-center">Next step</p>
                     <Button className="w-full whitespace-normal shadow-brand" asChild>
-                      <Link href={`${GETTING_STARTED_PATH}?stage=${tier.stageId}`}>
-                        Continue to Step 2: Confirm Your Tier
+                      <Link href={`${GETTING_STARTED_PATH}?stage=${result.band.stageId}`}>
+                        Continue to Confirm Your Tier
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                     <Button variant="outline" className="w-full whitespace-normal" asChild>
-                      <Link href="/contact">
-                        {tier.ctaLabel}
+                      <Link href={`/contact?intent=${result.band.entryTierId}`}>
+                        {result.band.ctaLabel}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -329,19 +375,19 @@ export function CoEReadinessAssessment() {
                 </>
               ) : (
                 <p className="text-center text-sm text-muted-foreground">
-                  Answer all six pillars to reveal your maturity tier and a tailored next step.
+                  Answer all six pillars to see your maturity band, pillar profile, and a suggested starting tier.
                 </p>
               )}
             </CardContent>
 
-            {allAnswered && (
-              <BorderBeam duration={8} size={120} colorFrom="#0B7CFF" colorTo="#00D6C9" />
-            )}
+            {allAnswered && <BorderBeam duration={8} size={120} colorFrom="#0B7CFF" colorTo="#00D6C9" />}
           </Card>
 
           <p className="text-xs text-muted-foreground text-center px-4">
-            This free self-check is for orientation only. It is not the Readiness Diagnostic - that is a formal
-            2-3 week engagement in which we evaluate each pillar in depth.
+            This AI CoE Readiness Snapshot is for orientation only. It is not an objective or validated organizational
+            maturity score, and it is not the Readiness Diagnostic — that is a formal estimated 2–3 week engagement
+            that produces a substantiated maturity baseline, prioritized gaps, success measures, and a recommended
+            roadmap.
           </p>
         </div>
       </div>

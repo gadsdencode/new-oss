@@ -1,7 +1,7 @@
 // components/coe/start-here-block.tsx
 // Server Component - static content + next/link only (no client interactivity).
-// The single "map" of the CoE funnel, rendered on the hub and every pillar page:
-//   Step 1 - free 5-minute readiness self-check (hub, #assessment)
+// The single "map" of the CoE funnel, rendered on pillar pages (hub uses its own narrative):
+//   Step 1 - free AI CoE Readiness Snapshot (hub, #assessment)
 //   Step 2 - tier finder / PathFinder wizard (getting-started)
 //   Step 3 - readiness workshop with our team (/contact)
 // The stage chips are a shortcut that skips Step 1 and deep-links into the
@@ -17,10 +17,10 @@ import { JOURNEY_STAGES, GETTING_STARTED_PATH } from "@/lib/coe/getting-started-
 const JOURNEY_STEPS = [
   {
     step: "1",
-    title: "Check your readiness",
-    detail: "A free 5-minute self-check across the six pillars. You get a maturity profile and a recommended entry tier.",
+    title: "Take the Readiness Snapshot",
+    detail: "A free ~5-minute AI CoE Readiness Snapshot across the six pillars — orientation and a recommended starting point.",
     href: "/ai-center-of-excellence#assessment",
-    linkLabel: "Take the self-check",
+    linkLabel: "Start the Snapshot",
   },
   {
     step: "2",
@@ -31,10 +31,10 @@ const JOURNEY_STEPS = [
   },
   {
     step: "3",
-    title: "Book a readiness workshop",
+    title: "Request a Readiness Workshop",
     detail: "Talk with our team to scope the formal engagement. Most teams start with the fixed-scope Readiness Diagnostic.",
-    href: "/contact",
-    linkLabel: "Schedule the workshop",
+    href: "/contact?intent=readiness-workshop",
+    linkLabel: "Request the workshop",
   },
 ] as const;
 
@@ -82,7 +82,7 @@ export function StartHereBlock({ className }: StartHereBlockProps) {
               ))}
             </div>
 
-            {/* Shortcut: skip the self-check and jump into the tier finder with a stage preselected */}
+            {/* Shortcut: skip the Snapshot and jump into the tier finder with a stage preselected */}
             <p className="mt-8 text-sm font-medium text-muted-foreground">
               Already know where you stand? Pick your stage and skip straight to the tier finder:
             </p>
