@@ -3,7 +3,6 @@
 // sales journey so each route stays focused on its pillar.
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 
 interface PillarNextStepsProps {
   /** Short line tying this pillar to the next action. */
@@ -18,14 +17,13 @@ export function PillarNextSteps({ prompt }: PillarNextStepsProps) {
           Next step
         </h2>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{prompt}</p>
-        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-          <Button size="lg" className="w-full sm:w-auto whitespace-normal shadow-brand" asChild>
+        <div className="mt-8 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+          <Button size="lg" className="w-full sm:w-auto" asChild>
             <Link href="/ai-center-of-excellence#assessment">
               Take the Readiness Snapshot
-              <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
-          <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal" asChild>
+          <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
             <Link href="/contact?intent=readiness-workshop">Request a Readiness Workshop</Link>
           </Button>
         </div>

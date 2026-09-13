@@ -74,7 +74,7 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
             Processing...
           </>
         ) : (
-          "Pay Now"
+          "Pay now"
         )}
       </Button>
     </form>

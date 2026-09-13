@@ -91,7 +91,7 @@ const examples: {
   {
     title: "Example: Practitioner judgment capture",
     description:
-      "High-performing operators contribute decision criteria and exception handling that become reusable prompts, policies, and evaluation cases — without leaving their unit.",
+      "High-performing operators contribute decision criteria and exception handling that become reusable prompts, policies, and evaluation cases — without leaving their unit. ICDU provides a structure for turning reviewed examples of expert judgment into training data for specialized AI. Those examples capture task intent (what the work should achieve and why), relevant context, decision criteria, exceptions, and when human review is required.",
     image: "/images/coe/coe-industry-supplychain.webp",
     imagePosition: "object-center",
   },
@@ -112,7 +112,7 @@ const schema = {
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };
 
-const pageContent = `Centralized AI Expertise is pillar 2 of Overture's AI Center of Excellence. It is a flexible multidisciplinary capability — not a mandate to hire a large permanent central team of data scientists. Roles include: domain leaders and high-performing practitioners; AI product and process owners; agent and application engineers; data and knowledge engineers; evaluation and quality specialists; platform, security, and governance specialists; adoption and enablement leaders. The CoE does not remove expertise from business units. It gives the organization a way to capture, strengthen, reuse, and scale that expertise consistently. Do not invent staffing numbers or client results. Examples are illustrative.`;
+const pageContent = `Centralized AI Expertise is pillar 2 of Overture's AI Center of Excellence. It is a flexible multidisciplinary capability — not a mandate to hire a large permanent central team of data scientists. Roles include: domain leaders and high-performing practitioners; AI product and process owners; agent and application engineers; data and knowledge engineers; evaluation and quality specialists; platform, security, and governance specialists; adoption and enablement leaders. The CoE does not remove expertise from business units. It gives the organization a way to capture, strengthen, reuse, and scale that expertise consistently. ICDU provides a structure for turning reviewed examples of expert judgment into training data for specialized AI, connecting those examples to task intent (what the work should achieve and why), context, decision criteria, exceptions, and human-review requirements. Expertise remains within the business. Do not invent staffing numbers or client results. Examples are illustrative.`;
 
 export default function CentralizedExpertisePage() {
   return (
@@ -128,13 +128,13 @@ export default function CentralizedExpertisePage() {
           <HeroBackdrop src="/images/coe/coe-centralized-expertise-hero.webp" intensity="strong" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-5xl text-center px-4 sm:px-6 lg:px-8 py-20">
-            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline" />
               AI Center of Excellence &bull; Pillar 2 of 6
             </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Centralized
-              <span className="block mt-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+              <span className="block mt-2 text-primary">
                 AI Expertise
               </span>
             </h1>
@@ -142,14 +142,13 @@ export default function CentralizedExpertisePage() {
               Capture, strengthen, and reuse multidisciplinary expertise across the enterprise — without stripping capability from the units that hold it.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto" asChild>
                 <Link href="/contact?intent=readiness-workshop">
                   Request a Readiness Workshop
-                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/ai-center-of-excellence">Back to the Framework</Link>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+                <Link href="/ai-center-of-excellence">Back to the framework</Link>
               </Button>
             </div>
           </div>

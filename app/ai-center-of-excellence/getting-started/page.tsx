@@ -112,14 +112,13 @@ export default function GettingStartedPage() {
             <p className="mt-6 text-xl leading-relaxed text-muted-foreground max-w-3xl mx-auto">
               {GETTING_STARTED.hero.subtitle}
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+            <div className="mt-8 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+              <Button size="lg" className="w-full sm:w-auto" asChild>
                 <Link href={GETTING_STARTED.cta.primaryHref}>
                   {GETTING_STARTED.cta.primaryLabel}
-                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
                 <Link href={GETTING_STARTED.cta.secondaryHref}>{GETTING_STARTED.cta.secondaryLabel}</Link>
               </Button>
             </div>
@@ -226,7 +225,7 @@ export default function GettingStartedPage() {
                       </div>
                       <div className="flex items-center justify-center gap-1.5 pt-1 text-sm font-semibold text-primary">
                         Get started
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        <ArrowRight className="size-4" aria-hidden="true" />
                       </div>
                     </CardContent>
                   </Card>

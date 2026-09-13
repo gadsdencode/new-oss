@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 const capabilities = [
   { title: "Use-Case Intake & Risk Tiering", description: "Classify initiatives by risk and required controls before build accelerates." },
   { title: "Ownership & Decision Rights", description: "Name who owns outcomes, risk acceptance, and go-live decisions." },
-  { title: "Pre-Deployment Evaluation", description: "Evaluate quality, intent alignment, and failure modes before release — including ICDU where appropriate." },
+  { title: "Pre-Deployment Evaluation", description: "Evaluate quality, intent alignment, and failure modes before release — including tests informed by ICDU training requirements." },
   { title: "Provenance", description: "Track model, prompt, policy, and version lineage so change is auditable." },
   { title: "Human Approval Requirements", description: "Define when a human must approve before an action or output is final." },
   { title: "Audit Evidence", description: "Retain the evidence trail needed for review — not paperwork theater." },
@@ -22,7 +22,7 @@ export function GovernanceRiskPageTools() {
   useCopilotAction({
     name: "getGovernanceRiskCapability",
     description:
-      "Get details about a Governance, Risk & Responsible AI capability. Emphasize operational evidence (intake, evaluation, provenance, monitoring). ICDU is a quality/evaluation capability that improves effectiveness and alignment — not mere compliance documentation. ONLY available on the Governance Risk pillar page.",
+      "Get details about a Governance, Risk & Responsible AI capability. Emphasize operational evidence (intake, evaluation, provenance, monitoring). ICDU structures expert judgment, task intent, context, rules, and escalation criteria into examples for model training and evaluation, giving teams a defined behavioral standard. ICDU supports governance by making those requirements explicit; the surrounding application remains responsible for permissions, approvals, monitoring, and action controls. Do not invent measured improvements. ONLY available on the Governance Risk pillar page.",
     parameters: [
       { name: "capabilityName", type: "string", description: "The capability", required: true, enum: capabilities.map((c) => c.title) },
     ],

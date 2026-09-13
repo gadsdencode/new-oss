@@ -355,21 +355,20 @@ export function CoEReadinessAssessment() {
 
                   <div className="space-y-3">
                     <p className="text-xs font-medium text-muted-foreground text-center">Next step</p>
-                    <Button className="w-full whitespace-normal shadow-brand" asChild>
+                    <Button className="w-full" asChild>
                       <Link href={`${GETTING_STARTED_PATH}?stage=${result.band.stageId}`}>
-                        Continue to Confirm Your Tier
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        Continue to confirm your tier
+                        <ArrowRight className="size-4" aria-hidden="true" />
                       </Link>
                     </Button>
-                    <Button variant="outline" className="w-full whitespace-normal" asChild>
+                    <Button variant="outline" className="w-full" asChild>
                       <Link href={`/contact?intent=${result.band.entryTierId}`}>
                         {result.band.ctaLabel}
-                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="ghost" className="w-full" onClick={handleReset}>
-                      <RotateCcw className="mr-2 h-4 w-4" />
-                      Start Over
+                    <Button type="button" variant="ghost" className="w-full" onClick={handleReset}>
+                      <RotateCcw className="size-4" aria-hidden="true" />
+                      Start over
                     </Button>
                   </div>
                 </>

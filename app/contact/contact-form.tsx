@@ -139,7 +139,7 @@ export function ContactForm({ intentId = "general" }: ContactFormProps) {
                 <Input
                   id="name"
                   name="name"
-                  placeholder="Jordan Martens"
+                  placeholder="John Smith"
                   required
                   disabled={isPending}
                   autoComplete="name"
@@ -223,7 +223,7 @@ export function ContactForm({ intentId = "general" }: ContactFormProps) {
               />
               {fromCoe && (
                 <p className="text-xs text-muted-foreground">
-                  Prefilled for a scoping conversation. Editable. Snapshot details are orientation only.
+                  Prefilled for a scoping conversation. You can edit this before sending.
                 </p>
               )}
             </div>
@@ -237,7 +237,7 @@ export function ContactForm({ intentId = "general" }: ContactFormProps) {
               ) : (
                 <>
                   <SendIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-                  Send Message
+                  Send message
                 </>
               )}
             </Button>

@@ -21,8 +21,6 @@ import {
   MessageSquareIcon,
   SparklesIcon,
   ArrowRight,
-  HashIcon,
-  UserIcon,
 } from "lucide-react";
 import { ContactForm } from "./contact-form";
 import { getCoeIntentCopy, resolveCoeIntent } from "@/lib/contact/coe-intent";
@@ -40,7 +38,7 @@ const contactMethods = [
     icon: PhoneIcon,
     title: "Call Us",
     detail: "+1 (888) 716-3360",
-    description: "Mon–Fri, 9am–6pm EST · Extensions available",
+    description: "We follow up during business hours. The contact form is the fastest way to reach us.",
     href: "tel:+18887163360",
     color: "from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10",
   },
@@ -52,16 +50,6 @@ const contactMethods = [
     href: "#contact-form",
     color: "from-orange-500/20 to-red-500/20 dark:from-orange-500/10 dark:to-red-500/10",
   },
-];
-
-const phoneExtensions = [
-  { ext: "1", department: "Sales", contact: "Brian Conrad" },
-  { ext: "2", department: "HR", contact: "Brian Conrad" },
-  { ext: "4", department: "Legal", contact: "Brian Conrad" },
-  { ext: "5", department: "Consulting Services", contact: "Brian Conrad" },
-  { ext: "8", department: "All Other Services", contact: "Jordan Martens" },
-  { ext: "103", department: "AI Research", contact: "Samuel Conrad" },
-  { ext: "300", department: "Technical Services", contact: "Jordan Martens" },
 ];
 
 /** Only verified company social destinations — no placeholder homepage links. */
@@ -134,15 +122,9 @@ function ContactPageInner() {
         {
           type: "Phone",
           value: "+1 (888) 716-3360",
-          description: "Call us during business hours. Extensions available for direct department routing.",
-          availability: "Mon-Fri, 9am-6pm EST",
-          extensions: phoneExtensions.map((e) => ({
-            extension: e.ext,
-            department: e.department,
-            contact: e.contact,
-          })),
-          routingInstructions:
-            "When a user asks to speak to a specific department, provide the main number +1 (888) 716-3360 and the relevant extension number.",
+          description:
+            "A number is listed, but phones are not regularly staffed. Prefer the contact form or email for a follow-up.",
+          availability: "Do not promise live phone support or department extensions.",
         },
         {
           type: "AI Assistant",
@@ -242,12 +224,8 @@ function ContactPageInner() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-sm text-muted-foreground">Phone support</span>
-                    <span className="text-sm font-medium">Mon–Fri, 9am–6pm EST</span>
-                  </div>
-                  <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center">
                     <span className="text-sm text-muted-foreground">Email &amp; form follow-up</span>
-                    <span className="text-sm font-medium">During business hours</span>
+                    <span className="text-sm font-medium">Mon–Fri, 9am–6pm EST</span>
                   </div>
                   <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center">
                     <span className="text-sm text-muted-foreground">Site AI assistant</span>
@@ -345,50 +323,6 @@ function ContactPageInner() {
         </div>
       </section>
 
-      <section className="pb-16 pt-4 sm:-mt-4 sm:pt-0">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Card className="border-2 overflow-hidden">
-            <div className="h-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10" />
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/10">
-                  <PhoneIcon className="h-5 w-5 text-green-600 dark:text-green-400" aria-hidden="true" />
-                </div>
-                <div>
-                  <CardTitle className="text-lg">Phone Extension Directory</CardTitle>
-                  <CardDescription>
-                    Call <span className="font-medium text-foreground">+1 (888) 716-3360</span> and dial the
-                    extension
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {phoneExtensions.map((item) => (
-                  <div
-                    key={item.ext}
-                    className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
-                  >
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-xs font-bold text-primary">
-                      <HashIcon className="h-3 w-3 mr-0.5" aria-hidden="true" />
-                      {item.ext}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium leading-tight truncate">{item.department}</p>
-                      <div className="flex items-center gap-1 mt-0.5">
-                        <UserIcon className="h-3 w-3 text-muted-foreground shrink-0" aria-hidden="true" />
-                        <p className="text-xs text-muted-foreground truncate">{item.contact}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
       <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/5 dark:to-background">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -420,10 +354,7 @@ function ContactPageInner() {
             scheduler embedded here — we&apos;ll follow up to arrange a time.
           </p>
           <Button size="lg" className="mt-8" asChild>
-            <Link href="#contact-form">
-              Request a Conversation
-              <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
-            </Link>
+            <Link href="#contact-form">Request a conversation</Link>
           </Button>
         </div>
       </section>

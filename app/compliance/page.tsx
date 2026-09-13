@@ -343,7 +343,7 @@ export default function CompliancePage() {
       <header className="relative flex min-h-[65vh] items-center justify-center overflow-hidden bg-gradient-to-br from-green-500/20 via-emerald-500/10 to-teal-500/20 dark:from-green-500/10 dark:via-emerald-500/5 dark:to-teal-500/10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-20">
-          <Badge variant="outline" className="mb-4 max-w-full whitespace-normal text-center border-primary text-primary px-4 py-1.5">
+          <Badge variant="outline" className="mb-4 max-w-full text-center border-primary text-primary px-4 py-1.5">
             <ShieldCheckIcon className="w-3 h-3 mr-2 inline" />
             Enterprise-Grade Security & Compliance
           </Badge>
@@ -356,12 +356,12 @@ export default function CompliancePage() {
           <p className="mt-6 text-xl sm:text-2xl leading-8 text-muted-foreground max-w-3xl mx-auto">
             Security built around recognized frameworks and privacy-first engineering. Your data is protected by enterprise-grade infrastructure and governance built into every engagement.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/contact">Request Security Documentation</Link>
+          <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Request security documentation</Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="#certifications">View Certifications</Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="#certifications">View certifications</Link>
             </Button>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
@@ -595,15 +595,12 @@ export default function CompliancePage() {
           <p className="mt-6 text-xl text-muted-foreground">
             Get detailed security documentation and discuss your specific compliance needs with our security team.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/contact">
-                Contact Security Team
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+          <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Contact the security team</Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/security-whitepaper">Download Security Whitepaper</Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="/security-whitepaper">Download the security whitepaper</Link>
             </Button>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">

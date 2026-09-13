@@ -24,7 +24,6 @@ import {
   Zap, 
   Cpu,
   Cloud,
-  ArrowRight,
   Sparkles,
   CheckCircle2,
   Code,
@@ -643,11 +642,8 @@ export function LLMCostEstimator() {
               <Separator className="bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
               {/* CTA Button */}
-              <Button size="lg" className="w-full text-base" asChild>
-                <Link href="/contact">
-                  Request Detailed Quote
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+              <Button size="lg" className="w-full" asChild>
+                <Link href="/contact">Request a detailed quote</Link>
               </Button>
 
               <p className="text-xs text-center text-muted-foreground">

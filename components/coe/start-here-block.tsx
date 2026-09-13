@@ -74,7 +74,7 @@ export function StartHereBlock({ className }: StartHereBlockProps) {
                   <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
                     {s.linkLabel}
                     <ArrowRight
-                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                      className="h-3.5 w-3.5"
                       aria-hidden="true"
                     />
                   </span>
@@ -95,7 +95,7 @@ export function StartHereBlock({ className }: StartHereBlockProps) {
                 >
                   {stage.label}
                   <ArrowRight
-                    className="h-3.5 w-3.5 text-primary transition-transform group-hover:translate-x-0.5"
+                    className="h-3.5 w-3.5 text-primary"
                     aria-hidden="true"
                   />
                 </Link>
@@ -103,11 +103,8 @@ export function StartHereBlock({ className }: StartHereBlockProps) {
             </div>
 
             <div className="mt-8">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href={GETTING_STARTED_PATH}>
-                  See how to get started
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+              <Button size="lg" className="w-full sm:w-auto" asChild>
+                <Link href={GETTING_STARTED_PATH}>See how to get started</Link>
               </Button>
             </div>
           </div>

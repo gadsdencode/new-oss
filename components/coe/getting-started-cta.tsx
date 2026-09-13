@@ -7,7 +7,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import { CtaTexture } from "@/components/coe/cta-texture";
 import {
   ctaForRecommendedTier,
@@ -43,14 +42,11 @@ export function GettingStartedCta() {
       <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">{cta.title}</h2>
         <p className="mt-6 text-xl text-muted-foreground leading-relaxed">{cta.body}</p>
-        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-          <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-            <Link href={cta.primaryHref}>
-              {cta.primaryLabel}
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
+        <div className="mt-8 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+          <Button size="lg" className="w-full sm:w-auto" asChild>
+            <Link href={cta.primaryHref}>{cta.primaryLabel}</Link>
           </Button>
-          <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+          <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
             <Link href={cta.secondaryHref}>{cta.secondaryLabel}</Link>
           </Button>
         </div>

@@ -69,7 +69,8 @@ const GENERAL_COPY: CoeIntentCopy = {
   subject: "",
   heading: "Get in Touch",
   intro: "Fill out the form below and we’ll follow up during business hours.",
-  messageTemplate: "",
+  messageTemplate:
+    "I’d like to discuss how Overture can help our organization.\n\nWhat we’re trying to accomplish:\n",
   source: "ai-coe",
 };
 
@@ -102,31 +103,16 @@ export function getCoeIntentCopy(raw: string | null | undefined): CoeIntentCopy 
   };
 }
 
-/** Non-sensitive Snapshot lines appended into the editable message when present. */
-export function formatSnapshotContextForMessage(handoff: SnapshotHandoff | null | undefined): string {
-  if (!handoff) return "";
-  const lines = [
-    "",
-    "—",
-    "AI CoE Readiness Snapshot context (orientation only — not a validated maturity score):",
-    `Maturity band: ${handoff.maturityBandName}`,
-    `Recommended entry tier: ${handoff.recommendedTierName}`,
-    `Primary opportunity: ${handoff.largestGapLabel}`,
-  ];
-  return lines.join("\n");
-}
-
+/**
+ * Visible message body only. Snapshot scores stay in the hidden coe_context
+ * field so a leftover session does not dump orientation data into the textarea.
+ */
 export function buildPrefillMessage(
   intent: ResolvedCoeIntentId,
-  handoff: SnapshotHandoff | null | undefined
+  _handoff?: SnapshotHandoff | null
 ): string {
   const copy = getCoeIntentCopy(intent === "general" ? null : intent);
-  const base = copy.messageTemplate;
-  const context = formatSnapshotContextForMessage(handoff);
-  if (!base && !context) return "";
-  if (!base) return context.trim();
-  if (!context) return base;
-  return `${base}${context}`;
+  return copy.messageTemplate;
 }
 
 /**

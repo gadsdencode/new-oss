@@ -105,25 +105,27 @@ export function EngagementPhases() {
           </div>
           <div className="mt-6 flex items-center justify-between">
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               disabled={active === 0}
               onClick={() => setActive((i) => Math.max(0, i - 1))}
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="size-4" aria-hidden="true" />
               Previous
             </Button>
             <p className="text-xs text-muted-foreground">
               Phase {active + 1} of {phases.length}
             </p>
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               disabled={active === phases.length - 1}
               onClick={() => setActive((i) => Math.min(phases.length - 1, i + 1))}
             >
               Next
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="size-4" aria-hidden="true" />
             </Button>
           </div>
         </CardContent>

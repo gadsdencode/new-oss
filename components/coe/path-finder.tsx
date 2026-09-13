@@ -225,7 +225,7 @@ export function PathFinder() {
                 >
                   <span className="flex items-center justify-between font-semibold text-foreground">
                     {s.label}
-                    <ArrowRight className="h-4 w-4 text-primary opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
+                    <ArrowRight className="size-4 text-primary" aria-hidden="true" />
                   </span>
                   <span className="mt-1 block text-sm text-muted-foreground">{s.description}</span>
                 </button>
@@ -302,13 +302,12 @@ export function PathFinder() {
               })}
             </div>
             <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
-              <Button variant="ghost" onClick={() => setStep("stage")}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
+              <Button type="button" variant="ghost" onClick={() => setStep("stage")}>
+                <ArrowLeft className="size-4" aria-hidden="true" />
                 Back
               </Button>
-              <Button onClick={handleSeeResult} className="shadow-brand">
+              <Button type="button" onClick={handleSeeResult}>
                 See my starting point
-                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -384,13 +383,12 @@ export function PathFinder() {
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Button size="lg" className="shadow-brand whitespace-normal" asChild>
+              <Button size="lg" asChild>
                 <Link href={`/contact?intent=${tier.id}`}>
                   Request the {tier.name}
-                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" onClick={scrollToCompare}>
+              <Button type="button" size="lg" variant="outline" onClick={scrollToCompare}>
                 Compare all three tiers
               </Button>
             </div>
@@ -403,8 +401,8 @@ export function PathFinder() {
               </p>
             )}
             <div className="mt-3 text-center">
-              <Button variant="ghost" size="sm" onClick={handleReset}>
-                <RotateCcw className="mr-2 h-4 w-4" />
+              <Button type="button" variant="ghost" size="sm" onClick={handleReset}>
+                <RotateCcw className="size-4" aria-hidden="true" />
                 Start over
               </Button>
             </div>

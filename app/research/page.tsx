@@ -158,12 +158,6 @@ const researchServiceSchema = {
   "audience": {
     "@type": "Audience",
     "audienceType": "Healthcare organizations, Non-profit organizations, B2B research teams"
-  },
-  "offers": {
-    "@type": "Offer",
-    "description": "14-day free trial available, no credit card required",
-    "price": "0",
-    "priceCurrency": "USD"
   }
 };
 
@@ -227,12 +221,7 @@ export default function B2BResearchPage() {
         timeSaved: "80%",
         accuracyRate: "95%"
       },
-      compliance: ["Secure, Governed Data Handling", "Enterprise Security", "Data Privacy"],
-      trial: {
-        available: true,
-        duration: "14 days",
-        noCreditCard: true
-      }
+      compliance: ["Secure, Governed Data Handling", "Enterprise Security", "Data Privacy"]
     }
   });
 
@@ -252,7 +241,7 @@ export default function B2BResearchPage() {
       <header className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-accent/10 to-primary/20 dark:from-primary/10 dark:via-accent/5 dark:to-primary/10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-20">
-          <Badge variant="outline" className="mb-4 max-w-full whitespace-normal text-center border-primary text-primary px-4 py-1">
+          <Badge variant="outline" className="mb-4 max-w-full text-center border-primary text-primary px-4 py-1">
             <SparklesIcon className="w-3 h-3 mr-2 inline" />
             AI-Enabled Research Platform
           </Badge>
@@ -265,18 +254,14 @@ export default function B2BResearchPage() {
           <p className="mt-6 text-xl sm:text-2xl leading-8 text-muted-foreground max-w-3xl mx-auto">
             Transform your research process with AI-powered intelligence. Identify partners, track opportunities, and drive growth faster than ever.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/demo">Request Demo</Link>
+          <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/demo">Request a demo</Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/contact">Talk to an Expert</Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Talk to an expert</Link>
             </Button>
           </div>
-          <p className="mt-6 text-sm text-muted-foreground">
-            <CheckCircle2 className="w-4 h-4 inline mr-2 text-green-500" />
-            No credit card required • 14-day free trial
-          </p>
         </div>
       </header>
 
@@ -512,15 +497,12 @@ export default function B2BResearchPage() {
           <p className="mt-6 text-xl text-muted-foreground">
             Join hundreds of healthcare and non-profit organizations using AI to accelerate their B2B research.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/demo">
-                Start Free Trial
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+          <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Talk to an expert</Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/pricing">View Pricing</Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="/pricing">View pricing</Link>
             </Button>
           </div>
           <p className="mt-8 text-sm text-muted-foreground">

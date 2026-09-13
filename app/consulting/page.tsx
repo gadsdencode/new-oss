@@ -159,8 +159,8 @@ const benefits: {
   {
     icon: BrainCircuitIcon,
     stat: "Patented",
-    label: "ICDU Evaluation Pipeline",
-    description: "Our proprietary method for evaluating AI quality and intent",
+    label: "ICDU Model Specialization",
+    description: "Expert knowledge, task intent, and decision criteria structured for AI model training.",
     href: "https://icdu.ai",
   },
   {
@@ -217,7 +217,9 @@ Industries: Healthcare (secure, governed AI), Financial Services (fraud detectio
 
 Process (general consulting engagements): Discovery & Assessment (1-2 weeks), Strategy & Planning (2-3 weeks), Implementation & Integration (8-16 weeks), Optimization & Support (Ongoing). These are distinct from the AI Center of Excellence entry tiers on /ai-center-of-excellence/getting-started: Readiness Diagnostic (estimated 2–3 weeks; diagnostic scope only), Foundation Pilot (estimated 8–12 weeks), and CoE Build & Scale (phased, generally 6 months or more). CoE durations are estimates and depend on readiness, access, use-case complexity, stakeholders, security, and existing infrastructure.
 
-What you can verify before signing: 20+ years in business (founded 2005), the patented ICDU evaluation pipeline (https://icdu.ai), fixed-scope entry engagements with defined deliverables and timelines, and end-to-end delivery from strategy through production.
+What you can verify before signing: 20+ years in business (founded 2005), patented ICDU technology for structuring expert knowledge into training data for specialized AI (https://icdu.ai), fixed-scope entry engagements with defined deliverables and timelines, and end-to-end delivery from strategy through production.
+
+ICDU (Intent-Conscious Data Unit) is a patented approach to structuring expert knowledge, task intent, context, and decision criteria for specialized AI model training. Overture uses that structure to train models for defined workflows and evaluate their behavior against the task's requirements. Learn more at https://icdu.ai. AI Training & Enablement is employee training for teams — distinct from ICDU model training. Do not invent measured improvements.
 
 Contact: Free consultation available at /contact page.
 `;
@@ -291,7 +293,7 @@ export default function AIConsultingPage() {
         <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />
         
         <div className="relative z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-24">
-          <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+          <Badge variant="outline" className="mb-6 max-w-full text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
             Enterprise AI Consulting • Founded 2005
           </Badge>
@@ -305,15 +307,12 @@ export default function AIConsultingPage() {
             Partner with AI experts who combine deep technical expertise with business acumen. We transform complexity into competitive advantage.
             <span className="block mt-3 font-medium text-foreground">From strategy to production. From vision to measurable ROI.</span>
           </p>
-          <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
-              <Link href="/contact">
-                Schedule Consultation
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+          <div className="mt-12 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Request a consultation</Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8 border-2" asChild>
-              <Link href="#services">View Services</Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="#services">View services</Link>
             </Button>
           </div>
           <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
@@ -543,7 +542,7 @@ export default function AIConsultingPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
         
         <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-          <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+          <Badge variant="outline" className="mb-6 max-w-full text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline" />
             Free Consultation • No Obligation
           </Badge>
@@ -553,15 +552,9 @@ export default function AIConsultingPage() {
           <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
             Schedule a free consultation with our AI experts. Let&apos;s discuss your challenges, explore opportunities, and create a roadmap to measurable business impact.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
-              <Link href="/contact">
-                Schedule Free Consultation
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8 border-2" asChild>
-              <Link href="/contact">Contact Sales</Link>
+          <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Request a consultation</Link>
             </Button>
           </div>
           <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">

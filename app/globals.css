@@ -136,6 +136,23 @@
   --sidebar-ring: oklch(0.608 0.215 257.4);
   --ai-accent: oklch(0.789 0.138 187.1);
   --aiGradient: linear-gradient(135deg, #0B7CFF, #00D6C9);
+  /* Button-only tokens — do not reuse for unrelated surfaces */
+  --button-primary: #0057cb;
+  --button-primary-hover: #0042b5;
+  --button-primary-active: #003694;
+  --button-primary-fg: #ffffff;
+  --button-outline-border: #0057cb;
+  --button-outline-fg: #0057cb;
+  --button-outline-hover-bg: rgba(0, 87, 203, 0.08);
+  --button-outline-hover-border: #0042b5;
+  --button-secondary: #f3f4f6;
+  --button-secondary-fg: #1f2937;
+  --button-secondary-hover: #e5e7eb;
+  --button-destructive: #b91c1c;
+  --button-destructive-hover: #991b1b;
+  --button-destructive-active: #7f1d1d;
+  --button-destructive-fg: #ffffff;
+  --button-ring: #0057cb;
 }
 
 .dark {
@@ -172,6 +189,30 @@
   --sidebar-ring: oklch(0.65 0.20 257);
   --ai-accent: oklch(0.80 0.14 187);
   --aiGradient: linear-gradient(135deg, #11B7FF, #37F1DE);
+  --button-primary: #63a4ff;
+  --button-primary-hover: #a0c3f6;
+  --button-primary-active: #4b8ee6;
+  --button-primary-fg: #001272;
+  --button-outline-border: rgba(255, 255, 255, 0.5);
+  --button-outline-fg: #f9fafb;
+  --button-outline-hover-bg: rgba(255, 255, 255, 0.08);
+  --button-outline-hover-border: rgba(255, 255, 255, 0.72);
+  --button-secondary: rgba(255, 255, 255, 0.1);
+  --button-secondary-fg: #f9fafb;
+  --button-secondary-hover: rgba(255, 255, 255, 0.16);
+  --button-destructive: #b91c1c;
+  --button-destructive-hover: #991b1b;
+  --button-destructive-active: #7f1d1d;
+  --button-destructive-fg: #ffffff;
+  --button-ring: #a0c3f6;
+}
+
+/* Native outline so button focus is not lost to Tailwind ring/box-shadow composition. */
+@layer utilities {
+  .button-focus-ring:focus {
+    outline: 2px solid var(--button-ring);
+    outline-offset: 2px;
+  }
 }
 
 @layer base {
@@ -185,16 +226,6 @@
     background: var(--aiGradient);
     background-size: var(--bg-size, 200%);
     animation: gradient-flow var(--animation-duration, 5s) ease infinite;
-  }
-}
-
-@layer utilities {
-  /* Text shadow utilities for button readability */
-  .text-shadow-button-light {
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.5);
-  }
-  .text-shadow-button-dark {
-    text-shadow: 0 2px 12px rgba(11, 124, 255, 0.8), 0 1px 4px rgba(0, 0, 0, 0.4);
   }
 }
 

@@ -159,9 +159,9 @@ const whyOverture = [
   },
   {
     icon: BrainCircuitIcon,
-    title: "Patented ICDU evaluation",
+    title: "Turn Organizational Expertise into Specialized AI",
     description:
-      "A quality and evaluation capability that helps make AI behavior more effective, measurable, repeatable, and aligned with organizational intent.",
+      "Patented ICDU technology structures expert judgment, task intent, context, and rules into data for model training and evaluation.",
     href: "https://icdu.ai",
   },
   {
@@ -221,7 +221,7 @@ const coeServiceSchema = {
 };
 
 // ---- Plain-text context for the AI assistant ----
-const pageContent = `Overture Systems Solutions' AI Center of Excellence practice helps an organization turn its best expertise, decisions, controls, data, and operating practices into a governed AI capability that can be applied consistently across the enterprise. Experimentation is not the objective — a repeatable organizational capability is. The CoE connects strategy, business expertise, technology, evaluation, governance, and adoption into one operating model. Overture can begin with a contained readiness engagement rather than requiring an immediate full-scale commitment. DIFFERENTIATION (supported facts only): founded 2005 / 20+ years of delivery; patented ICDU evaluation pipeline (https://icdu.ai) — a quality and evaluation capability that helps make AI behavior more effective, measurable, repeatable, and aligned with organizational intent (do not describe ICDU as merely a governance wrapper, and do not say it fails to improve AI effectiveness); fixed-scope entry engagements; strategy through governed production; ability to operate across models and cloud environments. Do not invent client names, case studies, or statistics. Do not promise literal employee cloning or guaranteed zero degradation. Do not present "AI Factory" as a launched commercial product name. SIX PILLARS (a connected operating model, not six independent services): Strategic Vision & Leadership; Centralized AI Expertise (multidisciplinary — domain experts, analysts, ML engineers, data scientists — not merely a team of data scientists); Scalable AI Infrastructure; Data Management & Governance; Governance, Risk & Responsible AI; Culture of Adoption & Continuous Learning. Value comes from how the pillars interact. EXECUTION GAP: isolated tools vs reusable capability; individual experimentation vs organization-wide execution; successful demonstrations vs dependable operations; AI activity vs measured business outcomes. NAMING: free tool = "AI CoE Readiness Snapshot"; formal paid engagement = "Readiness Diagnostic". Do not call both an assessment or both a diagnostic. SNAPSHOT SCORING: each pillar uses levels 0–3; completed score normalizes to 0–100 (all-lowest = 0%, all-highest = 100%). Emphasize maturity band and six-pillar profile over the percentage. The Snapshot is orientation only — not an objective or validated organizational maturity score. ENTRY TIERS (durations are estimates): Readiness Diagnostic (estimated 2–3 weeks; diagnostic scope only — later phases are NOT included); Foundation Pilot (estimated 8–12 weeks); CoE Build & Scale (phased, generally 6 months or more). ${GETTING_STARTED.durationDisclaimer} TIER-FINDER: Exploring/Planning → Diagnostic; Building → Pilot; Scaling → Build & Scale; fewer than 2 foundations in place always → Diagnostic. Recommendations explain why. FLOW: Snapshot on this page → tier finder on getting-started (session handoff carries band, tier, stage, largest gap, foundations — not sensitive URL data) → /contact. Broader CoE journey artifacts include: prioritized use-case portfolio, CoE operating model, governance and decision structure, data and knowledge requirements, technical architecture, evaluation and measurement plan, adoption and enablement plan, sequenced implementation roadmap.`;
+const pageContent = `Overture Systems Solutions' AI Center of Excellence practice helps an organization turn its best expertise, decisions, controls, data, and operating practices into a governed AI capability that can be applied consistently across the enterprise. Experimentation is not the objective — a repeatable organizational capability is. The CoE connects strategy, business expertise, technology, evaluation, governance, and adoption into one operating model. Overture can begin with a contained readiness engagement rather than requiring an immediate full-scale commitment. DIFFERENTIATION (supported facts only): founded 2005 / 20+ years of delivery; patented ICDU technology (https://icdu.ai) for structuring expert knowledge, task intent, context, and decision criteria into training data for specialized AI; Overture uses that structure to train models for defined workflows and evaluate how well they apply those requirements (describe the method accurately; do not invent measured improvements, guaranteed accuracy, or a fully deployed autonomous evaluation/governance platform); fixed-scope entry engagements; strategy through governed production; ability to operate across models and cloud environments. Do not invent client names, case studies, or statistics. Do not promise literal employee cloning or guaranteed zero degradation. Do not present "AI Factory" as a launched commercial product name. SIX PILLARS (a connected operating model, not six independent services): Strategic Vision & Leadership; Centralized AI Expertise (multidisciplinary — domain experts, analysts, ML engineers, data scientists — not merely a team of data scientists); Scalable AI Infrastructure; Data Management & Governance; Governance, Risk & Responsible AI; Culture of Adoption & Continuous Learning. Value comes from how the pillars interact. EXECUTION GAP: isolated tools vs reusable capability; individual experimentation vs organization-wide execution; successful demonstrations vs dependable operations; AI activity vs measured business outcomes. NAMING: free tool = "AI CoE Readiness Snapshot"; formal paid engagement = "Readiness Diagnostic". Do not call both an assessment or both a diagnostic. SNAPSHOT SCORING: each pillar uses levels 0–3; completed score normalizes to 0–100 (all-lowest = 0%, all-highest = 100%). Emphasize maturity band and six-pillar profile over the percentage. The Snapshot is orientation only — not an objective or validated organizational maturity score. ENTRY TIERS (durations are estimates): Readiness Diagnostic (estimated 2–3 weeks; diagnostic scope only — later phases are NOT included); Foundation Pilot (estimated 8–12 weeks); CoE Build & Scale (phased, generally 6 months or more). ${GETTING_STARTED.durationDisclaimer} TIER-FINDER: Exploring/Planning → Diagnostic; Building → Pilot; Scaling → Build & Scale; fewer than 2 foundations in place always → Diagnostic. Recommendations explain why. FLOW: Snapshot on this page → tier finder on getting-started (session handoff carries band, tier, stage, largest gap, foundations — not sensitive URL data) → /contact. Broader CoE journey artifacts include: prioritized use-case portfolio, CoE operating model, governance and decision structure, data and knowledge requirements, technical architecture, evaluation and measurement plan, adoption and enablement plan, sequenced implementation roadmap.`;
 
 export default function AICenterOfExcellencePage() {
   return (
@@ -254,7 +254,7 @@ export default function AICenterOfExcellencePage() {
             </div>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
               Make Your Best Expertise
-              <span className="block mt-3 pb-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+              <span className="block mt-3 pb-2 text-primary">
                 an Enterprise Capability
               </span>
             </h1>
@@ -264,14 +264,11 @@ export default function AICenterOfExcellencePage() {
             <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Begin with a contained readiness engagement. A full-scale build is not required to start.
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand" asChild>
-                <Link href="#assessment">
-                  Start the 5-Minute Readiness Snapshot
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+            <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+              <Button size="lg" className="w-full sm:w-auto" asChild>
+                <Link href="#assessment">Take the Readiness Snapshot</Link>
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
                 <Link href="/contact?intent=readiness-workshop">Request a Readiness Workshop</Link>
               </Button>
             </div>
@@ -316,7 +313,7 @@ export default function AICenterOfExcellencePage() {
                 Built to Operationalize Judgment — Not Just Deploy Tools
               </h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-                We bring long-running delivery discipline, a proprietary evaluation pipeline, and fixed-scope entry paths so you can stand up a CoE without an open-ended commitment.
+                We bring long-running delivery experience, patented ICDU technology for model specialization, and fixed-scope entry paths to help you establish a practical AI Center of Excellence.
               </p>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -346,7 +343,7 @@ export default function AICenterOfExcellencePage() {
               ))}
             </div>
             <p className="mt-10 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
-              Within the CoE, ICDU supports evaluation of quality and intent so AI systems can be improved, measured, and kept aligned with how the organization intends to operate.
+              Within the CoE, ICDU connects expertise capture with model training and evaluation, giving teams a structured way to define intended behavior and test how well a specialized model applies it.
             </p>
           </div>
         </section>
@@ -382,7 +379,7 @@ export default function AICenterOfExcellencePage() {
                   Icon={p.icon}
                   description={p.description}
                   href={`/ai-center-of-excellence/${p.href}`}
-                  cta="Explore This Pillar"
+                  cta="Explore this pillar"
                 />
               ))}
             </BentoGrid>
@@ -393,7 +390,6 @@ export default function AICenterOfExcellencePage() {
         <section id="assessment" className="scroll-mt-24 py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4">Free · About 5 Minutes</Badge>
               <h2 className="text-4xl font-bold tracking-tight text-foreground">AI CoE Readiness Snapshot</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 Rate yourself across the six pillars for a live maturity profile, your biggest gap, and a recommended starting point.
@@ -455,11 +451,11 @@ export default function AICenterOfExcellencePage() {
             <p className="mt-10 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
               {GETTING_STARTED.durationDisclaimer}
             </p>
-            <div className="mt-8 text-center">
+            <div className="mt-8 text-center p-0.5">
               <Button variant="outline" asChild>
                 <Link href="/ai-center-of-excellence/getting-started">
                   Compare tiers and find your path
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="size-4" aria-hidden="true" />
                 </Link>
               </Button>
             </div>
@@ -507,14 +503,11 @@ export default function AICenterOfExcellencePage() {
             <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
               Orient yourself in five minutes — or talk with us to scope a formal Readiness Diagnostic.
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand" asChild>
-                <Link href="#assessment">
-                  Take the Readiness Snapshot
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+            <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+              <Button size="lg" className="w-full sm:w-auto" asChild>
+                <Link href="#assessment">Take the Readiness Snapshot</Link>
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
                 <Link href="/contact?intent=readiness-workshop">Request a Readiness Workshop</Link>
               </Button>
             </div>

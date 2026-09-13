@@ -80,7 +80,7 @@ export async function GET(
         industries: ["Healthcare", "Financial Services", "Retail & E-commerce", "Manufacturing", "Technology", "Non-Profits"],
         trackRecord: {
           yearsInBusiness: "20+ (founded 2005)",
-          icduPipeline: "Patented ICDU evaluation pipeline (https://icdu.ai)",
+          icduPipeline: "Patented ICDU technology for specialized AI model training and evaluation (https://icdu.ai)",
           engagementModel: "Fixed-scope entry engagements with defined deliverables and timelines",
           coverage: "End-to-end delivery from strategy through production",
         },

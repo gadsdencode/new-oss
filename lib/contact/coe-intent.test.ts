@@ -72,16 +72,18 @@ describe("getCoeIntentCopy subjects", () => {
 });
 
 describe("buildPrefillMessage", () => {
-  it("includes Snapshot band, tier, and opportunity when handoff present", () => {
+  it("uses the diagnostic conversation starter and omits Snapshot score dump", () => {
     const msg = buildPrefillMessage("diagnostic", sampleHandoff);
     assert.match(msg, /Readiness Diagnostic/i);
-    assert.match(msg, /Developing/);
-    assert.match(msg, /Governance, Risk & Responsible AI/);
-    assert.match(msg, /orientation only/i);
+    assert.doesNotMatch(msg, /Maturity band/);
+    assert.doesNotMatch(msg, /Primary opportunity/);
   });
 
-  it("generic fallback with no handoff yields empty message", () => {
-    assert.equal(buildPrefillMessage("general", null), "");
+  it("uses a general inquiry starter even if Snapshot handoff is leftover", () => {
+    const msg = buildPrefillMessage("general", sampleHandoff);
+    assert.match(msg, /how Overture can help/i);
+    assert.doesNotMatch(msg, /Maturity band/);
+    assert.doesNotMatch(msg, /Foundational|Developing/);
   });
 });
 

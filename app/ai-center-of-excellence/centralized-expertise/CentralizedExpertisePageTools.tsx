@@ -19,7 +19,7 @@ export function CentralizedExpertisePageTools() {
   useCopilotAction({
     name: "getCentralizedExpertiseCapability",
     description:
-      "Get details about a Centralized AI Expertise capability. Emphasize multidisciplinary roles and that the CoE captures/reuses expertise without removing it from business units or requiring a large permanent hire wave. ONLY available on the Centralized Expertise pillar page.",
+      "Get details about a Centralized AI Expertise capability. Emphasize multidisciplinary roles and that the CoE captures/reuses expertise without removing it from business units or requiring a large permanent hire wave. ICDU provides a structure for turning reviewed examples of expert judgment into training data for specialized AI, connecting those examples to task intent, context, decision criteria, and human-review requirements. Expertise remains within the business. Examples are illustrative. ONLY available on the Centralized Expertise pillar page.",
     parameters: [
       { name: "capabilityName", type: "string", description: "The capability", required: true, enum: capabilities.map((c) => c.title) },
     ],

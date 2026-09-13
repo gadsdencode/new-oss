@@ -200,9 +200,9 @@ const results = {
   },
   icduPipeline: {
     stat: "Patented",
-    label: "ICDU Evaluation Pipeline",
-    description: "Our proprietary method for evaluating AI quality and intent",
-    details: "The patented ICDU evaluation pipeline (https://icdu.ai) is our proprietary approach to assessing the quality and intent of AI systems.",
+    label: "ICDU Model Specialization",
+    description: "Expert knowledge, task intent, and decision criteria structured for AI model training.",
+    details: "ICDU is a patented approach to structuring expert knowledge, task intent, context, and decision criteria for specialized AI model training. Overture uses that structure to train models for defined workflows and evaluate their behavior against the task’s requirements. Learn more at https://icdu.ai.",
   },
   fixedScope: {
     stat: "Fixed-Scope",
@@ -542,7 +542,7 @@ export function ConsultingPageTools() {
   useCopilotAction({
     name: "getConsultingResults",
     description:
-      "Get verifiable facts about Overture Systems Solutions' consulting track record (years in business, the patented ICDU evaluation pipeline, fixed-scope entry engagements, end-to-end delivery). Use this when the user asks about results, outcomes, track record, or credentials. This tool is ONLY available on the consulting page.",
+      "Get verifiable facts about Overture Systems Solutions' consulting track record (years in business, patented ICDU technology for specialized AI model training and evaluation, fixed-scope entry engagements, end-to-end delivery). Distinguish ICDU model training from employee Training & Enablement. Do not invent measured improvements. This tool is ONLY available on the consulting page.",
     parameters: [
       {
         name: "metric",

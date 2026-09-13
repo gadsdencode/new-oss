@@ -5,57 +5,36 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden group",
+  "button-focus-ring inline-flex items-center justify-center gap-2 rounded-[6px] text-center text-sm font-medium leading-5 transition-[color,background-color,border-color] duration-150 motion-reduce:transition-none disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          // Light mode: saturated brand gradient with white text (WCAG AA)
-          "bg-gradient-to-br from-primary-700 via-primary-600 to-primary-700 text-white tracking-wide " +
-          "text-shadow-button-light shadow-2xl shadow-primary-600/40 border-2 border-primary-800/30 " +
-          "hover:from-primary-800 hover:via-primary-700 hover:to-primary-800 hover:shadow-[0_20px_40px_rgba(0,87,203,0.5)] hover:scale-[1.02] hover:border-primary-900/40 " +
-          "active:scale-[0.98] transition-all duration-300 " +
-          // Subtle shimmer that doesn't interfere with text readability
-          "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-1000 before:pointer-events-none " +
-          // Dark mode: pop on navy without dropping below AA on white text
-          "dark:from-primary-600 dark:via-primary-500 dark:to-primary-600 dark:text-white dark:font-bold dark:text-shadow-button-dark " +
-          "dark:shadow-2xl dark:shadow-primary-500/50 dark:border-primary-400/30 " +
-          "dark:hover:from-primary-500 dark:hover:via-primary-600 dark:hover:to-primary-500 dark:hover:shadow-[0_0_30px_rgba(11,124,255,0.6)] dark:hover:border-primary-300/40 dark:hover:scale-[1.02] " +
-          // Dark mode shimmer with enhanced glow
-          "dark:before:bg-gradient-to-r dark:before:from-transparent dark:before:via-white/20 dark:before:to-transparent",
+          "bg-[var(--button-primary)] text-[var(--button-primary-fg)] hover:bg-[var(--button-primary-hover)] active:bg-[var(--button-primary-active)]",
         destructive:
-          // Light mode: Red gradient
-          "bg-gradient-to-r from-red-600 via-red-500 to-rose-500 text-white shadow-lg shadow-red-500/40 hover:shadow-xl hover:shadow-red-500/50 hover:scale-[1.02] hover:from-red-700 hover:via-red-600 hover:to-rose-600 active:scale-[0.98] " +
-          // Dark mode: Brighter red
-          "dark:from-red-500 dark:via-red-400 dark:to-rose-400 dark:text-white dark:shadow-red-400/50 dark:hover:from-red-400 dark:hover:via-red-300 dark:hover:to-rose-300 dark:hover:shadow-red-400/60",
+          "bg-[var(--button-destructive)] text-[var(--button-destructive-fg)] hover:bg-[var(--button-destructive-hover)] active:bg-[var(--button-destructive-active)]",
         outline:
-          // Light mode: Clear border and text with high contrast
-          "border-2 border-primary-500 bg-background text-primary-700 shadow-sm hover:bg-primary-50 hover:border-primary-600 hover:text-primary-800 hover:shadow-md hover:scale-[1.02] active:scale-[0.98] backdrop-blur-sm " +
-          // Dark mode: Lighter border and text for visibility
-          "dark:border-primary-400 dark:text-primary-200 dark:hover:bg-primary-950/80 dark:hover:border-primary-300 dark:hover:text-primary-100 dark:hover:shadow-primary-400/20",
+          "border border-[var(--button-outline-border)] bg-transparent text-[var(--button-outline-fg)] hover:border-[var(--button-outline-hover-border)] hover:bg-[var(--button-outline-hover-bg)]",
         secondary:
-          // Light mode: Secondary to accent gradient
-          "bg-gradient-to-r from-secondary-600 via-secondary-500 to-accent-500 text-white shadow-lg shadow-secondary-500/40 hover:shadow-xl hover:shadow-secondary-500/50 hover:scale-[1.02] hover:from-secondary-700 hover:via-secondary-600 hover:to-accent-600 active:scale-[0.98] " +
-          // Dark mode: Lighter secondary to accent for visibility
-          "dark:from-secondary-500 dark:via-secondary-400 dark:to-accent-400 dark:text-white dark:shadow-secondary-400/50 dark:hover:from-secondary-400 dark:hover:via-secondary-300 dark:hover:to-accent-300 dark:hover:shadow-secondary-400/60",
-        ghost: 
-          // Light mode: Default text with hover background
-          "text-foreground hover:bg-primary-100 hover:text-primary-700 active:bg-primary-200 active:text-primary-800 " +
-          // Dark mode: Light text with subtle hover for visibility
-          "dark:text-foreground dark:hover:bg-primary-950/70 dark:hover:text-primary-200 dark:active:bg-primary-900/90 dark:active:text-primary-100 transition-colors",
-        link: 
-          // Light mode: Primary color text for visibility
-          "text-primary-600 underline-offset-4 hover:underline hover:text-primary-700 " +
-          // Dark mode: Lighter primary for visibility
-          "dark:text-primary-400 dark:hover:text-primary-300 transition-colors",
+          "bg-[var(--button-secondary)] text-[var(--button-secondary-fg)] hover:bg-[var(--button-secondary-hover)]",
+        ghost:
+          "bg-transparent text-foreground hover:bg-muted hover:text-foreground dark:hover:bg-white/10",
+        link:
+          "bg-transparent text-[var(--button-primary)] underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-6 py-2.5",
-        sm: "h-8 rounded-md px-4 text-xs",
-        lg: "h-12 rounded-lg px-10 text-base",
-        icon: "h-10 w-10 rounded-lg",
+        default: "min-h-11 px-5 py-2",
+        sm: "min-h-9 px-3",
+        lg: "min-h-12 px-6 py-2.5 text-base leading-6",
+        icon: "size-11 p-0",
       },
     },
+    compoundVariants: [
+      {
+        variant: "link",
+        class: "h-auto min-h-0 w-auto px-0 py-0",
+      },
+    ],
     defaultVariants: {
       variant: "default",
       size: "default",
@@ -74,7 +53,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size }), className)}
         ref={ref}
         {...props}
       />

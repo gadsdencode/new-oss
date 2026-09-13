@@ -149,7 +149,7 @@ export function ConsultationForm({ onSubmit, onCancel }: ConsultationFormProps) 
             type="submit" 
             disabled={form.formState.isSubmitting}
           >
-            {form.formState.isSubmitting ? "Submitting..." : "Submit Request"}
+            {form.formState.isSubmitting ? "Submitting..." : "Submit request"}
           </Button>
         </div>
       </form>

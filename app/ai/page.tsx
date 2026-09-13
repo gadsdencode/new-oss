@@ -31,7 +31,7 @@ import {
 export const metadata: Metadata = {
   title: "Custom AI Development | Overture Systems Solutions",
   description:
-    "Custom LLM solutions built on leading foundation models. Scope your build with our interactive estimator and talk to our team.",
+    "Custom LLM solutions built on leading foundation models. For suitable engagements, patented ICDU technology structures expert knowledge into training data for specialized AI. Scope your build with our interactive estimator.",
 };
 
 interface AIModel {
@@ -388,7 +388,7 @@ export default function AIPage() {
       <header className="relative flex min-h-[65vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary-500/20 via-accent-500/10 to-secondary-500/20 dark:from-primary-500/10 dark:via-accent-500/5 dark:to-secondary-500/10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-20">
-          <Badge variant="outline" className="mb-4 max-w-full whitespace-normal text-center border-primary text-primary px-4 py-1.5">
+          <Badge variant="outline" className="mb-4 max-w-full text-center border-primary text-primary px-4 py-1.5">
             <BrainCircuitIcon className="w-3 h-3 mr-2 inline" />
             Custom LLM Solutions
           </Badge>
@@ -401,12 +401,12 @@ export default function AIPage() {
           <p className="mt-6 text-xl sm:text-2xl leading-8 text-muted-foreground max-w-3xl mx-auto">
             Create tailored LLM solutions powered by the latest foundation models. From Mistral Large 3 to Llama 4, we fine-tune and deploy custom AI systems built for your specific business needs.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="#calculator">Get Your Estimate</Link>
+          <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="#calculator">Estimate your project</Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/contact">Schedule Consultation</Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Request a consultation</Link>
             </Button>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
@@ -425,6 +425,51 @@ export default function AIPage() {
           </div>
         </div>
       </header>
+
+      {/* ICDU specialization — suitable engagements, not included in every estimate */}
+      <section className="py-20 border-b">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <Badge variant="secondary" className="mb-4">Model Specialization</Badge>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Specialize AI Around Your Expertise
+            </h2>
+          </div>
+          <p className="text-lg leading-relaxed text-muted-foreground">
+            ICDU—Intent-Conscious Data Unit—is a patented approach to structuring expert knowledge for specialized AI. It captures what a task should achieve, the context and rules that matter, and examples of expert judgment—including when clarification or human review is needed. Overture uses that structure to train models for specific workflows and evaluate how well they apply those requirements across different situations.
+          </p>
+          <p className="mt-6 text-sm text-muted-foreground">
+            For suitable engagements, the work typically follows this sequence. ICDU is not automatic in every calculator estimate and is not claimed to work with every model listed on this page.
+          </p>
+          <ol className="mt-8 space-y-4">
+            {[
+              "Define the workflow and what a good result looks like.",
+              "Capture reviewed expert examples, context, and decision criteria.",
+              "Structure the examples as ICDU training data.",
+              "Train a specialized model.",
+              "Compare its behavior with a baseline using agreed test cases.",
+            ].map((step, idx) => (
+              <li key={step} className="flex items-start gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                  {idx + 1}
+                </span>
+                <span className="pt-0.5 text-foreground">{step}</span>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-8 text-center">
+            <Link
+              href="https://icdu.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+            >
+              Learn more at icdu.ai
+              <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* LLM Cost Estimator Section */}
       <section id="calculator" className="py-20 bg-gradient-to-b from-background to-primary/5">
@@ -663,15 +708,12 @@ export default function AIPage() {
           <p className="mt-6 text-xl text-muted-foreground">
             Our AI consulting experts can help you select and implement the perfect model for your specific use case and requirements.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/consulting">
-                Get AI Consulting
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+          <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Request a consultation</Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-              <Link href="/contact">Contact Us</Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="/consulting">Explore consulting</Link>
             </Button>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">

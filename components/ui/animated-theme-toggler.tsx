@@ -71,12 +71,16 @@ export const AnimatedThemeToggler = ({
     return (
       <button
         ref={buttonRef}
+        type="button"
         onClick={toggleTheme}
-        className={cn(className)}
+        className={cn(
+          "button-focus-ring inline-flex size-11 items-center justify-center rounded-[6px] text-foreground transition-[color,background-color] duration-150 hover:bg-muted motion-reduce:transition-none",
+          className
+        )}
         {...props}
         aria-label="Toggle theme"
       >
-        <Moon />
+        <Moon className="size-4" aria-hidden="true" />
         <span className="sr-only">Toggle theme</span>
       </button>
     )
@@ -85,11 +89,16 @@ export const AnimatedThemeToggler = ({
   return (
     <button
       ref={buttonRef}
+      type="button"
       onClick={toggleTheme}
-      className={cn(className)}
+      aria-label="Toggle theme"
+      className={cn(
+        "button-focus-ring inline-flex size-11 items-center justify-center rounded-[6px] text-foreground transition-[color,background-color] duration-150 hover:bg-muted motion-reduce:transition-none",
+        className
+      )}
       {...props}
     >
-      {isDark ? <Sun /> : <Moon />}
+      {isDark ? <Sun className="size-4" aria-hidden="true" /> : <Moon className="size-4" aria-hidden="true" />}
       <span className="sr-only">Toggle theme</span>
     </button>
   )

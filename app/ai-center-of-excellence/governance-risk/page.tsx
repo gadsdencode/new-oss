@@ -41,7 +41,7 @@ import {
 export const metadata: Metadata = coePageMetadata({
   title: "Governance, Risk & Responsible AI | AI Center of Excellence | Overture Systems Solutions",
   description:
-    "Operational governance and evidence for enterprise AI — intake, risk tiering, evaluation, provenance, approvals, monitoring, and ICDU as a differentiated evaluation capability.",
+    "Operational governance and evidence for enterprise AI — intake, risk tiering, evaluation, provenance, approvals, monitoring, and patented ICDU technology for training and testing intended behavior.",
   path: "/ai-center-of-excellence/governance-risk",
   ogImage: "/images/coe/coe-governance-risk-og.jpg",
 });
@@ -61,7 +61,7 @@ const capabilities = [
 
 const approach = [
   { step: "01", icon: SearchCheckIcon, title: "Define Intake & Rights", description: "Stand up use-case intake, risk tiers, ownership, and approval thresholds." },
-  { step: "02", icon: BrainCircuitIcon, title: "Wire Evaluation & Evidence", description: "Connect pre-deployment evaluation — including ICDU where appropriate — with provenance and audit evidence." },
+  { step: "02", icon: BrainCircuitIcon, title: "Wire Evaluation & Evidence", description: "Connect pre-deployment testing—including tests informed by ICDU training requirements—with provenance and audit evidence." },
   { step: "03", icon: RocketIcon, title: "Operate Continuously", description: "Monitor production, escalate incidents, and reassess on a defined cadence." },
 ];
 
@@ -109,13 +109,13 @@ const schema = {
   name: "Governance, Risk & Responsible AI for an AI Center of Excellence",
   url: absoluteUrl("/ai-center-of-excellence/governance-risk"),
   description:
-    "Operational governance and evidence for enterprise AI — intake, risk tiering, pre-deployment evaluation, provenance, human approvals, audit evidence, monitoring, incident escalation, reassessment, and alignment to applicable requirements. Includes the patented ICDU evaluation pipeline as a quality and evaluation capability.",
+    "Operational governance and evidence for enterprise AI — intake, risk tiering, pre-deployment evaluation, provenance, human approvals, audit evidence, monitoring, incident escalation, reassessment, and alignment to applicable requirements. Includes patented ICDU technology for structuring expert knowledge into training data for specialized AI.",
   provider: { "@type": "Organization", name: "Overture Systems Solutions", url: absoluteUrl("/") },
   areaServed: { "@type": "Country", name: "United States" },
   isPartOf: { "@type": "Service", name: "AI Center of Excellence (CoE) Establishment" },
 };
 
-const pageContent = `Governance, Risk & Responsible AI is pillar 5 of Overture's AI Center of Excellence. It is an operational governance and evidence layer — not fear messaging and not paperwork alone. Capabilities include: AI use-case intake and risk tiering; defined ownership and decision rights; pre-deployment evaluation; model, prompt, policy, and version provenance; human approval requirements; audit evidence; production monitoring; incident escalation; periodic reassessment; alignment to applicable organizational and regulatory requirements. ICDU (https://icdu.ai) is Overture's patented evaluation pipeline — a differentiated quality and evaluation capability that helps make AI behavior more effective, measurable, repeatable, and aligned with organizational intent. ICDU's value extends across strategy, infrastructure, data, and continuous improvement; do not reduce it to compliance documentation or a governance wrapper, and do not say it fails to improve AI effectiveness. Control areas are qualitative (values/policy, transparency, bias evaluation, privacy/security, accountability) — not arbitrary numerical scores. Do not invent results. Examples are illustrative. Avoid introducing the word finance.`;
+const pageContent = `Governance, Risk & Responsible AI is pillar 5 of Overture's AI Center of Excellence. It is an operational governance and evidence layer — not fear messaging and not paperwork alone. Capabilities include: AI use-case intake and risk tiering; defined ownership and decision rights; pre-deployment evaluation; model, prompt, policy, and version provenance; human approval requirements; audit evidence; production monitoring; incident escalation; periodic reassessment; alignment to applicable organizational and regulatory requirements. ICDU (https://icdu.ai) is a patented approach to structuring expert judgment, task intent, context, rules, and escalation criteria into examples for model training and evaluation. This gives teams a defined behavioral standard against which to assess a specialized model. ICDU supports governance by making those requirements explicit; the surrounding application remains responsible for permissions, approvals, monitoring, and action controls. Implementation step: connect pre-deployment testing—including tests informed by ICDU training requirements—with provenance and audit evidence. Describe the method accurately; do not invent measured improvements. Control areas are qualitative (values/policy, transparency, bias evaluation, privacy/security, accountability) — not arbitrary numerical scores. Do not invent results. Examples are illustrative. Avoid introducing the word finance.`;
 
 export default function GovernanceRiskPage() {
   return (
@@ -131,13 +131,13 @@ export default function GovernanceRiskPage() {
           <HeroBackdrop src="/images/coe/coe-governance-risk-hero.webp" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-5xl text-center px-4 sm:px-6 lg:px-8 py-20">
-            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline" />
               AI Center of Excellence &bull; Pillar 5 of 6
             </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Governance, Risk
-              <span className="block mt-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+              <span className="block mt-2 text-primary">
                 &amp; Responsible AI
               </span>
             </h1>
@@ -145,14 +145,13 @@ export default function GovernanceRiskPage() {
               An operational evidence layer — intake, evaluation, provenance, approvals, and monitoring — so AI can be improved and trusted in production.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto" asChild>
                 <Link href="/contact?intent=readiness-workshop">
                   Request a Readiness Workshop
-                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/ai-center-of-excellence">Back to the Framework</Link>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+                <Link href="/ai-center-of-excellence">Back to the framework</Link>
               </Button>
             </div>
           </div>
@@ -206,9 +205,9 @@ export default function GovernanceRiskPage() {
                   <BrainCircuitIcon className="h-6 w-6 text-primary" aria-hidden="true" />
                 </div>
                 <Badge variant="secondary" className="w-fit mb-2">Differentiated Capability</Badge>
-                <CardTitle className="text-2xl">ICDU Evaluation Pipeline</CardTitle>
+                <CardTitle className="text-2xl">ICDU: Training and Testing for Intended Behavior</CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Overture&apos;s patented ICDU evaluation pipeline is a quality and evaluation capability that helps make AI behavior more effective, measurable, repeatable, and aligned with organizational intent. It is not a documentation wrapper. Its value spans strategy (what “good” means), infrastructure (evaluation in the release path), data/context (what grounded an output), and continuous improvement after go-live.
+                  ICDU structures expert judgment, task intent, context, rules, and escalation criteria into examples for model training and evaluation. This gives teams a defined behavioral standard against which to assess a specialized model. ICDU supports governance by making those requirements explicit; the surrounding application remains responsible for permissions, approvals, monitoring, and action controls.
                 </CardDescription>
               </CardHeader>
               <CardContent>

@@ -131,13 +131,13 @@ export default function DataGovernancePage() {
           <HeroBackdrop src="/images/coe/coe-data-governance-hero.webp" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-5xl text-center px-4 sm:px-6 lg:px-8 py-20">
-            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline" />
               AI Center of Excellence &bull; Pillar 4 of 6
             </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Trusted AI Requires
-              <span className="block mt-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+              <span className="block mt-2 text-primary">
                 Trusted Context
               </span>
             </h1>
@@ -145,14 +145,13 @@ export default function DataGovernancePage() {
               Data management for enterprise AI is about permissions, freshness, retrieval quality, and evidence — not storage for training alone.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
+              <Button size="lg" className="w-full sm:w-auto" asChild>
                 <Link href="/contact?intent=readiness-workshop">
                   Request a Readiness Workshop
-                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8" asChild>
-                <Link href="/ai-center-of-excellence">Back to the Framework</Link>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+                <Link href="/ai-center-of-excellence">Back to the framework</Link>
               </Button>
             </div>
           </div>

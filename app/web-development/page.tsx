@@ -372,7 +372,7 @@ export default function WebDevelopmentPage() {
           <div className="absolute bottom-20 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow opacity-50 animation-delay-1000" />
 
           <div className="relative z-10 mx-auto max-w-6xl text-center px-4 sm:px-6 lg:px-8 py-24">
-            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline animate-pulse" />
               AI-Powered Web Development • Every Site Ships Smarter
             </Badge>
@@ -389,15 +389,12 @@ export default function WebDevelopmentPage() {
                 Your site shouldn&apos;t just exist. It should work for you.
               </span>
             </p>
-            <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-lg hover:shadow-brand-xl transition-all duration-300" asChild>
-                <Link href="/contact">
-                  Get Your Free Quote
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+            <div className="mt-12 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+              <Button size="lg" className="w-full sm:w-auto" asChild>
+                <Link href="/contact">Request a consultation</Link>
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8 border-2" asChild>
-                <Link href="#calculator">Estimate Your Cost</Link>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+                <Link href="#calculator">Estimate your project</Link>
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
@@ -637,7 +634,7 @@ export default function WebDevelopmentPage() {
         <section className="relative py-32 overflow-hidden bg-gradient-to-br from-primary/15 via-secondary/10 to-accent/15 dark:from-primary/10 dark:via-secondary/5 dark:to-accent/10">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
           <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-            <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+            <Badge variant="outline" className="mb-6 max-w-full text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
               <SparklesIcon className="w-3 h-3 mr-2 inline" />
               Free Consultation • No Obligation
             </Badge>
@@ -648,15 +645,9 @@ export default function WebDevelopmentPage() {
               Let&apos;s talk about your project. We&apos;ll map out the AI opportunities, scope
               the work, and give you a clear proposal — no strings attached.
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
-                <Link href="/contact">
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8 border-2" asChild>
-                <Link href="/contact">Schedule Consultation</Link>
+            <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+              <Button size="lg" className="w-full sm:w-auto" asChild>
+                <Link href="/contact">Request a consultation</Link>
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">

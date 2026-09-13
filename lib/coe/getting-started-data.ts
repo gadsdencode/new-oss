@@ -158,7 +158,7 @@ export const GETTING_STARTED = {
     body: "The lowest-risk first step. We give you an objective baseline and a clear recommendation, no commitment to a full build.",
     primaryLabel: "Request a Readiness Diagnostic",
     primaryHref: "/contact?intent=diagnostic",
-    secondaryLabel: "Not sure yet? Take the free AI CoE Readiness Snapshot",
+    secondaryLabel: "Take the Readiness Snapshot",
     // Anchor verified against app/ai-center-of-excellence/page.tsx (section id="assessment").
     secondaryHref: "/ai-center-of-excellence#assessment",
   },

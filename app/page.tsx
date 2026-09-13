@@ -6,7 +6,6 @@ import { BentoCard, BentoGrid } from "@/components/ui/bento-grid"
 import { HomeButton } from "@/components/ui/home-button";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteFooter } from "@/components/site-footer";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCopilotReadable } from "@copilotkit/react-core";
 import { 
@@ -43,8 +42,8 @@ const trustStats: {
   {
     icon: BrainCircuitIcon,
     stat: "Patented",
-    label: "ICDU Evaluation Pipeline",
-    description: "Our proprietary method for evaluating AI quality and intent",
+    label: "ICDU Model Specialization",
+    description: "Expert knowledge, task intent, and decision criteria structured for AI model training.",
     href: "https://icdu.ai",
   },
   {
@@ -68,7 +67,7 @@ export default function Home() {
     value: {
       companyName: "Overture Systems Solutions",
       tagline: "Transform Your Business With AI Solutions",
-      description: "Strategic AI consulting, implementation, and platforms built for enterprises and innovative organizations. Founded in 2005 and home of the patented ICDU evaluation pipeline.",
+      description: "Strategic AI consulting, implementation, and platforms built for enterprises and innovative organizations. Founded in 2005 and home of patented ICDU technology for structuring expert knowledge into training data for specialized AI.",
       mainServices: [
         {
           name: "AI Strategy & Implementation",
@@ -103,7 +102,7 @@ export default function Home() {
       ],
       keyFacts: {
         yearsInBusiness: "20+ years - founded in 2005, delivering systems long before the AI boom",
-        icduPipeline: "Patented ICDU evaluation pipeline - our proprietary method for evaluating AI quality and intent (https://icdu.ai)",
+        icduPipeline: "Patented ICDU technology for structuring expert knowledge into training data for specialized AI (https://icdu.ai)",
         engagementModel: "Fixed-scope entry engagements with defined deliverables and timelines",
         coverage: "End-to-end delivery - one team from roadmap to deployed, governed AI"
       },
@@ -155,33 +154,30 @@ export default function Home() {
             <span className="block mt-2 font-medium">We deliver measurable results.</span>
           </p>
           
-          {/* Clear CTAs - stack on mobile, 2-up on small screens, single row on large */}
-          <div className="mt-10 mx-auto grid w-full max-w-6xl grid-cols-1 gap-3 px-2 sm:grid-cols-2 sm:px-0 lg:flex lg:flex-nowrap lg:items-center lg:justify-center">
-            <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
-              <Link href="/ai">
-                Start Your Custom AI Project
-                <BrainCircuitIcon className="ml-1.5 h-4 w-4" />
-              </Link>
+          <div className="mt-10 mx-auto flex w-full max-w-xl flex-col items-stretch justify-center gap-3 p-1.5 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Request an executive briefing</Link>
             </Button>
-            <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
-              <Link href="/ai-center-of-excellence">
-                AI Center of Excellence
-                <TargetIcon className="ml-1.5 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
-              <Link href="/web-development">
-                Start Your Web Project
-                <GlobeIcon className="ml-1.5 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button size="default" className="h-11 w-full justify-center px-4 text-sm shadow-brand-lg hover:shadow-brand-xl transition-all duration-300 lg:w-auto lg:shrink-0" asChild>
-              <Link href="/contact">
-                Schedule an Executive Briefing
-                <ArrowRight className="ml-1.5 h-4 w-4" />
-              </Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="/ai-center-of-excellence">Explore the AI Center of Excellence</Link>
             </Button>
           </div>
+          <nav aria-label="More ways to explore" className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-6">
+            <Link
+              href="/ai"
+              className="button-focus-ring inline-flex items-center gap-2 text-sm font-medium text-[var(--button-primary)] underline-offset-4 hover:underline"
+            >
+              Explore custom AI
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+            <Link
+              href="/web-development"
+              className="button-focus-ring inline-flex items-center gap-2 text-sm font-medium text-[var(--button-primary)] underline-offset-4 hover:underline"
+            >
+              Explore web development
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </nav>
           
           {/* Trust Indicators */}
           <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
@@ -191,7 +187,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span>Patented ICDU Evaluation</span>
+              <span>Patented ICDU Technology</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
@@ -244,6 +240,24 @@ export default function Home() {
               );
             })}
           </div>
+          <div className="mx-auto mt-16 max-w-3xl text-center">
+            <Badge variant="secondary" className="mb-4">Patented ICDU Technology</Badge>
+            <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Turn expert judgment into AI built for your work.
+            </h3>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              ICDU—Intent-Conscious Data Unit—is a patented approach to structuring expert knowledge for specialized AI. It captures what a task should achieve, the context and rules that matter, and examples of expert judgment—including when clarification or human review is needed. Overture uses that structure to train models for specific workflows and evaluate how well they apply those requirements across different situations.
+            </p>
+            <a
+              href="https://icdu.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center text-sm font-medium text-primary hover:underline"
+            >
+              Learn more at icdu.ai
+              <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </a>
+          </div>
         </div>
       </section>
 
@@ -269,7 +283,7 @@ export default function Home() {
               Icon={ChartBarIcon} 
               description="Expert AI consulting from strategy development to production deployment. We deliver measurable ROI and transform your operations." 
               href="/consulting" 
-              cta="Explore Consulting" 
+              cta="Explore consulting"
             />
             <BentoCard 
               name="B2B Research Platform" 
@@ -280,7 +294,7 @@ export default function Home() {
               Icon={SearchCheckIcon} 
               description="AI research solutions for healthcare and non-profits with secure, governed data handling. Powerful and purpose-built." 
               href="/research" 
-              cta="Learn More" 
+              cta="Learn more"
             />
             <BentoCard 
               name="AI Center of Excellence" 
@@ -313,7 +327,7 @@ export default function Home() {
               Icon={GlobeIcon} 
               description="Custom websites with built-in AI — chatbots, semantic search, and predictive UX in every build." 
               href="/web-development" 
-              cta="Explore Web Dev" 
+              cta="Explore web development"
             />
             <BentoCard 
               name="Enterprise Compliance" 
@@ -324,7 +338,7 @@ export default function Home() {
               Icon={ShieldCheckIcon} 
               description="Enterprise-grade security, data protection, and AI governance built into every solution." 
               href="/compliance" 
-              cta="View Security" 
+              cta="View security"
             />
           </BentoGrid>
         </div>
@@ -388,7 +402,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
         
         <div className="relative z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-          <Badge variant="outline" className="mb-6 max-w-full whitespace-normal text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
+          <Badge variant="outline" className="mb-6 max-w-full text-center border-primary/50 text-primary px-4 py-1.5 shadow-brand">
             <SparklesIcon className="w-3 h-3 mr-2 inline" />
             Free Consultation Available
           </Badge>
@@ -398,15 +412,12 @@ export default function Home() {
           <p className="mt-6 text-xl text-muted-foreground leading-relaxed">
             Schedule a free consultation with our AI experts. &apos;Let&apos;s discuss how we can help you achieve measurable results and competitive advantage through AI.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto whitespace-normal text-lg px-8 shadow-brand-xl hover:shadow-brand-xl transition-all duration-300" asChild>
-              <Link href="/contact">
-                Schedule Free Consultation
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+          <div className="mt-10 flex flex-col justify-center gap-4 p-0.5 sm:flex-row">
+            <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Link href="/contact">Request a consultation</Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto whitespace-normal text-lg px-8 border-2" asChild>
-              <Link href="/consulting">View All Services</Link>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
+              <Link href="/consulting">View all services</Link>
             </Button>
           </div>
           <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
