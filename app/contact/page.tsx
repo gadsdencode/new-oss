@@ -166,49 +166,32 @@ function ContactPageInner() {
       <StructuredData data={faqPageSchema} />
       <HomeButton />
 
-      <header className="relative flex min-h-[50vh] items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-accent/10 to-primary/20 dark:from-primary/10 dark:via-accent/5 dark:to-primary/10">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/15 via-background to-accent/10 dark:from-primary/10 dark:via-background dark:to-accent/5">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-        <div className="z-10 mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8 py-16">
-          <Badge variant="outline" className="mb-4 border-primary text-primary px-4 py-1.5">
-            <SparklesIcon className="w-3 h-3 mr-2 inline" aria-hidden="true" />
-            {fromCoe ? "AI Center of Excellence" : "Get In Touch"}
-          </Badge>
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            {fromCoe ? (
-              <span className="text-primary">{intentCopy.heading}</span>
-            ) : (
-              <>
-                Let&apos;s Start a
-                <span className="block mt-2 text-primary">Conversation</span>
-              </>
-            )}
-          </h1>
-          <p className="mt-6 text-xl leading-8 text-muted-foreground max-w-2xl mx-auto">
-            {fromCoe
-              ? intentCopy.intro
-              : "Have a question or ready to explore how AI can support your organization? Reach out and we&apos;ll follow up."}
-          </p>
-        </div>
-      </header>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-12 sm:pt-24 sm:pb-16">
+          <div className="mb-8 max-w-2xl">
+            <Badge variant="outline" className="mb-3 border-primary text-primary px-3 py-1">
+              <SparklesIcon className="w-3 h-3 mr-2 inline" aria-hidden="true" />
+              {fromCoe ? "AI Center of Excellence" : "Get in touch"}
+            </Badge>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              {fromCoe ? (
+                <span className="text-primary">{intentCopy.heading}</span>
+              ) : (
+                <>
+                  Let&apos;s start a <span className="text-primary">conversation</span>
+                </>
+              )}
+            </h1>
+            <p className="mt-3 text-base leading-7 text-muted-foreground sm:text-lg">
+              {fromCoe
+                ? intentCopy.intro
+                : "Have a question or ready to explore how AI can support your organization? Use the form — we'll follow up during business hours."}
+            </p>
+          </div>
 
-      <section className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2">
-            <div>
-              <div className="mb-8">
-                <Badge variant="secondary" className="mb-4">
-                  {fromCoe ? "AI CoE inquiry" : "Send a Message"}
-                </Badge>
-                <h2 className="text-3xl font-bold tracking-tight text-foreground">
-                  {fromCoe ? intentCopy.heading : "Get in Touch"}
-                </h2>
-                <p className="mt-2 text-muted-foreground">
-                  {fromCoe
-                    ? intentCopy.intro
-                    : "Fill out the form below and we&apos;ll follow up during business hours."}
-                </p>
-              </div>
-
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+            <div id="contact-form-anchor">
               <ContactForm key={intentId} intentId={intentId} />
             </div>
 
