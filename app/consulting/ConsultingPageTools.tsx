@@ -199,10 +199,10 @@ const results = {
     details: "Overture Systems Solutions has operated continuously since 2005, with a delivery methodology refined across two decades of engagements.",
   },
   icduPipeline: {
-    stat: "Patent-Pending",
+    stat: "Patented",
     label: "ICDU Evaluation Pipeline",
     description: "Our proprietary method for evaluating AI quality and intent",
-    details: "The patent-pending ICDU evaluation pipeline (https://icdu.ai) is our proprietary approach to assessing the quality and intent of AI systems.",
+    details: "The patented ICDU evaluation pipeline (https://icdu.ai) is our proprietary approach to assessing the quality and intent of AI systems.",
   },
   fixedScope: {
     stat: "Fixed-Scope",
@@ -542,7 +542,7 @@ export function ConsultingPageTools() {
   useCopilotAction({
     name: "getConsultingResults",
     description:
-      "Get verifiable facts about Overture Systems Solutions' consulting track record (years in business, the patent-pending ICDU evaluation pipeline, fixed-scope entry engagements, end-to-end delivery). Use this when the user asks about results, outcomes, track record, or credentials. This tool is ONLY available on the consulting page.",
+      "Get verifiable facts about Overture Systems Solutions' consulting track record (years in business, the patented ICDU evaluation pipeline, fixed-scope entry engagements, end-to-end delivery). Use this when the user asks about results, outcomes, track record, or credentials. This tool is ONLY available on the consulting page.",
     parameters: [
       {
         name: "metric",

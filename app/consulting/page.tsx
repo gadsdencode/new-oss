@@ -158,7 +158,7 @@ const benefits: {
   },
   {
     icon: BrainCircuitIcon,
-    stat: "Patent-Pending",
+    stat: "Patented",
     label: "ICDU Evaluation Pipeline",
     description: "Our proprietary method for evaluating AI quality and intent",
     href: "https://icdu.ai",
@@ -217,7 +217,7 @@ Industries: Healthcare (secure, governed AI), Financial Services (fraud detectio
 
 Process (general consulting engagements): Discovery & Assessment (1-2 weeks), Strategy & Planning (2-3 weeks), Implementation & Integration (8-16 weeks), Optimization & Support (Ongoing). These are distinct from the AI Center of Excellence entry tiers on /ai-center-of-excellence/getting-started: Readiness Diagnostic (estimated 2–3 weeks; diagnostic scope only), Foundation Pilot (estimated 8–12 weeks), and CoE Build & Scale (phased, generally 6 months or more). CoE durations are estimates and depend on readiness, access, use-case complexity, stakeholders, security, and existing infrastructure.
 
-What you can verify before signing: 20+ years in business (founded 2005), the patent-pending ICDU evaluation pipeline (https://icdu.ai), fixed-scope entry engagements with defined deliverables and timelines, and end-to-end delivery from strategy through production.
+What you can verify before signing: 20+ years in business (founded 2005), the patented ICDU evaluation pipeline (https://icdu.ai), fixed-scope entry engagements with defined deliverables and timelines, and end-to-end delivery from strategy through production.
 
 Contact: Free consultation available at /contact page.
 `;

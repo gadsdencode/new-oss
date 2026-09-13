@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
   title: "Overture Systems Solutions | Enterprise AI Consulting and Implementation",
   description:
-    "AI strategy, implementation, and governance for enterprises. Founded in 2005. Home of the patent-pending ICDU evaluation pipeline and the AI Center of Excellence practice.",
+    "AI strategy, implementation, and governance for enterprises. Founded in 2005. Home of the patented ICDU evaluation pipeline and the AI Center of Excellence practice.",
   icons: {
     icon: "/images/Overture_icon_transparent_32.png",
     apple: "/images/Overture_icon_transparent_128.png",
@@ -44,7 +44,7 @@ const organizationSchema = {
   "name": "Overture Systems Solutions",
   "url": absoluteUrl("/"),
   "logo": absoluteUrl("/images/Overture_icon_transparent_512.png"),
-  "description": "Enterprise AI consulting, implementation, and governance. Founded in 2005, Overture Systems Solutions helps organizations build AI Centers of Excellence and deploy custom AI solutions, and is the home of the patent-pending ICDU evaluation pipeline.",
+  "description": "Enterprise AI consulting, implementation, and governance. Founded in 2005, Overture Systems Solutions helps organizations build AI Centers of Excellence and deploy custom AI solutions, and is the home of the patented ICDU evaluation pipeline.",
   "foundingDate": "2005",
   "contactPoint": {
     "@type": "ContactPoint",

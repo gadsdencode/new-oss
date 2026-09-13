@@ -42,7 +42,7 @@ const trustStats: {
   },
   {
     icon: BrainCircuitIcon,
-    stat: "Patent-Pending",
+    stat: "Patented",
     label: "ICDU Evaluation Pipeline",
     description: "Our proprietary method for evaluating AI quality and intent",
     href: "https://icdu.ai",
@@ -68,7 +68,7 @@ export default function Home() {
     value: {
       companyName: "Overture Systems Solutions",
       tagline: "Transform Your Business With AI Solutions",
-      description: "Strategic AI consulting, implementation, and platforms built for enterprises and innovative organizations. Founded in 2005 and home of the patent-pending ICDU evaluation pipeline.",
+      description: "Strategic AI consulting, implementation, and platforms built for enterprises and innovative organizations. Founded in 2005 and home of the patented ICDU evaluation pipeline.",
       mainServices: [
         {
           name: "AI Strategy & Implementation",
@@ -103,7 +103,7 @@ export default function Home() {
       ],
       keyFacts: {
         yearsInBusiness: "20+ years - founded in 2005, delivering systems long before the AI boom",
-        icduPipeline: "Patent-pending ICDU evaluation pipeline - our proprietary method for evaluating AI quality and intent (https://icdu.ai)",
+        icduPipeline: "Patented ICDU evaluation pipeline - our proprietary method for evaluating AI quality and intent (https://icdu.ai)",
         engagementModel: "Fixed-scope entry engagements with defined deliverables and timelines",
         coverage: "End-to-end delivery - one team from roadmap to deployed, governed AI"
       },
@@ -191,7 +191,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span>Patent-Pending ICDU Evaluation</span>
+              <span>Patented ICDU Evaluation</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
