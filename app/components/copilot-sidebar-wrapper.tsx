@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { CopilotSidebar } from "@copilotkit/react-ui";
-import { Sparkles, X, SendHorizontal } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
+import { X, SendHorizontal } from "lucide-react";
 import {
   ASSISTANT_CONTACT_PATH,
   VISITOR_BUSY_MESSAGE,
@@ -49,7 +50,13 @@ export function CopilotSidebarWrapper() {
         clickOutsideToClose={false}
         defaultOpen={false}
         icons={{
-          openIcon: <Sparkles className="h-6 w-6" aria-hidden />,
+          openIcon: (
+            <BrandLogo
+              size="md"
+              decorative
+              className="overture-copilot-launcher-logo"
+            />
+          ),
           closeIcon: <X className="h-6 w-6" aria-hidden />,
           headerCloseIcon: <X className="h-4 w-4" aria-hidden />,
           sendIcon: <SendHorizontal className="h-5 w-5" aria-hidden />,

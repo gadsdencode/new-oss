@@ -258,12 +258,27 @@
 
 .overture-copilot .copilotKitButton {
   z-index: 2;
-  background: var(--overture-copilot-accent);
-  border: 0;
-  color: #ffffff;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(0, 87, 203, 0.18);
+  color: var(--copilot-kit-primary-color);
   box-shadow:
-    0 8px 24px -8px rgba(0, 87, 203, 0.55),
+    0 8px 24px -8px rgba(0, 87, 203, 0.45),
     0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+}
+
+.dark .overture-copilot .copilotKitButton {
+  background: rgba(8, 18, 42, 0.92);
+  border: 1px solid rgba(160, 195, 246, 0.28);
+  color: #ffffff;
+}
+
+.overture-copilot .copilotKitButtonIcon img,
+.overture-copilot .overture-copilot-launcher-logo {
+  width: 2.2rem;
+  height: 2.2rem;
+  object-fit: contain;
+  display: block;
 }
 
 .overture-copilot .copilotKitButton:not(.open)::after {
