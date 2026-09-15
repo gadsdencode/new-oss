@@ -212,14 +212,16 @@ export function boundAssembledModelInput(
   const definedMessages = messages.filter((message): message is BaseMessage => Boolean(message));
   const toolTokens = estimateToolSchemaTokens(tools);
   const systemMessages = definedMessages.filter(isSystemMessage);
-  const nonSystem = definedMessages.filter((message) => !isSystemMessage(message));
+  const nonSystem: BaseMessage[] = definedMessages.filter(
+    (message): boolean => !isSystemMessage(message)
+  );
 
   const lastUserIndex = findLastIndex(nonSystem, isHumanMessage);
-  const prefix = lastUserIndex >= 0 ? nonSystem.slice(0, lastUserIndex) : [];
-  const suffix = lastUserIndex >= 0 ? nonSystem.slice(lastUserIndex) : nonSystem;
+  const prefix: BaseMessage[] = lastUserIndex >= 0 ? nonSystem.slice(0, lastUserIndex) : [];
+  const suffix: BaseMessage[] = lastUserIndex >= 0 ? nonSystem.slice(lastUserIndex) : nonSystem;
 
   let boundedSystems = collapseSystemMessages(systemMessages);
-  let boundedSuffix = suffix;
+  let boundedSuffix: BaseMessage[] = suffix;
   let systemTokens = boundedSystems.reduce((sum, message) => sum + estimateMessageTokens(message), 0);
   let suffixTokens = boundedSuffix.reduce((sum, message) => sum + estimateMessageTokens(message), 0);
   let reservedTokens = toolTokens + systemTokens + suffixTokens;
