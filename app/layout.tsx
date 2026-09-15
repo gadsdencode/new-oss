@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
+import "./components/copilot-chat-theme.css";
 
 import { CopilotKit } from "@copilotkit/react-core";
 import { ThemeProvider } from "next-themes";

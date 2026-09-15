@@ -435,7 +435,7 @@ export function WebDevCostEstimator() {
               </Button>
 
               <p className="text-xs text-center text-muted-foreground">
-                This is a ballpark estimate. Final pricing depends on specific requirements.
+                This is a ballpark Overture engagement estimate dated 2026-09-15, not a provider invoice. Final pricing depends on specific requirements.
               </p>
 
               <Separator className="bg-gradient-to-r from-transparent via-primary/30 to-transparent" />

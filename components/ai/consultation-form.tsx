@@ -58,7 +58,10 @@ export function ConsultationForm({ onSubmit, onCancel }: ConsultationFormProps) 
         onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-4 p-4 border rounded-lg shadow-md bg-background"
       >
-        <h3 className="text-lg font-semibold">Book Consultation</h3>
+        <h3 className="text-lg font-semibold">Request a consultation</h3>
+        <p className="text-xs text-muted-foreground">
+          Submitting this form sends a request. It does not book a meeting.
+        </p>
         
         <FormField
           control={form.control}

@@ -59,3 +59,9 @@ After setup, test the form submission by:
 2. Submitting the form
 3. Verifying the submission appears in your Neon database
 
+## Assistant spend schema
+
+Modeled Gemini API charges for `/api/copilotkit` use `assistant-spend-schema.sql`. Apply it manually in the Neon SQL editor after review. Do not run it from the application, and do not treat it as a Google or Vercel invoice cap.
+
+Operator steps and query examples: `docs/assistant-setup.md`.
+

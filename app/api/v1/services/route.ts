@@ -97,10 +97,6 @@ export async function GET(request: NextRequest) {
             "Non-profit landscape and competitive analysis",
           ],
         },
-        results: {
-          organizationsServed: "500+",
-          dataPoints: "10M+",
-        },
       },
       {
         id: "web-development",

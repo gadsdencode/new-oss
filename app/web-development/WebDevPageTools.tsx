@@ -560,9 +560,6 @@ export function WebDevPageTools() {
                   <div key={idx} className="p-3 bg-background rounded-lg border">
                     <div className="flex items-start justify-between mb-2">
                       <p className="font-medium text-sm text-foreground">{feature.name}</p>
-                      <Badge variant="secondary" className="text-xs bg-orange-500/10 text-orange-600 border-orange-500/20">
-                        {feature.stat}
-                      </Badge>
                     </div>
                     <p className="text-xs text-muted-foreground">{feature.description}</p>
                   </div>
@@ -581,9 +578,20 @@ export function WebDevPageTools() {
           if (!feature) {
             throw new Error(`AI feature "${featureName}" not found`);
           }
-          return { success: true, features: [feature] };
+          return {
+            success: true,
+            features: [{ name: feature.name, description: feature.description }],
+            quantitativeClaims: "not_verified",
+          };
         }
-        return { success: true, features: aiFeatures };
+        return {
+          success: true,
+          features: aiFeatures.map((feature) => ({
+            name: feature.name,
+            description: feature.description,
+          })),
+          quantitativeClaims: "not_verified",
+        };
       } catch (error) {
         console.error("Error getting AI features:", error);
         const errorMessage = error instanceof Error ? error.message : "Unknown error";

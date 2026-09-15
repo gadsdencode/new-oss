@@ -1,58 +1,64 @@
 "use client";
 
+import { useRef } from "react";
 import { useCopilotAction } from "@copilotkit/react-core";
 import { submitConsultationRequest } from "@/app/contact/submit-consultation";
 import { ConsultationForm } from "@/components/ai/consultation-form";
 import { ServicesSummaryCard } from "@/components/ai/services-summary-card";
-import { StatusCard } from "@/components/ai/status-card";
 import { toast } from "sonner";
+import { ASSISTANT_CONTACT_PATH } from "@/lib/assistant/constants";
+import {
+  consultationCompleteIsSuccess,
+  outcomeFromSubmitResult,
+  type ConsultationOutcome,
+} from "@/lib/assistant/consultation-outcome";
 
 /**
- * Global AI Tools Component
- * 
- * This component registers CopilotKit actions that are available on ALL pages
- * of the application. Import this in the root layout to make tools globally accessible.
- * 
- * Available Tools:
- * 1. scheduleConsultation - HITL form for booking consultations
- * 2. showCoreServices - Display services summary card
- * 3. getSystemStatus - Fetch and display system health status
+ * Global assistant tools available on every page.
+ * System-health checking is not registered: there is no live visitor status implementation.
  */
 export function GlobalAITools() {
-  // Tool 1: HITL Form - Schedule a consultation (AVAILABLE GLOBALLY)
+  const consultationOutcome = useRef<ConsultationOutcome>("idle");
+
   useCopilotAction({
     name: "scheduleConsultation",
     description:
-      "Schedules a consultation call with the user. Use this if they ask to book a meeting, schedule time, talk to someone, or request a consultation. This tool is available on ALL pages.",
+      "Shows a form to request a consultation. Use this if they ask to talk to someone, request a consultation, or reach the team. Submitting the form sends a request only; it does not book a calendar meeting. Available on all pages.",
     parameters: [],
     available: "enabled",
-    // renderAndWaitForResponse replaces both render and handler for HITL patterns
-    // IMPORTANT: Must ALWAYS return a ReactElement, never null
     renderAndWaitForResponse: ({ status, respond }) => {
-      // Show completion message when status is "complete"
       if (status === "complete") {
+        if (consultationCompleteIsSuccess(consultationOutcome.current)) {
+          return (
+            <div className="p-4 border rounded-lg bg-green-50 border-green-200">
+              <p className="text-sm text-green-700">
+                Consultation request submitted. We will follow up — this does not schedule a meeting.
+              </p>
+            </div>
+          );
+        }
+        if (consultationOutcome.current === "cancelled") {
+          return (
+            <div className="p-4 border rounded-lg bg-muted/40">
+              <p className="text-sm">Consultation request was cancelled. You can try again or use the contact page.</p>
+            </div>
+          );
+        }
         return (
-          <div className="p-4 border rounded-lg bg-green-50 border-green-200">
-            <p className="text-sm text-green-700">✅ Consultation request submitted successfully!</p>
+          <div className="p-4 border rounded-lg bg-muted/40">
+            <p className="text-sm">
+              The consultation request was not submitted. Please try again or visit {ASSISTANT_CONTACT_PATH}.
+            </p>
           </div>
         );
       }
 
-      // Show the form when status is "inProgress" or "executing"
+      consultationOutcome.current = "idle";
+
       return (
         <ConsultationForm
           onSubmit={async (formData) => {
-            console.log('[Global AI Tools] Form submitted with data:', {
-              name: formData.name,
-              email: formData.email,
-              hasCompany: !!formData.company,
-              hasPhone: !!formData.phone,
-              messageLength: formData.message?.length || 0
-            });
-
             try {
-              // Call the existing, secure Server Action with the data
-              // This will validate, rate-limit, and save to NeonDB
               const result = await submitConsultationRequest({
                 name: formData.name,
                 email: formData.email,
@@ -61,40 +67,36 @@ export function GlobalAITools() {
                 message: formData.message,
               });
 
-              console.log('[Global AI Tools] Server action result:', result);
+              consultationOutcome.current = outcomeFromSubmitResult(result, false);
 
-              // Inform the user of the result
               if (result.success) {
-                toast.success(result.message || "Consultation request submitted successfully!");
-                // Respond to CopilotKit with success message for the AI
+                toast.success(result.message || "Consultation request submitted.");
                 respond?.({
                   success: true,
-                  message: "✅ Thanks! Your consultation request has been submitted. We'll be in touch soon via email."
+                  message:
+                    "The consultation request was submitted. The team will follow up by email. This does not schedule a meeting.",
                 });
               } else {
                 toast.error(result.error || "Failed to submit consultation request");
-                // Respond to CopilotKit with error message for the AI
                 respond?.({
                   success: false,
-                  message: `❌ Sorry, there was an error: ${result.error}. Please try our contact page at /contact.`
+                  message: `The request was not submitted: ${result.error || "please try again"}. You can use ${ASSISTANT_CONTACT_PATH}.`,
                 });
               }
-            } catch (error) {
-              console.error("Error submitting consultation:", error);
-              const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-              toast.error(`Failed to schedule consultation: ${errorMessage}`);
-              // Respond to CopilotKit with error message for the AI
+            } catch {
+              consultationOutcome.current = "error";
+              toast.error("Failed to submit the consultation request. Please try the contact page.");
               respond?.({
                 success: false,
-                message: `❌ Sorry, there was an unexpected error: ${errorMessage}. Please try contacting us directly through our contact page.`
+                message: `The request was not submitted. Please try ${ASSISTANT_CONTACT_PATH}.`,
               });
             }
           }}
           onCancel={() => {
-            // User cancelled the form
+            consultationOutcome.current = "cancelled";
             respond?.({
               success: false,
-              message: "Consultation request was cancelled. Feel free to ask if you'd like to try again or visit our contact page at /contact."
+              message: `The consultation request was cancelled. You can try again or visit ${ASSISTANT_CONTACT_PATH}.`,
             });
           }}
         />
@@ -102,76 +104,21 @@ export function GlobalAITools() {
     },
   });
 
-  // Tool 2: Render Component - Show services summary (AVAILABLE GLOBALLY)
   useCopilotAction({
     name: "showCoreServices",
     description:
-      "Displays a summary of the company's core AI consulting services. Use this when the user asks what we do, what our services are, or for a summary. This tool is available on ALL pages.",
+      "Displays a summary of Overture's core AI consulting services from the published consulting offering. Use this when the user asks what we do or what our services are. Available on all pages.",
     parameters: [],
-    // The render function is called automatically by CopilotKit
-    // IMPORTANT: Must ALWAYS return a ReactElement, never null
     render: ({ status }) => {
       if (status === "executing" || status === "complete") {
         return <ServicesSummaryCard />;
       }
-      // Return empty fragment instead of null to satisfy TypeScript
       return <></>;
     },
     handler: async () => {
-      // Return a message that the LLM will use in its response
-      return "I've displayed our core AI consulting services above. We specialize in Agentic Architecture, Generative UI Solutions, and RAG & Data Integration. Would you like to know more about any specific service or schedule a consultation?";
+      return "Displayed Overture's published consulting services. Details are on /consulting. Offer /contact if they want to request a consultation.";
     },
   });
 
-  // Tool 3: Fetch and Render - Get system status (AVAILABLE GLOBALLY)
-  useCopilotAction({
-    name: "getSystemStatus",
-    description: "Fetches and displays the current system status including database and AI endpoint health. Use this when the user asks about system status, uptime, or service health. This tool is available on ALL pages.",
-    parameters: [],
-    // The render function is called automatically by CopilotKit with status and result
-    // IMPORTANT: Must ALWAYS return a ReactElement, never null
-    render: ({ status, result }) => {
-      if (status === "executing") {
-        // Show loading state while fetching
-        return (
-          <div className="p-4 border rounded-lg bg-blue-50 border-blue-200">
-            <p className="text-sm text-blue-700">🔄 Checking system status...</p>
-          </div>
-        );
-      }
-      
-      if (status === "complete" && result) {
-        // Show the status card with fetched data
-        return <StatusCard {...result} />;
-      }
-      
-      // Return empty fragment instead of null to satisfy TypeScript
-      return <></>;
-    },
-    handler: async () => {
-      try {
-        // Fetch data from the API
-        const response = await fetch("/api/status");
-        if (!response.ok) {
-          throw new Error("Failed to fetch system status");
-        }
-        const data = (await response.json()) as { 
-          status: string; 
-          database: string; 
-          ai_endpoint: string 
-        };
-
-        // Return the data - it will be passed to render() as 'result'
-        return data;
-      } catch (error) {
-        console.error("Error fetching system status:", error);
-        const errorMessage = error instanceof Error ? error.message : "Unknown error";
-        toast.error(`Failed to fetch system status: ${errorMessage}`);
-        throw error; // Re-throw so CopilotKit knows it failed
-      }
-    },
-  });
-
-  return null; // This component renders no UI
+  return null;
 }
-

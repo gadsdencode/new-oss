@@ -273,14 +273,14 @@ export function CompliancePageTools() {
             <CardHeader>
               <div className="flex items-center gap-3">
                 <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />
-                <CardTitle className="text-lg">Checking Certification Status</CardTitle>
+                <CardTitle className="text-lg">Checking framework alignment</CardTitle>
               </div>
               <CardDescription>
-                {args?.certificationName ? `Certification: "${args.certificationName}"` : "All Certifications"}
+                {args?.certificationName ? `Area: "${args.certificationName}"` : "All framework-alignment areas"}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Retrieving certification information...</p>
+              <p className="text-sm text-muted-foreground">Retrieving published framework-alignment information. No held third-party certifications are asserted.</p>
             </CardContent>
           </Card>
         );

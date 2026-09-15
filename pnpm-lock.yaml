@@ -26,6 +26,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.65.0(react@19.2.0))
+      '@langchain/core':
+        specifier: 0.3.79
+        version: 0.3.79(openai@4.104.0(ws@8.18.3)(zod@3.25.76))
       '@langchain/google-genai':
         specifier: 0.1.10
         version: 0.1.10(@langchain/core@0.3.79(openai@4.104.0(ws@8.18.3)(zod@3.25.76)))(zod@4.1.12)
@@ -5690,6 +5693,7 @@ packages:
 
   uuid@10.0.0:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@11.1.0:

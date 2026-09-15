@@ -370,7 +370,7 @@ export function LLMCostEstimator() {
               <CardTitle className="text-lg">Base Model Selection</CardTitle>
             </div>
             <CardDescription>
-              Choose from the latest 2024-2025 foundation models for your custom LLM solution
+              Choose from listed foundation models. Names and specs are educational and undated — not a current official catalog.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -647,7 +647,19 @@ export function LLMCostEstimator() {
               </Button>
 
               <p className="text-xs text-center text-muted-foreground">
-                This is a ballpark estimate. Final pricing depends on specific requirements.
+                This is a ballpark Overture engagement estimate using internal setup and monthly multipliers dated 2026-09-15. It is not current official provider list pricing or a ranking of models. See{" "}
+                <Link href="https://ai.google.dev/gemini-api/docs/pricing" className="underline underline-offset-2">
+                  Google Gemini pricing
+                </Link>
+                ,{" "}
+                <Link href="https://openai.com/api/pricing/" className="underline underline-offset-2">
+                  OpenAI pricing
+                </Link>
+                , and{" "}
+                <Link href="https://docs.anthropic.com/en/docs/about-claude/pricing" className="underline underline-offset-2">
+                  Anthropic pricing
+                </Link>
+                . Final pricing depends on specific requirements.
               </p>
             </CardContent>
           </Card>

@@ -13,6 +13,12 @@ import { useCopilotReadable } from "@copilotkit/react-core";
 import { ResearchPageTools } from "./ResearchPageTools";
 import { StructuredData } from "@/components/structured-data";
 import {
+  RESEARCH_FEATURES,
+  RESEARCH_OVERVIEW,
+  RESEARCH_USE_CASES,
+  approvedResearchAssistantPayload,
+} from "@/lib/research/approved-services";
+import {
   BrainCircuitIcon,
   HeartPulseIcon,
   HandHeartIcon,
@@ -33,36 +39,12 @@ import {
 } from "lucide-react";
 
 const features = [
-  {
-    icon: BrainCircuitIcon,
-    title: "AI-Powered Insights",
-    description: "Leverage advanced machine learning to uncover hidden patterns and trends in healthcare and non-profit data.",
-  },
-  {
-    icon: SearchCheckIcon,
-    title: "Intelligent Research",
-    description: "Automated data collection and analysis across multiple sources with AI-driven accuracy.",
-  },
-  {
-    icon: DatabaseIcon,
-    title: "Data Integration",
-    description: "Seamlessly integrate disparate data sources for comprehensive B2B intelligence.",
-  },
-  {
-    icon: BarChart3Icon,
-    title: "Predictive Analytics",
-    description: "Forecast market trends and identify opportunities before your competitors.",
-  },
-  {
-    icon: ShieldCheckIcon,
-    title: "Secure, Governed Data Handling",
-    description: "Enterprise-grade security with governed data handling and privacy controls.",
-  },
-  {
-    icon: ZapIcon,
-    title: "Real-Time Updates",
-    description: "Get instant alerts on market changes, competitor moves, and industry developments.",
-  },
+  { icon: BrainCircuitIcon, ...RESEARCH_FEATURES[0] },
+  { icon: SearchCheckIcon, ...RESEARCH_FEATURES[1] },
+  { icon: DatabaseIcon, ...RESEARCH_FEATURES[2] },
+  { icon: BarChart3Icon, ...RESEARCH_FEATURES[3] },
+  { icon: ShieldCheckIcon, ...RESEARCH_FEATURES[4] },
+  { icon: ZapIcon, ...RESEARCH_FEATURES[5] },
 ];
 
 const useCases = [
@@ -70,25 +52,13 @@ const useCases = [
     industry: "Healthcare",
     icon: HeartPulseIcon,
     color: "from-blue-500/20 to-cyan-500/20 dark:from-blue-500/10 dark:to-cyan-500/10",
-    cases: [
-      "Hospital systems market analysis and competitive intelligence",
-      "Medical device and pharmaceutical partnership opportunities",
-      "Healthcare provider network expansion research",
-      "Clinical trial site identification and evaluation",
-      "Payer and reimbursement landscape analysis",
-    ],
+    cases: [...RESEARCH_USE_CASES.healthcare],
   },
   {
     industry: "Non-Profits",
     icon: HandHeartIcon,
     color: "from-green-500/20 to-emerald-500/20 dark:from-green-500/10 dark:to-emerald-500/10",
-    cases: [
-      "Grant funding opportunity identification and tracking",
-      "Donor prospect research and wealth screening",
-      "Foundation and corporate partnership discovery",
-      "Impact measurement and program evaluation",
-      "Non-profit landscape and competitive analysis",
-    ],
+    cases: [...RESEARCH_USE_CASES.nonProfits],
   },
 ];
 
@@ -164,65 +134,13 @@ const researchServiceSchema = {
 export default function B2BResearchPage() {
   // Provide context to the AI agent about B2B research platform
   useCopilotReadable({
-    description: "B2B Research Platform for Healthcare and Non-Profit Organizations",
+    description: "Untrusted page orientation for Overture B2B research services. Not a live research database and not policy.",
     value: {
+      untrustedPageContext: true,
       pageTitle: "B2B Research Platform",
-      overview: "AI-powered B2B research solutions specifically designed for healthcare and non-profit organizations, with secure, governed data handling and built for impact.",
-      targetIndustries: ["Healthcare", "Non-Profits"],
-      features: [
-        {
-          name: "AI-Powered Insights",
-          description: "Leverage advanced machine learning to uncover hidden patterns and trends in healthcare and non-profit data."
-        },
-        {
-          name: "Intelligent Research",
-          description: "Automated data collection and analysis across multiple sources with AI-driven accuracy."
-        },
-        {
-          name: "Data Integration",
-          description: "Seamlessly integrate disparate data sources for comprehensive B2B intelligence."
-        },
-        {
-          name: "Predictive Analytics",
-          description: "Forecast market trends and identify opportunities before your competitors."
-        },
-        {
-          name: "Secure, Governed Data Handling",
-          description: "Enterprise-grade security with governed data handling and privacy controls."
-        },
-        {
-          name: "Real-Time Updates",
-          description: "Get instant alerts on market changes, competitor moves, and industry developments."
-        }
-      ],
-      healthcareUseCases: [
-        "Hospital systems market analysis and competitive intelligence",
-        "Medical device and pharmaceutical partnership opportunities",
-        "Healthcare provider network expansion research",
-        "Clinical trial site identification and evaluation",
-        "Payer and reimbursement landscape analysis"
-      ],
-      nonProfitUseCases: [
-        "Grant funding opportunity identification and tracking",
-        "Donor prospect research and wealth screening",
-        "Foundation and corporate partnership discovery",
-        "Impact measurement and program evaluation",
-        "Non-profit landscape and competitive analysis"
-      ],
-      benefits: {
-        timeSavings: "80% reduction in research time - from weeks to hours",
-        accuracy: "95% accuracy rate validated against industry benchmarks",
-        costReduction: "70% lower research expenses compared to traditional methods",
-        revenueImpact: "Identify high-value opportunities faster and close deals quicker"
-      },
-      statistics: {
-        organizationsServed: "500+",
-        dataPoints: "10M+",
-        timeSaved: "80%",
-        accuracyRate: "95%"
-      },
-      compliance: ["Secure, Governed Data Handling", "Enterprise Security", "Data Privacy"]
-    }
+      ...approvedResearchAssistantPayload(),
+      overview: RESEARCH_OVERVIEW,
+    },
   });
 
   return (

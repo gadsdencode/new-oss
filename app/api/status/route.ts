@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 
+/**
+ * Compatibility status payload. This route does not probe database or model
+ * connectivity. Environment variable presence is not treated as health.
+ */
 export async function GET() {
-  // In a real app, you might check your database, NeonDB, etc.
-  // For now, we'll return a simple status response
   return NextResponse.json({
-    status: "All systems operational",
-    database: "connected",
-    ai_endpoint: "healthy",
+    status: "unknown",
+    database: "unchecked",
+    ai_endpoint: "unchecked",
+    checked: false,
+    note: "This endpoint does not perform live health checks.",
   });
 }
-
