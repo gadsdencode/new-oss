@@ -88,12 +88,6 @@ export default function Home() {
           features: ["Secure, Governed Data Handling", "Advanced Analytics", "Impact Measurement"]
         },
         {
-          name: "Uterpi",
-          description: "Modern AI platform for businesses. Streamline workflows, automate processes, and unlock productivity with cutting-edge AI technology.",
-          link: "https://uterpi.com",
-          features: ["Advanced AI Models", "Team Collaboration", "Enterprise Security"]
-        },
-        {
           name: "AI-Powered Web Development",
           description: "Custom websites with built-in AI capabilities. Intelligent chatbots, semantic search, and predictive UX — bundled into every build.",
           link: "/web-development",
@@ -261,7 +255,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Core Solutions - Focused BentoGrid (3 key offerings) */}
+      {/* Core Solutions - Focused BentoGrid (5 key offerings) */}
       <section className="py-20 bg-gradient-to-b from-background to-primary/5 dark:to-primary/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -270,7 +264,7 @@ export default function Home() {
               The Right Solutions for Your Business
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Six core offerings designed to transform your enterprise with AI
+              Five core offerings designed to transform your enterprise with AI
             </p>
           </div>
           <BentoGrid className="auto-rows-[28rem]">
@@ -308,19 +302,8 @@ export default function Home() {
               cta="Explore the CoE" 
             />
             <BentoCard 
-              name="Uterpi" 
-              className="col-span-1 md:col-span-1 lg:col-span-1" 
-              background={
-                <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-secondary/10 to-secondary/5" />
-              } 
-              Icon={LayersIcon} 
-              description="Modern AI platform for businesses. Advanced models, team collaboration, and enterprise security." 
-              href="https://uterpi.com" 
-              cta="Visit Uterpi" 
-            />
-            <BentoCard 
               name="AI-Powered Web Development" 
-              className="col-span-1 md:col-span-1 lg:col-span-1" 
+              className="col-span-1 md:col-span-2 lg:col-span-1" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/15 via-primary/10 to-accent/5" />
               } 
@@ -331,7 +314,7 @@ export default function Home() {
             />
             <BentoCard 
               name="Enterprise Compliance" 
-              className="col-span-1 md:col-span-2 lg:col-span-2" 
+              className="col-span-1 md:col-span-2 lg:col-span-3" 
               background={
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/5" />
               } 
