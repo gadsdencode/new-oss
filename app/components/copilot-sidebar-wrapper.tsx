@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import {useCopilotChat} from "@copilotkit/react-core";
+import {FeedbackReview} from "@/components/ai/feedback-review";
 import { useEffect, useState } from "react";
 import { AssistantMessage, CopilotSidebar, type AssistantMessageProps } from "@copilotkit/react-ui";
 import { BrandLogo } from "@/components/brand-logo";
@@ -75,6 +77,10 @@ function QueueNote() {
 
 function WaitingAssistantMessage(props: AssistantMessageProps) {
   const content = typeof props.message?.content === "string" ? props.message.content.trim() : "";
+  const {visibleMessages}=useCopilotChat();
+  const index=visibleMessages.findIndex(m=>m.id===props.message?.id);
+  const prior=visibleMessages.slice(0,index<0?visibleMessages.length:index).reverse().find(m=>"role" in m&&m.role==='user');
+  const question=prior&&"content" in prior&&typeof prior.content==='string'?prior.content:'';
   const waiting = props.isLoading && !props.isGenerating && content.length === 0;
 
   return (
@@ -86,6 +92,7 @@ function WaitingAssistantMessage(props: AssistantMessageProps) {
         </div>
       ) : null}
       <AssistantMessage {...props} />
+      {!props.isLoading&&!props.isGenerating&&content?<FeedbackReview question={question} answer={content}/>:null}
     </>
   );
 }

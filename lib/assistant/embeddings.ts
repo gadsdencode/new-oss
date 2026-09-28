@@ -74,6 +74,7 @@ async function embedOnce(texts: string[], options: EmbedRequestOptions, started:
   const headers: Record<string, string> = {
     Authorization: `Bearer ${options.apiKey}`,
     "Content-Type": "application/json",
+        "X-ICDU-Site": "overture",
   };
   if (options.priority === "background") {
     headers["X-ICDU-Priority"] = "background";
