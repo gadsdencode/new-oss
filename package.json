@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
-    "start": "next start",
+    "dev": "node ./scripts/run-next.cjs dev --webpack",
+    "build": "node ./scripts/run-next.cjs build --webpack",
+    "start": "node ./scripts/run-next.cjs start",
     "lint": "eslint",
-    "test": "npx tsx --test lib/coe/readiness-snapshot.test.ts lib/coe/recommend-tier.test.ts lib/contact/coe-intent.test.ts lib/site.test.ts lib/assistant/config.test.ts lib/assistant/provider-limits.test.ts lib/assistant/streaming-tools.test.ts lib/assistant/missing-key.test.ts lib/assistant/live-provider.test.ts lib/assistant/spend-controls.test.ts lib/assistant/copilot-request.test.ts lib/assistant/client-id.test.ts lib/assistant/pricing.test.ts lib/assistant/copilotkit-route.test.ts lib/assistant/knowledge-tools.test.ts lib/assistant/icdu-flow.test.ts lib/assistant/knowledge-retrieval.test.ts lib/assistant/navigation.test.ts",
+    "test": "npx tsx --test lib/coe/readiness-snapshot.test.ts lib/coe/recommend-tier.test.ts lib/contact/coe-intent.test.ts lib/site.test.ts lib/assistant/config.test.ts lib/assistant/provider-limits.test.ts lib/assistant/streaming-tools.test.ts lib/assistant/missing-key.test.ts lib/assistant/live-provider.test.ts lib/assistant/spend-controls.test.ts lib/assistant/copilot-request.test.ts lib/assistant/client-id.test.ts lib/assistant/pricing.test.ts lib/assistant/copilotkit-route.test.ts lib/assistant/knowledge-tools.test.ts lib/assistant/icdu-flow.test.ts lib/assistant/knowledge-retrieval.test.ts lib/assistant/navigation.test.ts scripts/win-module-case.test.ts",
     "knowledge:ingest": "npx tsx scripts/ingest-overture-knowledge.ts"
   },
   "dependencies": {

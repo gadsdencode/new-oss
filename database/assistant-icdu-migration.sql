@@ -15,10 +15,14 @@ CREATE TABLE IF NOT EXISTS assistant_visitor_turns (
   hour_start TIMESTAMPTZ NOT NULL,
   model_calls INTEGER NOT NULL DEFAULT 0 CHECK (model_calls >= 0),
   tool_events INTEGER NOT NULL DEFAULT 0 CHECK (tool_events >= 0),
+  model_in_flight BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (client_hash, namespace, turn_key, hour_start)
 );
+
+ALTER TABLE assistant_visitor_turns
+  ADD COLUMN IF NOT EXISTS model_in_flight BOOLEAN NOT NULL DEFAULT FALSE;
 
 CREATE OR REPLACE FUNCTION assistant_hit_rate_limit(
   p_client_hash TEXT,
@@ -124,6 +128,8 @@ BEGIN
 END;
 $$;
 
+DROP FUNCTION IF EXISTS assistant_consume_turn_model_call(TEXT, TEXT, TEXT, TIMESTAMPTZ, INTEGER, INTEGER, INTEGER);
+
 CREATE OR REPLACE FUNCTION assistant_consume_turn_model_call(
   p_client_hash TEXT,
   p_namespace TEXT,
@@ -131,12 +137,17 @@ CREATE OR REPLACE FUNCTION assistant_consume_turn_model_call(
   p_hour TIMESTAMPTZ,
   p_max_calls INTEGER,
   p_tool_events INTEGER,
-  p_max_tools INTEGER
-) RETURNS TABLE (ok BOOLEAN, call_number INTEGER, answer_only BOOLEAN, tool_events INTEGER)
+  p_max_tools INTEGER,
+  p_deadline_ms INTEGER,
+  p_inflight_stale_ms INTEGER,
+  p_final_reserve_ms INTEGER
+) RETURNS TABLE (ok BOOLEAN, call_number INTEGER, answer_only BOOLEAN, tool_events INTEGER, reason TEXT)
 LANGUAGE plpgsql
 AS $$
 DECLARE
   rec assistant_visitor_turns%ROWTYPE;
+  elapsed_ms INTEGER;
+  remaining_ms INTEGER;
 BEGIN
   INSERT INTO assistant_visitor_turns (client_hash, namespace, turn_key, hour_start, model_calls, tool_events)
   VALUES (p_client_hash, p_namespace, p_turn_key, p_hour, 0, 0)
@@ -151,19 +162,33 @@ BEGIN
   FOR UPDATE;
 
   IF NOT FOUND THEN
-    RETURN QUERY SELECT FALSE, 0, FALSE, 0;
+    RETURN QUERY SELECT FALSE, 0, FALSE, 0, 'store_error'::TEXT;
+    RETURN;
+  END IF;
+
+  elapsed_ms := GREATEST(0, FLOOR(EXTRACT(EPOCH FROM (clock_timestamp() - rec.created_at)) * 1000))::INTEGER;
+  remaining_ms := p_deadline_ms - elapsed_ms;
+  IF remaining_ms <= 0 THEN
+    RETURN QUERY SELECT FALSE, rec.model_calls, TRUE, rec.tool_events, 'turn_deadline'::TEXT;
+    RETURN;
+  END IF;
+
+  IF rec.model_in_flight
+     AND rec.updated_at > clock_timestamp() - make_interval(secs => p_inflight_stale_ms / 1000.0) THEN
+    RETURN QUERY SELECT FALSE, rec.model_calls, FALSE, rec.tool_events, 'duplicate'::TEXT;
     RETURN;
   END IF;
 
   IF rec.model_calls >= p_max_calls THEN
-    RETURN QUERY SELECT FALSE, rec.model_calls, TRUE, rec.tool_events;
+    RETURN QUERY SELECT FALSE, rec.model_calls, TRUE, rec.tool_events, 'model_call_limit'::TEXT;
     RETURN;
   END IF;
 
   UPDATE assistant_visitor_turns
   SET model_calls = rec.model_calls + 1,
       tool_events = GREATEST(rec.tool_events, p_tool_events),
-      updated_at = CURRENT_TIMESTAMP
+      model_in_flight = TRUE,
+      updated_at = clock_timestamp()
   WHERE client_hash = p_client_hash
     AND namespace = p_namespace
     AND turn_key = p_turn_key
@@ -173,7 +198,26 @@ BEGIN
   RETURN QUERY SELECT
     TRUE,
     rec.model_calls,
-    rec.model_calls >= p_max_calls OR rec.tool_events >= p_max_tools,
-    rec.tool_events;
+    rec.model_calls >= p_max_calls OR rec.tool_events >= p_max_tools OR remaining_ms <= p_final_reserve_ms,
+    rec.tool_events,
+    NULL::TEXT;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION assistant_release_turn_model_call(
+  p_client_hash TEXT,
+  p_namespace TEXT,
+  p_turn_key TEXT,
+  p_hour TIMESTAMPTZ
+) RETURNS VOID
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  UPDATE assistant_visitor_turns
+  SET model_in_flight = FALSE
+  WHERE client_hash = p_client_hash
+    AND namespace = p_namespace
+    AND turn_key = p_turn_key
+    AND hour_start = p_hour;
 END;
 $$;

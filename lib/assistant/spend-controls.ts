@@ -8,6 +8,8 @@ import type { BoundInputResult } from "./token-budget";
 import { AssistantSpendError } from "./errors";
 import {
   VISITOR_BUSY_MESSAGE,
+  VISITOR_DUPLICATE_MESSAGE,
+  VISITOR_TURN_DEADLINE_MESSAGE,
   VISITOR_TURN_LIMIT_MESSAGE,
   VISITOR_UNAVAILABLE_MESSAGE,
   visitorHourlyLimitMessage,
@@ -21,6 +23,8 @@ export interface SpendGuard {
   requestId: string;
   checkRateLimit(now?: Date): Promise<void>;
   admitVisitorMessage(turnKey: string, now?: Date): Promise<void>;
+  readTurnClock(now?: Date): Promise<{ remainingMs: number }>;
+  releaseTurn(now?: Date): Promise<void>;
   beforeModelCall(
     bound: BoundInputResult,
     now?: Date,
@@ -114,6 +118,35 @@ export function createSpendGuard(options: {
         admission.retryAfterSeconds || (admission.blockedWindow === "day" ? 86_400 : 60)
       );
     },
+    async readTurnClock(now = new Date()) {
+      if (!options.turnKey) {
+        return { remainingMs: Number.POSITIVE_INFINITY };
+      }
+      try {
+        return await options.store.readTurnClock({
+          clientHash: options.clientHash,
+          turnKey: options.turnKey,
+          now,
+        });
+      } catch (error) {
+        logAssistantError(error, { source: "assistant-spend", errorCode: "TURN_CLOCK_FAILED" });
+        throw new AssistantSpendError("ASSISTANT_UNAVAILABLE", VISITOR_UNAVAILABLE_MESSAGE, 503);
+      }
+    },
+    async releaseTurn(now = new Date()) {
+      if (!options.turnKey) {
+        return;
+      }
+      try {
+        await options.store.releaseTurnModelCall({
+          clientHash: options.clientHash,
+          turnKey: options.turnKey,
+          now,
+        });
+      } catch (error) {
+        logAssistantError(error, { source: "assistant-spend", errorCode: "TURN_RELEASE_FAILED" });
+      }
+    },
     async beforeModelCall(bound, now = new Date(), extras) {
       if (!prices) {
         throw new AssistantSpendError(
@@ -133,11 +166,20 @@ export function createSpendGuard(options: {
           maxToolEvents: options.spend.maxToolEventsPerTurn,
         });
         if (!turn.ok) {
+          const deadline = turn.reason === "turn_deadline";
+          const duplicate = turn.reason === "duplicate";
+          const storeError = turn.reason === "store_error";
           throw new AssistantSpendError(
-            turn.reason === "store_error" ? "ASSISTANT_UNAVAILABLE" : "ASSISTANT_RATE_LIMITED",
-            turn.reason === "store_error" ? VISITOR_UNAVAILABLE_MESSAGE : VISITOR_TURN_LIMIT_MESSAGE,
-            turn.reason === "store_error" ? 503 : 429,
-            turn.reason === "store_error" ? undefined : 60
+            storeError ? "ASSISTANT_UNAVAILABLE" : "ASSISTANT_RATE_LIMITED",
+            storeError
+              ? VISITOR_UNAVAILABLE_MESSAGE
+              : deadline
+                ? VISITOR_TURN_DEADLINE_MESSAGE
+                : duplicate
+                  ? VISITOR_DUPLICATE_MESSAGE
+                  : VISITOR_TURN_LIMIT_MESSAGE,
+            storeError ? 503 : 429,
+            storeError || duplicate ? undefined : 60
           );
         }
         answerOnly = turn.answerOnly;
@@ -241,6 +283,8 @@ export function createSpendGuard(options: {
         await options.store.recordUsage(record);
       } catch (error) {
         logAssistantError(error, { source: "assistant-spend", errorCode: "USAGE_RECORD_FAILED" });
+      } finally {
+        await this.releaseTurn();
       }
     },
   };

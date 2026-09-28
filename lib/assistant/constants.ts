@@ -26,6 +26,17 @@ export type AssistantKnownTrialModel = (typeof ASSISTANT_KNOWN_TRIAL_MODELS)[num
 export const ASSISTANT_DEFAULT_MAX_INPUT_TOKENS = 16_000;
 export const ASSISTANT_DEFAULT_MAX_OUTPUT_TOKENS = 1_024;
 export const ASSISTANT_DEFAULT_TIMEOUT_MS = 30_000;
+/** Chat Completions timeout, including the OpenAI SDK timeout. Covers queue wait plus generation. */
+export const ICDU_GENERATION_TIMEOUT_MS = 120_000;
+/** Bound for one visitor turn, including tool continuations. Not reset by a new HTTP request. */
+export const ASSISTANT_TURN_DEADLINE_MS = 240_000;
+/** Leave enough time for one written answer when the turn deadline is close. */
+export const ASSISTANT_FINAL_ANSWER_RESERVE_MS = 45_000;
+/** A crashed in-flight flag older than this can be taken by the same turn. */
+export const ASSISTANT_INFLIGHT_STALE_MS = 130_000;
+/** Interactive query embeddings give up and fall back to keyword search. */
+export const ICDU_RETRIEVAL_BUDGET_MS = 12_000;
+export const ASSISTANT_QUEUE_NOTE_DELAY_MS = 4_000;
 
 export const ASSISTANT_MAX_INPUT_TOKENS_CEILING = 1_000_000;
 export const ASSISTANT_MAX_OUTPUT_TOKENS_CEILING = 8_192;
@@ -67,20 +78,59 @@ export function visitorGatewayBusyMessage(retryAfterSeconds: number): string {
   return `The assistant is busy right now. Please try again in ${seconds} seconds, or visit the contact page to reach our team.`;
 }
 
+export function visitorQueueFullMessage(retryAfterSeconds: number): string {
+  const seconds = Math.max(1, Math.ceil(retryAfterSeconds));
+  return `The assistant is helping someone else and cannot take another waiting conversation right now. Please try again in ${seconds} seconds, or visit the contact page to reach our team.`;
+}
+
+export function visitorQueueTimeoutMessage(retryAfterSeconds: number): string {
+  const seconds = Math.max(1, Math.ceil(retryAfterSeconds));
+  return `The assistant was still busy when your turn to start expired. Please try again in ${seconds} seconds, or visit the contact page to reach our team.`;
+}
+
+export function visitorGatewayRateLimitMessage(retryAfterSeconds: number): string {
+  const seconds = Math.max(1, Math.ceil(retryAfterSeconds));
+  return `The assistant is receiving too many new conversations. Please try again in ${seconds} seconds, or visit the contact page to reach our team.`;
+}
+
+export const VISITOR_DUPLICATE_MESSAGE =
+  "This question is already being answered. Use Stop if you want to cancel it, or visit the contact page to reach our team.";
+
+export const VISITOR_TURN_DEADLINE_MESSAGE =
+  "This conversation has reached its time limit. Please send a new question, or visit the contact page to reach our team.";
+
 export function visitorHourlyLimitMessage(limit: number, remaining: number, resetAtIso: string): string {
   const left = Math.max(0, Math.floor(remaining));
   return `You can send ${limit} messages per hour. ${left} remaining. The allowance resets at ${resetAtIso}. Please try again then, or visit the contact page.`;
+}
+
+/** Seconds named by a visitor-facing "try again in N seconds" message. */
+export function retryDelaySeconds(message: string): number {
+  const match = message.match(/try again in (\d+) seconds/i);
+  const seconds = match ? Number(match[1]) : 0;
+  return Number.isFinite(seconds) && seconds > 0 ? seconds : 0;
 }
 
 export function approvedVisitorMessage(message: string | undefined): string {
   if (!message) {
     return VISITOR_UNAVAILABLE_MESSAGE;
   }
-  if (message === VISITOR_UNAVAILABLE_MESSAGE || message === VISITOR_BUSY_MESSAGE || message === VISITOR_TURN_LIMIT_MESSAGE) {
+  if (
+    message === VISITOR_UNAVAILABLE_MESSAGE
+    || message === VISITOR_BUSY_MESSAGE
+    || message === VISITOR_TURN_LIMIT_MESSAGE
+    || message === VISITOR_DUPLICATE_MESSAGE
+    || message === VISITOR_TURN_DEADLINE_MESSAGE
+  ) {
     return message;
   }
   if (
-    message.startsWith("The assistant is busy right now. Please try again in ")
+    (
+      message.startsWith("The assistant is busy right now. Please try again in ")
+      || message.startsWith("The assistant is helping someone else and cannot take another waiting conversation right now. Please try again in ")
+      || message.startsWith("The assistant was still busy when your turn to start expired. Please try again in ")
+      || message.startsWith("The assistant is receiving too many new conversations. Please try again in ")
+    )
     && message.endsWith("or visit the contact page to reach our team.")
     && !/api[_ -]?key|bearer|password|authorization/i.test(message)
   ) {

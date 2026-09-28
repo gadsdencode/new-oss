@@ -4,6 +4,11 @@ import { resolveDatabaseUrl } from "../database-url";
 import { ZERO_NANOS, type NanoDollars } from "./money";
 import type { AssistantSpendConfig } from "./spend-config";
 import type { SpendNamespace } from "./client-id";
+import {
+  ASSISTANT_FINAL_ANSWER_RESERVE_MS,
+  ASSISTANT_INFLIGHT_STALE_MS,
+  ASSISTANT_TURN_DEADLINE_MS,
+} from "./constants";
 
 export type ReservationStatus = "reserved" | "committed" | "retained";
 export type UsageSource = "provider" | "estimated" | "unknown";
@@ -35,7 +40,8 @@ export interface TurnModelCallResult {
   callNumber: number;
   answerOnly: boolean;
   toolEvents: number;
-  reason?: "model_call_limit" | "store_error";
+  reason?: "model_call_limit" | "store_error" | "duplicate" | "turn_deadline";
+  remainingMs?: number;
 }
 
 export interface UsageRecord {
@@ -81,6 +87,16 @@ export interface SpendStore {
     toolEventsSeen: number;
     maxToolEvents: number;
   }): Promise<TurnModelCallResult>;
+  releaseTurnModelCall(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<void>;
+  readTurnClock(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<{ remainingMs: number }>;
   reserve(input: {
     requestId: string;
     callIndex: number;
@@ -138,7 +154,13 @@ export class MemorySpendStore implements SpendStore {
   private readonly reservations = new Map<string, SpendReservation>();
   private readonly reservationByCall = new Map<string, string>();
   private readonly windows = new Map<string, number>();
-  private readonly visitorTurns = new Map<string, { modelCalls: number; toolEvents: number }>();
+  private readonly visitorTurns = new Map<string, {
+    modelCalls: number;
+    toolEvents: number;
+    startedAt: number;
+    inFlight: boolean;
+    inFlightAt: number;
+  }>();
   readonly usage: UsageRecord[] = [];
 
   constructor(private readonly config: AssistantSpendConfig) {}
@@ -254,7 +276,13 @@ export class MemorySpendStore implements SpendStore {
         };
       }
 
-      this.visitorTurns.set(storageKey, { modelCalls: 0, toolEvents: 0 });
+      this.visitorTurns.set(storageKey, {
+        modelCalls: 0,
+        toolEvents: 0,
+        startedAt: input.now.getTime(),
+        inFlight: false,
+        inFlightAt: 0,
+      });
       const hourKey = `${input.clientHash}:${this.config.namespace}:hour:${hourStart.toISOString()}`;
       return {
         ok: true,
@@ -276,25 +304,87 @@ export class MemorySpendStore implements SpendStore {
   }): Promise<TurnModelCallResult> {
     return this.mutex.run(() => {
       const storageKey = this.turnStorageKey(input.clientHash, input.turnKey, utcHourStart(input.now));
-      const current = this.visitorTurns.get(storageKey) ?? { modelCalls: 0, toolEvents: 0 };
+      const current = this.visitorTurns.get(storageKey) ?? {
+        modelCalls: 0,
+        toolEvents: 0,
+        startedAt: input.now.getTime(),
+        inFlight: false,
+        inFlightAt: 0,
+      };
+      const elapsed = input.now.getTime() - current.startedAt;
+      const remainingMs = ASSISTANT_TURN_DEADLINE_MS - elapsed;
+      if (remainingMs <= 0) {
+        this.visitorTurns.set(storageKey, current);
+        return {
+          ok: false,
+          callNumber: current.modelCalls,
+          answerOnly: true,
+          toolEvents: current.toolEvents,
+          remainingMs: 0,
+          reason: "turn_deadline" as const,
+        };
+      }
+      if (current.inFlight && input.now.getTime() - current.inFlightAt < ASSISTANT_INFLIGHT_STALE_MS) {
+        return {
+          ok: false,
+          callNumber: current.modelCalls,
+          answerOnly: false,
+          toolEvents: current.toolEvents,
+          remainingMs,
+          reason: "duplicate" as const,
+        };
+      }
       if (current.modelCalls >= input.maxModelCalls) {
         return {
           ok: false,
           callNumber: current.modelCalls,
           answerOnly: true,
           toolEvents: current.toolEvents,
+          remainingMs,
           reason: "model_call_limit" as const,
         };
       }
       current.modelCalls += 1;
       current.toolEvents = Math.max(current.toolEvents, input.toolEventsSeen);
+      current.inFlight = true;
+      current.inFlightAt = input.now.getTime();
       this.visitorTurns.set(storageKey, current);
       return {
         ok: true,
         callNumber: current.modelCalls,
-        answerOnly: current.modelCalls >= input.maxModelCalls || current.toolEvents >= input.maxToolEvents,
+        answerOnly: current.modelCalls >= input.maxModelCalls
+          || current.toolEvents >= input.maxToolEvents
+          || remainingMs <= ASSISTANT_FINAL_ANSWER_RESERVE_MS,
         toolEvents: current.toolEvents,
+        remainingMs,
       };
+    });
+  }
+
+  releaseTurnModelCall(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<void> {
+    return this.mutex.run(() => {
+      const current = this.visitorTurns.get(this.turnStorageKey(input.clientHash, input.turnKey, utcHourStart(input.now)));
+      if (current) {
+        current.inFlight = false;
+      }
+    });
+  }
+
+  readTurnClock(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<{ remainingMs: number }> {
+    return this.mutex.run(() => {
+      const current = this.visitorTurns.get(this.turnStorageKey(input.clientHash, input.turnKey, utcHourStart(input.now)));
+      if (!current) {
+        return { remainingMs: ASSISTANT_TURN_DEADLINE_MS };
+      }
+      return { remainingMs: Math.max(0, ASSISTANT_TURN_DEADLINE_MS - (input.now.getTime() - current.startedAt)) };
     });
   }
 
@@ -507,8 +597,9 @@ export class NeonSpendStore implements SpendStore {
         call_number: number;
         answer_only: boolean;
         tool_events: number;
+        reason: string | null;
       }>(
-        "SELECT ok, call_number, answer_only, tool_events FROM assistant_consume_turn_model_call($1,$2,$3,$4,$5,$6,$7)",
+        "SELECT ok, call_number, answer_only, tool_events, reason FROM assistant_consume_turn_model_call($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
         [
           input.clientHash,
           this.config.namespace,
@@ -517,22 +608,62 @@ export class NeonSpendStore implements SpendStore {
           input.maxModelCalls,
           input.toolEventsSeen,
           input.maxToolEvents,
+          ASSISTANT_TURN_DEADLINE_MS,
+          ASSISTANT_INFLIGHT_STALE_MS,
+          ASSISTANT_FINAL_ANSWER_RESERVE_MS,
         ]
       );
       const row = rows[0];
       if (!row) {
         return { ok: false, callNumber: 0, answerOnly: true, toolEvents: 0, reason: "store_error" };
       }
+      const reason = row.reason === "duplicate" || row.reason === "turn_deadline" || row.reason === "model_call_limit" || row.reason === "store_error"
+        ? row.reason
+        : row.ok
+          ? undefined
+          : "model_call_limit";
       return {
         ok: row.ok,
         callNumber: row.call_number,
         answerOnly: row.answer_only,
         toolEvents: row.tool_events,
-        reason: row.ok ? undefined : "model_call_limit",
+        reason,
       };
     } catch {
       return { ok: false, callNumber: 0, answerOnly: true, toolEvents: 0, reason: "store_error" };
     }
+  }
+
+  async releaseTurnModelCall(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<void> {
+    await this.query(
+      "SELECT assistant_release_turn_model_call($1, $2, $3, $4)",
+      [input.clientHash, this.config.namespace, input.turnKey, utcHourStart(input.now).toISOString()]
+    );
+  }
+
+  async readTurnClock(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<{ remainingMs: number }> {
+    const rows = await this.query<{ created_at: string | Date }>(
+      `SELECT created_at FROM assistant_visitor_turns
+       WHERE client_hash = $1 AND namespace = $2 AND turn_key = $3 AND hour_start = $4`,
+      [input.clientHash, this.config.namespace, input.turnKey, utcHourStart(input.now).toISOString()]
+    );
+    const created = rows[0]?.created_at;
+    if (!created) {
+      return { remainingMs: ASSISTANT_TURN_DEADLINE_MS };
+    }
+    const started = created instanceof Date ? created.getTime() : Date.parse(created);
+    if (!Number.isFinite(started)) {
+      return { remainingMs: ASSISTANT_TURN_DEADLINE_MS };
+    }
+    return { remainingMs: Math.max(0, ASSISTANT_TURN_DEADLINE_MS - (input.now.getTime() - started)) };
   }
 
   async reserve(input: {

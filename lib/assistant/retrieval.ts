@@ -23,6 +23,7 @@ export async function retrieveForVisitor(
     apiKey?: string;
     baseUrl?: string;
     signal?: AbortSignal;
+    parentSignal?: AbortSignal;
   }
 ): Promise<RetrievalPacket> {
   const keyword = keywordRetrieval(query, 4);
@@ -36,9 +37,14 @@ export async function retrieveForVisitor(
       apiKey: options.apiKey,
       baseUrl: options.baseUrl,
       signal: options.signal,
+      priority: "interactive",
+      maxAttempts: 1,
     });
     vectorQuery = vector ?? null;
-  } catch {
+  } catch (error) {
+    if (options.parentSignal?.aborted) {
+      throw error;
+    }
     const packet: RetrievalPacket = {
       ...keyword,
       limitation: KEYWORD_LIMITATION,

@@ -15,18 +15,21 @@ export class AssistantSpendError extends AssistantUnavailableError {
   readonly httpStatus: number;
   readonly retryAfterSeconds?: number;
   readonly visitorMessage: string;
+  readonly gatewayCode?: string;
 
   constructor(
     code: string,
     visitorMessage: string,
     httpStatus: number,
-    retryAfterSeconds?: number
+    retryAfterSeconds?: number,
+    gatewayCode?: string
   ) {
     super(code, visitorMessage);
     this.name = "AssistantSpendError";
     this.visitorMessage = visitorMessage;
     this.httpStatus = httpStatus;
     this.retryAfterSeconds = retryAfterSeconds;
+    this.gatewayCode = gatewayCode;
   }
 }
 

@@ -17,7 +17,7 @@ ICDU_API_KEY=<deployment secret>
 
 `ICDU_API_KEY` is a server secret. Do not put it in `NEXT_PUBLIC_*`, browser code, logs, committed files, or this example. On Vercel, add it in Project Settings → Environment Variables for Production and Preview, then redeploy. Leave it unset in the repository.
 
-The server calls OpenAI-compatible Chat Completions at `{ICDU_API_BASE_URL}/chat/completions` with Bearer authentication. It does not use the OpenAI Responses API. Embeddings, used only by the ingestion command and optional retrieval, call `{ICDU_API_BASE_URL}/embeddings` with model `icdu-embed-v1` and 768 dimensions.
+The server calls OpenAI-compatible Chat Completions at `{ICDU_API_BASE_URL}/chat/completions` with Bearer authentication. It does not use the OpenAI Responses API. The shared gateway queues one active chat or embedding request and up to four waiting requests. This app does not keep its own visitor queue. A full or expired wait returns HTTP 429 and the visitor can retry after the `Retry-After` delay. Each model call uses a 120 second timeout, covering queue wait and generation. `/api/copilotkit` sets `maxDuration` to 300 seconds. One visitor turn, including tool continuations, is limited to 240 seconds from the first admission. Embeddings call `{ICDU_API_BASE_URL}/embeddings` with model `icdu-embed-v1` and 768 dimensions. Ingestion sends `X-ICDU-Priority: background`. Visitor retrieval stays interactive.
 
 If `ASSISTANT_PROVIDER` is omitted, the server still selects ICDU. A missing `ICDU_API_KEY` returns the public unavailable state. A configured `GEMINI_API_KEY` does not become a fallback.
 

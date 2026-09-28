@@ -3,20 +3,32 @@ import assert from "node:assert/strict";
 import { AIMessage, HumanMessage, SystemMessage, ToolMessage } from "@langchain/core/messages";
 import { loadAssistantConfig, publicAssistantConfigSummary } from "./config";
 import { createIcdUChatModelFields, normalizeIcdUStreamChunk } from "./adapter";
-import { classifyUpstreamError, upstreamShouldRetry } from "./provider-errors";
-import { AssistantSpendError } from "./errors";
+import { classifyUpstreamError, readGatewayBusyCode, upstreamShouldRetry } from "./provider-errors";
+import { AssistantSpendError, AssistantUnavailableError } from "./errors";
 import { fitUpstreamChatRequest } from "./upstream-request";
 import { MemorySpendStore } from "./spend-store";
+import { embedIcdUTexts } from "./embeddings";
+import { retrieveForVisitor } from "./retrieval";
+import { generationTimeoutMs, retrievalPlan } from "./turn-budget";
 import type { AssistantSpendConfig } from "./spend-config";
 import { usdToNanos } from "./money";
 import { getModelPrices } from "./pricing";
 import {
+  ASSISTANT_QUEUE_NOTE_DELAY_MS,
+  ASSISTANT_TURN_DEADLINE_MS,
   ICDU_DEFAULT_BASE_URL,
   ICDU_DEFAULT_MODEL,
+  ICDU_EMBED_DIMENSIONS,
+  ICDU_GENERATION_TIMEOUT_MS,
   ICDU_MAX_MESSAGES,
   ICDU_MAX_UPSTREAM_BODY_BYTES,
+  ICDU_RETRIEVAL_BUDGET_MS,
+  retryDelaySeconds,
   VISITOR_UNAVAILABLE_MESSAGE,
   visitorGatewayBusyMessage,
+  visitorGatewayRateLimitMessage,
+  visitorQueueFullMessage,
+  visitorQueueTimeoutMessage,
 } from "./constants";
 
 function spendConfig(overrides: Partial<AssistantSpendConfig> = {}): AssistantSpendConfig {
@@ -111,6 +123,39 @@ describe("ICDU provider configuration", () => {
     assert.equal(fields.streamUsage, true);
     assert.equal(fields.maxTokens, loaded.config.maxOutputTokens);
     assert.equal(fields.configuration.baseURL, ICDU_DEFAULT_BASE_URL);
+    assert.equal(fields.timeout, ICDU_GENERATION_TIMEOUT_MS);
+    assert.equal(fields.configuration.timeout, ICDU_GENERATION_TIMEOUT_MS);
+    assert.equal(upstreamShouldRetry(), false);
+  });
+
+  it("maps queue_full, queue_timeout, and rate_limit without retrying", () => {
+    const full = classifyUpstreamError(Object.assign(new Error("busy"), {
+      status: 429,
+      code: "queue_full",
+      headers: { get: () => "5" },
+    }));
+    const timedOut = classifyUpstreamError(Object.assign(new Error('{"error":{"code":"queue_timeout"}}'), {
+      status: 429,
+      headers: { get: () => "5" },
+    }));
+    const limited = classifyUpstreamError(Object.assign(new Error("slow"), {
+      status: 429,
+      code: "rate_limit",
+      headers: { get: () => "60" },
+    }));
+    assert.equal(full instanceof AssistantSpendError, true);
+    assert.equal(readGatewayBusyCode(Object.assign(new Error("busy"), { status: 429, code: "queue_full" })), "queue_full");
+    if (full instanceof AssistantSpendError) {
+      assert.match(full.message, /cannot take another waiting conversation/);
+      assert.equal(full.retryAfterSeconds, 5);
+    }
+    if (timedOut instanceof AssistantSpendError) {
+      assert.match(timedOut.message, /turn to start expired/);
+    }
+    if (limited instanceof AssistantSpendError) {
+      assert.equal(limited.retryAfterSeconds, 60);
+      assert.match(limited.message, /too many new conversations/);
+    }
     assert.equal(upstreamShouldRetry(), false);
   });
 });
@@ -217,6 +262,7 @@ describe("shared hourly visitor allowance", () => {
       toolEventsSeen: 0,
       maxToolEvents: 6,
     });
+    await store.releaseTurnModelCall({ clientHash: "visitor", turnKey: "turn-a", now });
     const last = await store.consumeTurnModelCall({
       clientHash: "visitor",
       turnKey: "turn-a",
@@ -225,6 +271,7 @@ describe("shared hourly visitor allowance", () => {
       toolEventsSeen: 1,
       maxToolEvents: 6,
     });
+    await store.releaseTurnModelCall({ clientHash: "visitor", turnKey: "turn-a", now });
     const extra = await store.consumeTurnModelCall({
       clientHash: "visitor",
       turnKey: "turn-a",
@@ -238,5 +285,232 @@ describe("shared hourly visitor allowance", () => {
     assert.equal(last.ok, true);
     assert.equal(extra.ok, false);
     assert.equal(extra.reason, "model_call_limit");
+  });
+
+  it("lets two visitors reach the gateway and blocks only a duplicate submit of the same turn", async () => {
+    const store = new MemorySpendStore(spendConfig());
+    const now = new Date("2026-09-28T12:15:00.000Z");
+    await store.admitVisitorMessage({ clientHash: "visitor-a", turnKey: "turn", now });
+    await store.admitVisitorMessage({ clientHash: "visitor-b", turnKey: "turn", now });
+    const first = await store.consumeTurnModelCall({
+      clientHash: "visitor-a",
+      turnKey: "turn",
+      now,
+      maxModelCalls: 4,
+      toolEventsSeen: 0,
+      maxToolEvents: 6,
+    });
+    const otherVisitor = await store.consumeTurnModelCall({
+      clientHash: "visitor-b",
+      turnKey: "turn",
+      now,
+      maxModelCalls: 4,
+      toolEventsSeen: 0,
+      maxToolEvents: 6,
+    });
+    const duplicate = await store.consumeTurnModelCall({
+      clientHash: "visitor-a",
+      turnKey: "turn",
+      now,
+      maxModelCalls: 4,
+      toolEventsSeen: 0,
+      maxToolEvents: 6,
+    });
+    assert.equal(first.ok, true);
+    assert.equal(otherVisitor.ok, true);
+    assert.equal(duplicate.ok, false);
+    assert.equal(duplicate.reason, "duplicate");
+  });
+
+  it("keeps the original turn deadline across a later tool continuation", async () => {
+    const store = new MemorySpendStore(spendConfig());
+    const started = new Date("2026-09-28T12:00:00.000Z");
+    await store.admitVisitorMessage({ clientHash: "visitor", turnKey: "turn-a", now: started });
+    const continued = new Date(started.getTime() + 200_000);
+    const call = await store.consumeTurnModelCall({
+      clientHash: "visitor",
+      turnKey: "turn-a",
+      now: continued,
+      maxModelCalls: 4,
+      toolEventsSeen: 1,
+      maxToolEvents: 6,
+    });
+    const expired = await store.consumeTurnModelCall({
+      clientHash: "visitor",
+      turnKey: "turn-a",
+      now: new Date(started.getTime() + 241_000),
+      maxModelCalls: 4,
+      toolEventsSeen: 1,
+      maxToolEvents: 6,
+    });
+    assert.equal(call.ok, true);
+    assert.equal(call.answerOnly, true);
+    assert.equal(expired.ok, false);
+    assert.equal(expired.reason, "turn_deadline");
+  });
+
+  it("treats a second submit as a duplicate until the in-flight window goes stale", async () => {
+    const store = new MemorySpendStore(spendConfig());
+    const started = new Date("2026-09-28T12:00:00.000Z");
+    await store.admitVisitorMessage({ clientHash: "visitor", turnKey: "turn-a", now: started });
+    const first = await store.consumeTurnModelCall({
+      clientHash: "visitor",
+      turnKey: "turn-a",
+      now: started,
+      maxModelCalls: 4,
+      toolEventsSeen: 0,
+      maxToolEvents: 6,
+    });
+    const duplicate = await store.consumeTurnModelCall({
+      clientHash: "visitor",
+      turnKey: "turn-a",
+      now: new Date(started.getTime() + 10_000),
+      maxModelCalls: 4,
+      toolEventsSeen: 0,
+      maxToolEvents: 6,
+    });
+    const recovered = await store.consumeTurnModelCall({
+      clientHash: "visitor",
+      turnKey: "turn-a",
+      now: new Date(started.getTime() + 131_000),
+      maxModelCalls: 4,
+      toolEventsSeen: 0,
+      maxToolEvents: 6,
+    });
+    assert.equal(first.ok, true);
+    assert.equal(duplicate.ok, false);
+    assert.equal(duplicate.reason, "duplicate");
+    assert.equal(recovered.ok, true);
+    assert.equal(recovered.callNumber, 2);
+  });
+});
+
+describe("shared gateway queue and retrieval budget", () => {
+  it("keeps retrieval inside the turn deadline and caps generation to the time remaining", () => {
+    assert.equal(retrievalPlan(ASSISTANT_TURN_DEADLINE_MS).budgetMs, ICDU_RETRIEVAL_BUDGET_MS);
+    assert.equal(retrievalPlan(ASSISTANT_TURN_DEADLINE_MS).embed, true);
+    assert.equal(retrievalPlan(800).embed, false);
+    assert.equal(generationTimeoutMs(ASSISTANT_TURN_DEADLINE_MS - ICDU_RETRIEVAL_BUDGET_MS, ICDU_GENERATION_TIMEOUT_MS), ICDU_GENERATION_TIMEOUT_MS);
+    assert.equal(generationTimeoutMs(40_000, ICDU_GENERATION_TIMEOUT_MS), 40_000);
+    assert.equal(generationTimeoutMs(0, ICDU_GENERATION_TIMEOUT_MS), 0);
+    assert.equal(retryDelaySeconds(visitorQueueFullMessage(5)), 5);
+    assert.equal(retryDelaySeconds(visitorQueueTimeoutMessage(5)), 5);
+    assert.equal(retryDelaySeconds(visitorGatewayRateLimitMessage(60)), 60);
+    assert.equal(ASSISTANT_QUEUE_NOTE_DELAY_MS, 4_000);
+  });
+
+  it("retries a background embedding after delayed admission and keeps retrieval interactive", async () => {
+    const original = globalThis.fetch;
+    let attempts = 0;
+    const priorities: Array<string | null> = [];
+    globalThis.fetch = async (_input, init) => {
+      attempts += 1;
+      const headers = new Headers(init?.headers);
+      priorities.push(headers.get("x-icdu-priority"));
+      if (attempts === 1) {
+        return new Response(JSON.stringify({ error: { code: "queue_full" } }), {
+          status: 429,
+          headers: { "retry-after": "0" },
+        });
+      }
+      return new Response(JSON.stringify({
+        data: [{ index: 0, embedding: Array.from({ length: ICDU_EMBED_DIMENSIONS }, () => 0.01) }],
+      }), {
+        status: 200,
+        headers: { "x-icdu-queue-wait-ms": "20" },
+      });
+    };
+    try {
+      const vectors = await embedIcdUTexts(["consulting services"], {
+        apiKey: "server-secret",
+        baseUrl: ICDU_DEFAULT_BASE_URL,
+        priority: "background",
+        maxAttempts: 2,
+      });
+      assert.equal(vectors.length, 1);
+      assert.equal(vectors[0]?.length, ICDU_EMBED_DIMENSIONS);
+      assert.deepEqual(priorities, ["background", "background"]);
+      assert.equal(JSON.stringify(vectors).includes("server-secret"), false);
+    } finally {
+      globalThis.fetch = original;
+    }
+
+    attempts = 0;
+    globalThis.fetch = async () => {
+      attempts += 1;
+      return new Response(JSON.stringify({ error: { code: "queue_timeout" } }), {
+        status: 429,
+        headers: { "retry-after": "5" },
+      });
+    };
+    try {
+      await assert.rejects(
+        () => embedIcdUTexts(["consulting"], {
+          apiKey: "server-secret",
+          baseUrl: ICDU_DEFAULT_BASE_URL,
+          priority: "interactive",
+          maxAttempts: 4,
+        }),
+        (error: unknown) => error instanceof AssistantSpendError && error.gatewayCode === "queue_timeout"
+      );
+      assert.equal(attempts, 1);
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("cancels a queued background embedding when the caller aborts", async () => {
+    const original = globalThis.fetch;
+    const controller = new AbortController();
+    let attempts = 0;
+    globalThis.fetch = async () => {
+      attempts += 1;
+      setTimeout(() => controller.abort(), 15);
+      return new Response(JSON.stringify({ error: { code: "queue_full" } }), {
+        status: 429,
+        headers: { "retry-after": "30" },
+      });
+    };
+    try {
+      await assert.rejects(
+        () => embedIcdUTexts(["page copy"], {
+          apiKey: "server-secret",
+          baseUrl: ICDU_DEFAULT_BASE_URL,
+          priority: "background",
+          maxAttempts: 4,
+          signal: controller.signal,
+        }),
+        (error: unknown) => error instanceof AssistantUnavailableError && error.code === "ASSISTANT_CANCELLED"
+      );
+      assert.equal(attempts, 1);
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("uses keyword search when a query embedding is cancelled by its own budget", async () => {
+    const original = globalThis.fetch;
+    globalThis.fetch = (_input, init) => new Promise((_resolve, reject) => {
+      const signal = init?.signal;
+      const fail = () => reject(Object.assign(new Error("aborted"), { name: "AbortError" }));
+      if (signal?.aborted) {
+        fail();
+        return;
+      }
+      signal?.addEventListener("abort", fail, { once: true });
+    });
+    try {
+      const packet = await retrieveForVisitor("What consulting services does Overture offer?", {
+        embed: true,
+        apiKey: "server-secret",
+        baseUrl: ICDU_DEFAULT_BASE_URL,
+        signal: AbortSignal.timeout(40),
+      });
+      assert.equal(packet.mode, "keyword");
+      assert.match(packet.limitation ?? "", /keyword matches/);
+      assert.ok((packet.passages[0]?.sourceUrl ?? "").includes("overture-systems.com"));
+    } finally {
+      globalThis.fetch = original;
+    }
   });
 });

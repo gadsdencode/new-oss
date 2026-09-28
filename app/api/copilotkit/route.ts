@@ -21,6 +21,7 @@ import { getModelPrices } from "@/lib/assistant/pricing";
 import { ASSISTANT_DEFAULT_MAX_BODY_BYTES } from "@/lib/assistant/constants";
 
 export const runtime = "nodejs";
+export const maxDuration = 300;
 
 const copilotRuntime = new CopilotRuntime();
 

@@ -148,10 +148,12 @@ async function main(): Promise<void> {
       vectors = await embedIcdUTexts(slice.map((chunk) => chunk.content), {
         apiKey: loaded.config.apiKey,
         baseUrl: loaded.config.baseUrl,
+        priority: "background",
+        maxAttempts: 4,
       });
     } catch (error) {
       if (error instanceof AssistantSpendError) {
-        fail(`The embedding gateway is busy. Retry after ${error.retryAfterSeconds ?? 5} seconds. Ingestion was not retried automatically.`);
+        fail(`Embedding failed after bounded retries. Retry after ${error.retryAfterSeconds ?? 5} seconds. Unchanged chunks will be skipped on the next run.`);
       }
       if (error instanceof EmbeddingBatchError) {
         fail(error.message);

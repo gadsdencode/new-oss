@@ -12,6 +12,7 @@ import {
   ASSISTANT_TRIAL_CANDIDATE_MODEL,
   ICDU_DEFAULT_BASE_URL,
   ICDU_DEFAULT_MODEL,
+  ICDU_GENERATION_TIMEOUT_MS,
   ICDU_MAX_OUTPUT_TOKENS,
   type AssistantKnownTrialModel,
 } from "./constants";
@@ -252,7 +253,7 @@ export function loadAssistantConfig(env: AssistantEnv = process.env): AssistantC
 
   const timeout = parsePositiveInt(
     env.ASSISTANT_GENERATION_TIMEOUT_MS,
-    ASSISTANT_DEFAULT_TIMEOUT_MS,
+    providerResult.provider === "icdu" ? ICDU_GENERATION_TIMEOUT_MS : ASSISTANT_DEFAULT_TIMEOUT_MS,
     {
       min: 1_000,
       max: ASSISTANT_TIMEOUT_MS_CEILING,

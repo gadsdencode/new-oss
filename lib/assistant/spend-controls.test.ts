@@ -79,6 +79,12 @@ class FailingSpendStore implements SpendStore {
   consumeTurnModelCall(): ReturnType<SpendStore["consumeTurnModelCall"]> {
     return Promise.resolve({ ok: false, callNumber: 0, answerOnly: true, toolEvents: 0, reason: "store_error" });
   }
+  releaseTurnModelCall(): Promise<void> {
+    return Promise.resolve();
+  }
+  readTurnClock(): ReturnType<SpendStore["readTurnClock"]> {
+    return Promise.resolve({ remainingMs: 240_000 });
+  }
 }
 
 async function invokeGuarded(

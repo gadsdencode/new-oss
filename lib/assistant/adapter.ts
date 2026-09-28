@@ -5,18 +5,18 @@ import { AIMessage, SystemMessage, ToolMessage, type BaseMessage } from "@langch
 import type { AssistantConfig } from "./config";
 import { boundAssembledModelInput, type BoundInputResult } from "./token-budget";
 import { logAssistantError, logAssistantEvent } from "./logging";
-import { AssistantUnavailableError } from "./errors";
+import { AssistantSpendError, AssistantUnavailableError } from "./errors";
 import { createGenerationSignal, throwIfAborted } from "./signals";
 import { readUsageMetadata, type ProviderUsage } from "./usage";
 import type { SpendGuard } from "./spend-controls";
 import { getModelPrices } from "./pricing";
 import { applyOperatingInstructions } from "./instructions";
-import { ICDU_MAX_OUTPUT_TOKENS, ICDU_MAX_TOOLS, ICDU_MAX_UPSTREAM_BODY_BYTES } from "./constants";
-import { acquireIcdUSlot } from "./icdu-gate";
+import { ICDU_MAX_OUTPUT_TOKENS, ICDU_MAX_TOOLS, ICDU_MAX_UPSTREAM_BODY_BYTES, VISITOR_TURN_DEADLINE_MESSAGE } from "./constants";
 import { classifyUpstreamError } from "./provider-errors";
 import { fitUpstreamChatRequest } from "./upstream-request";
 import { formatRetrievedPassages } from "./knowledge/retrieve";
 import { retrieveForVisitor } from "./retrieval";
+import { generationTimeoutMs, retrievalPlan } from "./turn-budget";
 
 export type { ProviderUsage } from "./usage";
 export { readUsageMetadata } from "./usage";
@@ -51,7 +51,7 @@ export function createGeminiChatModelFields(config: AssistantConfig) {
   };
 }
 
-export function createIcdUChatModelFields(config: AssistantConfig) {
+export function createIcdUChatModelFields(config: AssistantConfig, timeoutMs = config.timeoutMs) {
   return {
     model: config.model,
     apiKey: config.apiKey,
@@ -59,11 +59,13 @@ export function createIcdUChatModelFields(config: AssistantConfig) {
     maxRetries: 0,
     streaming: true,
     streamUsage: true,
-    timeout: config.timeoutMs,
+    timeout: timeoutMs,
     useResponsesApi: false as const,
     configuration: {
       baseURL: config.baseUrl,
       apiKey: config.apiKey,
+      timeout: timeoutMs,
+      maxRetries: 0,
     },
   };
 }
@@ -322,6 +324,24 @@ function accountGeneration(
   };
 }
 
+function childSignal(parent: AbortSignal, timeoutMs: number): { signal: AbortSignal; cleanup: () => void } {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const onParent = () => controller.abort(parent.reason);
+  if (parent.aborted) {
+    controller.abort(parent.reason);
+  } else {
+    parent.addEventListener("abort", onParent, { once: true });
+  }
+  return {
+    signal: controller.signal,
+    cleanup: () => {
+      clearTimeout(timer);
+      parent.removeEventListener("abort", onParent);
+    },
+  };
+}
+
 function latestUserText(messages: BaseMessage[]): string {
   for (let index = messages.length - 1; index >= 0; index -= 1) {
     const message = messages[index];
@@ -369,7 +389,8 @@ export function createAssistantServiceAdapter(
         throw new AssistantUnavailableError("ASSISTANT_UNAVAILABLE");
       }
 
-      const { signal, cleanup } = createGenerationSignal(requestSignal, config.timeoutMs);
+      let signal: AbortSignal = requestSignal ?? new AbortController().signal;
+      let cleanup: () => void = () => undefined;
       const startedAt = Date.now();
       let latestUsage: ProviderUsage | undefined;
       let bound: BoundInputResult | undefined;
@@ -377,7 +398,6 @@ export function createAssistantServiceAdapter(
       let providerStarted = false;
       let finished = false;
       let failed = false;
-      let releaseSlot: (() => void) | undefined;
 
       const finish = async (aborted: boolean) => {
         if (finished) {
@@ -412,6 +432,7 @@ export function createAssistantServiceAdapter(
           });
         }
         cleanup();
+        await spend.releaseTurn();
       };
 
       try {
@@ -419,14 +440,36 @@ export function createAssistantServiceAdapter(
 
         const filtered = filterEmptyAssistantMessages(messages);
         const query = latestUserText(filtered);
-        const retrieval = query
-          ? await retrieveForVisitor(query, {
-              embed: config.provider === "icdu",
-              apiKey: config.apiKey,
-              baseUrl: config.baseUrl,
-              signal,
-            })
-          : null;
+        const turnClock = await spend.readTurnClock();
+        const plan = retrievalPlan(turnClock.remainingMs);
+        const retrievalSignal = plan.budgetMs > 0 ? childSignal(signal, plan.budgetMs) : undefined;
+        let retrieval = null;
+        try {
+          retrieval = query
+            ? await retrieveForVisitor(query, {
+                embed: config.provider === "icdu" && plan.embed,
+                apiKey: config.apiKey,
+                baseUrl: config.baseUrl,
+                signal: retrievalSignal?.signal ?? signal,
+                parentSignal: requestSignal,
+              })
+            : null;
+        } finally {
+          retrievalSignal?.cleanup();
+        }
+        const afterRetrieval = await spend.readTurnClock();
+        const modelTimeoutMs = generationTimeoutMs(afterRetrieval.remainingMs, config.timeoutMs);
+        if (modelTimeoutMs <= 0) {
+          throw new AssistantSpendError(
+            "ASSISTANT_RATE_LIMITED",
+            VISITOR_TURN_DEADLINE_MESSAGE,
+            429
+          );
+        }
+        const generation = createGenerationSignal(requestSignal, modelTimeoutMs);
+        signal = generation.signal;
+        cleanup = generation.cleanup;
+        throwIfAborted(signal);
         const retrievalText = retrieval ? formatRetrievedPassages(retrieval) : null;
         const withRetrieval = retrievalText ? [...filtered, new SystemMessage(retrievalText)] : filtered;
         const withPolicy = applyOperatingInstructions(withRetrieval);
@@ -468,12 +511,9 @@ export function createAssistantServiceAdapter(
           sourceIds: retrieval?.sourceIds.join(","),
         });
 
-        if (config.provider === "icdu") {
-          releaseSlot = await acquireIcdUSlot(signal);
-        }
         providerStarted = true;
         const chat = config.provider === "icdu"
-          ? new ChatOpenAI(createIcdUChatModelFields(config))
+          ? new ChatOpenAI(createIcdUChatModelFields(config, modelTimeoutMs))
           : new ChatGoogleGenerativeAI(createGeminiChatModelFields(config));
         const runnable = outboundTools.length > 0 ? chat.bindTools(outboundTools) : chat;
         const rawStream = await runnable.stream(outboundMessages, {
@@ -490,14 +530,11 @@ export function createAssistantServiceAdapter(
             latestUsage = usage;
           },
           onFinally: ({ aborted }) => {
-            releaseSlot?.();
-            releaseSlot = undefined;
             void finish(aborted);
           },
         });
       } catch (error) {
         failed = true;
-        releaseSlot?.();
         const classified = classifyUpstreamError(error, signal.aborted);
         logAssistantError(error, {
           source: "assistant-adapter",

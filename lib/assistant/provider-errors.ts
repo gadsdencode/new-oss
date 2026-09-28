@@ -1,5 +1,10 @@
 import { AssistantSpendError, AssistantUnavailableError } from "./errors";
-import { visitorGatewayBusyMessage } from "./constants";
+import {
+  visitorGatewayBusyMessage,
+  visitorGatewayRateLimitMessage,
+  visitorQueueFullMessage,
+  visitorQueueTimeoutMessage,
+} from "./constants";
 
 function readStatus(error: unknown): number | undefined {
   if (!error || typeof error !== "object") {
@@ -35,6 +40,44 @@ function headerValue(headers: unknown, name: string): string | undefined {
     return typeof match === "string" ? match : undefined;
   }
   return undefined;
+}
+
+export type GatewayBusyCode = "queue_full" | "queue_timeout" | "rate_limit";
+
+function readErrorCode(error: unknown): string | undefined {
+  if (!error || typeof error !== "object") {
+    return undefined;
+  }
+  const record = error as {
+    code?: unknown;
+    message?: unknown;
+    error?: { code?: unknown };
+    cause?: unknown;
+  };
+  if (typeof record.code === "string" && record.code.trim() && record.code !== "ASSISTANT_BUSY") {
+    return record.code.trim();
+  }
+  if (record.error && typeof record.error.code === "string" && record.error.code.trim()) {
+    return record.error.code.trim();
+  }
+  if (typeof record.message === "string") {
+    const match = record.message.match(/"code"\s*:\s*"(queue_full|queue_timeout|rate_limit)"/);
+    if (match?.[1]) {
+      return match[1];
+    }
+  }
+  if (record.cause) {
+    return readErrorCode(record.cause);
+  }
+  return undefined;
+}
+
+export function readGatewayBusyCode(error: unknown): GatewayBusyCode | null {
+  const code = readErrorCode(error);
+  if (code === "queue_full" || code === "queue_timeout" || code === "rate_limit") {
+    return code;
+  }
+  return null;
 }
 
 export function readRetryAfterSeconds(error: unknown): number | undefined {
@@ -76,13 +119,16 @@ export function classifyUpstreamError(error: unknown, aborted = false): Assistan
   }
   const status = readStatus(error);
   if (status === 429) {
-    const retryAfterSeconds = readRetryAfterSeconds(error) ?? 5;
-    return new AssistantSpendError(
-      "ASSISTANT_BUSY",
-      visitorGatewayBusyMessage(retryAfterSeconds),
-      429,
-      retryAfterSeconds
-    );
+    const busyCode = readGatewayBusyCode(error);
+    const retryAfterSeconds = readRetryAfterSeconds(error) ?? (busyCode === "rate_limit" ? 60 : 5);
+    const message = busyCode === "queue_full"
+      ? visitorQueueFullMessage(retryAfterSeconds)
+      : busyCode === "queue_timeout"
+        ? visitorQueueTimeoutMessage(retryAfterSeconds)
+        : busyCode === "rate_limit"
+          ? visitorGatewayRateLimitMessage(retryAfterSeconds)
+          : visitorGatewayBusyMessage(retryAfterSeconds);
+    return new AssistantSpendError("ASSISTANT_BUSY", message, 429, retryAfterSeconds, busyCode ?? undefined);
   }
   return new AssistantUnavailableError("ASSISTANT_PROVIDER_ERROR");
 }

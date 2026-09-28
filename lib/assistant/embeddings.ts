@@ -5,9 +5,9 @@ import {
   ICDU_EMBED_MAX_STRINGS,
   ICDU_EMBED_MODEL,
 } from "./constants";
-import { acquireIcdUSlot } from "./icdu-gate";
 import { logAssistantError, logAssistantEvent } from "./logging";
 import { classifyUpstreamError } from "./provider-errors";
+import { AssistantSpendError } from "./errors";
 
 export class EmbeddingBatchError extends Error {
   constructor(message: string) {
@@ -32,24 +32,56 @@ export function assertEmbeddingBatch(texts: string[]): void {
   }
 }
 
+export interface EmbedRequestOptions {
+  apiKey: string;
+  baseUrl: string;
+  signal?: AbortSignal;
+  /** Background jobs yield to interactive chat. Retrieval stays interactive. */
+  priority?: "interactive" | "background";
+  /** Background ingestion may retry a busy gateway. Interactive retrieval must not. */
+  maxAttempts?: number;
+}
+
 /**
- * One serialized embeddings call. Does not retry a busy gateway.
+ * One embeddings call. Interactive requests are not retried.
+ * Background ingestion retries a bounded number of times and honors Retry-After.
  * The API key is sent as a bearer token and is not logged.
  */
-export async function embedIcdUTexts(
-  texts: string[],
-  options: { apiKey: string; baseUrl: string; signal?: AbortSignal }
-): Promise<number[][]> {
+export async function embedIcdUTexts(texts: string[], options: EmbedRequestOptions): Promise<number[][]> {
   assertEmbeddingBatch(texts);
-  const release = await acquireIcdUSlot(options.signal);
-  const started = Date.now();
+  const attempts = options.priority === "background" ? Math.max(1, options.maxAttempts ?? 4) : 1;
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    if (options.signal?.aborted) {
+      throw classifyUpstreamError(options.signal.reason, true);
+    }
+    const started = Date.now();
+    try {
+      return await embedOnce(texts, options, started);
+    } catch (error) {
+      lastError = error;
+      const busy = error instanceof AssistantSpendError && error.httpStatus === 429 ? error : null;
+      if (!busy || attempt === attempts || options.signal?.aborted) {
+        throw error;
+      }
+      await waitForRetry(busy.retryAfterSeconds ?? 5, options.signal);
+    }
+  }
+  throw lastError instanceof Error ? lastError : new EmbeddingBatchError("Embedding failed.");
+}
+
+async function embedOnce(texts: string[], options: EmbedRequestOptions, started: number): Promise<number[][]> {
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${options.apiKey}`,
+    "Content-Type": "application/json",
+  };
+  if (options.priority === "background") {
+    headers["X-ICDU-Priority"] = "background";
+  }
   try {
     const response = await fetch(new URL("embeddings", ensureTrailingSlash(options.baseUrl)), {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${options.apiKey}`,
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         model: ICDU_EMBED_MODEL,
         input: texts,
@@ -58,12 +90,21 @@ export async function embedIcdUTexts(
       signal: options.signal,
     });
     if (!response.ok) {
-      const error = Object.assign(new Error("embedding_request_failed"), {
+      const body = await response.text();
+      let code: string | undefined;
+      try {
+        const parsed = JSON.parse(body) as { error?: { code?: string } };
+        code = parsed.error?.code;
+      } catch {
+        code = undefined;
+      }
+      throw Object.assign(new Error("embedding_request_failed"), {
         status: response.status,
         headers: response.headers,
+        code,
       });
-      throw error;
     }
+    const queueWait = response.headers.get("x-icdu-queue-wait-ms");
     const payload = (await response.json()) as {
       data?: Array<{ embedding?: number[]; index?: number }>;
     };
@@ -81,19 +122,42 @@ export async function embedIcdUTexts(
       model: ICDU_EMBED_MODEL,
       count: texts.length,
       durationMs: Date.now() - started,
+      priority: options.priority ?? "interactive",
+      queueWaitMs: queueWait && /^\d+$/.test(queueWait) ? Number(queueWait) : undefined,
     });
     return vectors;
   } catch (error) {
+    if (error instanceof EmbeddingBatchError) {
+      throw error;
+    }
     logAssistantError(error, {
       source: "icdu-embeddings",
       model: ICDU_EMBED_MODEL,
       count: texts.length,
       durationMs: Date.now() - started,
+      priority: options.priority ?? "interactive",
     });
     throw classifyUpstreamError(error, options.signal?.aborted === true);
-  } finally {
-    release();
   }
+}
+
+function waitForRetry(seconds: number, signal?: AbortSignal): Promise<void> {
+  const delay = Math.max(0, seconds) * 1000;
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(resolve, delay);
+    if (!signal) {
+      return;
+    }
+    if (signal.aborted) {
+      clearTimeout(timer);
+      reject(classifyUpstreamError(signal.reason, true));
+      return;
+    }
+    signal.addEventListener("abort", () => {
+      clearTimeout(timer);
+      reject(classifyUpstreamError(signal.reason, true));
+    }, { once: true });
+  });
 }
 
 function ensureTrailingSlash(baseUrl: string): string {
