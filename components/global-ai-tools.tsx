@@ -1,5 +1,6 @@
 "use client";
 
+import { VisitPlannerTool } from "./ai/visit-planner";
 import { useRef } from "react";
 import { useCopilotAction } from "@copilotkit/react-core";
 import { submitConsultationRequest } from "@/app/contact/submit-consultation";
@@ -120,5 +121,5 @@ export function GlobalAITools() {
     },
   });
 
-  return null;
+  return <VisitPlannerTool />;
 }

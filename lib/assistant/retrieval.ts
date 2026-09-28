@@ -1,3 +1,6 @@
+import {cachedRetrieval,overlayData,recordFeedback,hash} from './shared/library';
+import {libraryQuery} from './shared/database';
+import type {RankedPassage} from './knowledge/retrieve';
 import { embedIcdUTexts } from "./embeddings";
 import { searchKnowledgeByVector } from "./knowledge-store";
 import {
@@ -16,7 +19,7 @@ const INDEX_LIMITATION =
  * Retrieve a few published passages before generation.
  * Ingestion never runs here. A failed embedding call falls back to keyword search.
  */
-export async function retrieveForVisitor(
+async function retrieveUncached(
   query: string,
   options: {
     embed: boolean;
@@ -26,7 +29,18 @@ export async function retrieveForVisitor(
     parentSignal?: AbortSignal;
   }
 ): Promise<RetrievalPacket> {
-  const keyword = keywordRetrieval(query, 4);
+  let keyword = keywordRetrieval(query, 4);
+  let exclude:string[]=[];
+  try{const overlay=await overlayData(libraryQuery,'overture',query);exclude=overlay.exclude;
+    const extra:RankedPassage[]=overlay.hits.map(r=>({chunkId:r.id,documentId:r.document_id,title:r.title,sourceUrl:r.sourceUrl,content:r.content,contentHash:hash(r.content),score:Number(r.score)+1,match:'keyword'}));
+    const passages=mergePassages(extra,keyword.passages.filter(p=>!exclude.includes(p.documentId)),4);
+    keyword={...keyword,passages,sourceIds:passages.map(p=>p.chunkId)};
+  }catch(error){
+    // Old deployments can run before the additive migration. Other database failures
+    // cannot safely resurrect a document the editor may have retired.
+    if((error as {code?:string}).code!=='42P01' && process.env.DATABASE_URL)
+      return {passages:[],mode:'keyword',limitation:'The knowledge library is temporarily unavailable.',sourceIds:[]};
+  }
   if (!options.embed || !options.apiKey || !options.baseUrl || !query.trim()) {
     return keyword;
   }
@@ -70,7 +84,11 @@ export async function retrieveForVisitor(
     return packet;
   }
 
-  const passages = mergePassages(keyword.passages, vectorHits, 4);
+  let managed:RankedPassage[]=[];
+  if(vectorQuery)try{const overlay=await overlayData(libraryQuery,'overture',query,vectorQuery);exclude=overlay.exclude;
+    managed=overlay.hits.map(r=>({chunkId:r.id,documentId:r.document_id,title:r.title,sourceUrl:r.sourceUrl,content:r.content,contentHash:hash(r.content),score:Number(r.score),match:'vector'}));
+  }catch{}
+  const passages = mergePassages(keyword.passages, [...managed,...vectorHits.filter(p=>!exclude.includes(p.documentId))], 4);
   const packet: RetrievalPacket = {
     passages,
     mode: "keyword+vector",
@@ -84,4 +102,11 @@ export async function retrieveForVisitor(
     vector: "used",
   });
   return packet;
+}
+
+export async function retrieveForVisitor(query:string,options:Parameters<typeof retrieveUncached>[1]):Promise<RetrievalPacket>{
+ const packet=await cachedRetrieval(libraryQuery,'overture',`${options.embed?'vector':'keyword'}:${query}`,()=>retrieveUncached(query,options),p=>p.mode==='keyword+vector'&&!p.limitation);
+ if(query.trim().length>=12&&!packet.passages.length&&!packet.limitation)
+  await recordFeedback(libraryQuery,{question:query,reason:'no-matching-reference'}).catch(()=>undefined);
+ return packet;
 }

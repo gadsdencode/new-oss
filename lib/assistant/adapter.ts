@@ -63,6 +63,7 @@ export function createIcdUChatModelFields(config: AssistantConfig, timeoutMs = c
     useResponsesApi: false as const,
     configuration: {
       baseURL: config.baseUrl,
+      defaultHeaders: {"X-ICDU-Site":"overture"},
       apiKey: config.apiKey,
       timeout: timeoutMs,
       maxRetries: 0,
