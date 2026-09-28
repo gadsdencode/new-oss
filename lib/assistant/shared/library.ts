@@ -1,3 +1,4 @@
+import {publishedKnowledgeDocuments,hashKnowledgeContent} from "../knowledge/corpus";
 import { schemaStatements } from "./schema";
 import { createHash, timingSafeEqual } from 'node:crypto';
 export type Query = (text: string, values?: unknown[]) => Promise<Record<string, unknown>[]>;
@@ -22,7 +23,7 @@ export async function listDocuments(query:Query,site:Site):Promise<LibraryDocume
  const replaced=new Set(managed.flatMap(d=>stringList(d.replaces)));
  const native=site==='icdu'
   ? await query("SELECT id,title,body AS content,source_url,status,content_hash FROM icdu_knowledge_entries WHERE status='published' ORDER BY title")
-  : await query("SELECT d.document_id AS id,d.title,d.source_url,d.publication_status AS status,d.content_hash,string_agg(c.content,E'\\n\\n' ORDER BY c.chunk_id) AS content FROM overture_knowledge_documents d JOIN overture_knowledge_chunks c ON c.document_id=d.document_id WHERE d.publication_status='published' AND c.publication_status='published' GROUP BY d.document_id ORDER BY d.title");
+  : publishedKnowledgeDocuments().filter(d=>d.publicationStatus==='published').map(d=>({id:d.documentId,title:d.title,content:d.content,source_url:d.sourceUrl,status:'published',content_hash:hashKnowledgeContent(d.content)}));
  return [...managed.map(d=>({id:String(d.id),title:String(d.title),content:String(d.content),sourceUrl:String(d.source_url),status:String(d.status),revision:Number(d.revision),replaces:stringList(d.replaces)})),
   ...native.filter(d=>!replaced.has(String(d.id))).map(d=>({id:`base:${d.id}`,title:String(d.title),content:String(d.content??''),sourceUrl:String(d.source_url),status:'published',revision:0,replaces:[String(d.id)],nativeRevision:String(d.content_hash)}))];
 }
@@ -57,7 +58,7 @@ export async function overlayData(query:Query,site:Site,text:string,vector?:numb
 export async function libraryRevision(query:Query,site:Site):Promise<string>{
  const table=site==='icdu'?'icdu_knowledge_entries':'overture_knowledge_chunks';
  const rows=await query(`SELECT (SELECT count(*)::text||':'||COALESCE(max(updated_at)::text,'') FROM ${table})||':'||(SELECT count(*)::text||':'||COALESCE(max(updated_at)::text,'') FROM assistant_documents) AS revision`);
- return String(rows[0].revision);
+ return String(rows[0].revision)+(site==='overture'?':'+hash(JSON.stringify(publishedKnowledgeDocuments())):'');
 }
 export async function cachedRetrieval<T>(query:Query,site:Site,text:string,load:()=>Promise<T>,eligible:(value:T)=>boolean):Promise<T>{
  let revision:string|undefined;const key=hash(`${site}:retrieval-v2:icdu-embed-v1:${text.trim().toLowerCase()}`);

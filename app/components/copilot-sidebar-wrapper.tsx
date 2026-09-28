@@ -79,9 +79,10 @@ function WaitingAssistantMessage(props: AssistantMessageProps) {
   const content = typeof props.message?.content === "string" ? props.message.content.trim() : "";
   const {visibleMessages}=useCopilotChat();
   const index=visibleMessages.findIndex(m=>m.id===props.message?.id);
-  const prior=visibleMessages.slice(0,index<0?visibleMessages.length:index).reverse().find(m=>"role" in m&&m.role==='user');
+  const prior=visibleMessages.slice(0,index<0?0:index).reverse().find(m=>"role" in m&&m.role==='user');
   const question=prior&&"content" in prior&&typeof prior.content==='string'?prior.content:'';
-  const waiting = props.isLoading && !props.isGenerating && content.length === 0;
+  const toolUI = props.message?.generativeUI?.();
+  const waiting = props.isLoading && !props.isGenerating && content.length === 0 && !toolUI;
 
   return (
     <>
