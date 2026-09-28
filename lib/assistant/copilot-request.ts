@@ -1,3 +1,5 @@
+import { hashVisitorText } from "./visitor-turn";
+
 export const COPILOTKIT_GENERATE_OPERATION = "generateCopilotResponse";
 
 export type CopilotKitGraphqlBody = {
@@ -15,6 +17,7 @@ export interface ParsedCopilotMessage {
   kind: CopilotMessageKind;
   role?: string;
   textLength: number;
+  digest?: string;
 }
 
 export type ParsedCopilotRequest =
@@ -31,7 +34,7 @@ function messageKind(message: unknown): ParsedCopilotMessage {
   if (text && typeof text.content === "string") {
     const role = typeof text.role === "string" ? text.role.toLowerCase() : "";
     if (role === "user") {
-      return { kind: "user-text", role, textLength: text.content.length };
+      return { kind: "user-text", role, textLength: text.content.length, digest: hashVisitorText(text.content) };
     }
     return { kind: "assistant-text", role, textLength: text.content.length };
   }

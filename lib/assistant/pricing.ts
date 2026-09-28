@@ -1,4 +1,4 @@
-import { ASSISTANT_ROLLBACK_MODEL, ASSISTANT_TRIAL_CANDIDATE_MODEL } from "./constants";
+import { ASSISTANT_ROLLBACK_MODEL, ASSISTANT_TRIAL_CANDIDATE_MODEL, ICDU_DEFAULT_MODEL } from "./constants";
 import type { NanoDollars } from "./money";
 
 /**
@@ -11,12 +11,16 @@ import type { NanoDollars } from "./money";
  * cap on the full Google or Vercel invoice.
  */
 export const ASSISTANT_PRICING_VERSION = "google-ai-2026-09-15";
+export const ICDU_PRICING_VERSION = "icdu-self-hosted-2026-09-28";
 export const ASSISTANT_PRICING_SOURCE = "https://ai.google.dev/gemini-api/docs/pricing";
 
 export interface ModelTokenPrices {
   model: string;
   inputNanosPerToken: NanoDollars;
   outputNanosPerToken: NanoDollars;
+  /** False when there is no external per-token provider charge. Infrastructure is still limited. */
+  externalCharge: boolean;
+  pricingVersion: string;
   notes: string;
 }
 
@@ -27,6 +31,8 @@ const PRICES: Record<string, ModelTokenPrices> = {
     inputNanosPerToken: BigInt(300),
     // $2.50 / 1M output tokens (includes thinking tokens) = 2500 nanos/token
     outputNanosPerToken: BigInt(2500),
+    externalCharge: true,
+    pricingVersion: ASSISTANT_PRICING_VERSION,
     notes: "Standard paid tier. Output price includes thinking tokens.",
   },
   [ASSISTANT_TRIAL_CANDIDATE_MODEL]: {
@@ -35,9 +41,24 @@ const PRICES: Record<string, ModelTokenPrices> = {
     inputNanosPerToken: BigInt(100),
     // $0.40 / 1M output tokens (includes thinking tokens) = 400 nanos/token
     outputNanosPerToken: BigInt(400),
+    externalCharge: true,
+    pricingVersion: ASSISTANT_PRICING_VERSION,
     notes: "Standard paid tier. Output price includes thinking tokens.",
   },
+  [ICDU_DEFAULT_MODEL]: {
+    model: ICDU_DEFAULT_MODEL,
+    inputNanosPerToken: BigInt(0),
+    outputNanosPerToken: BigInt(0),
+    externalCharge: false,
+    pricingVersion: ICDU_PRICING_VERSION,
+    notes:
+      "No external per-token provider charge. Self-hosted capacity is still limited; this is not a statement that infrastructure or hosting is cost-free.",
+  },
 };
+
+export function pricingVersionFor(model: string): string {
+  return getModelPrices(model)?.pricingVersion ?? ASSISTANT_PRICING_VERSION;
+}
 
 export function getModelPrices(model: string): ModelTokenPrices | null {
   return PRICES[model] ?? null;

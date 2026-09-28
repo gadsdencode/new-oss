@@ -36,6 +36,6 @@ describe("missing-key behavior", () => {
     assert.equal(body.message, VISITOR_UNAVAILABLE_MESSAGE);
     assert.equal(body.statusCode, 503);
     assert.equal("details" in body, false);
-    assert.doesNotMatch(JSON.stringify(body), /GEMINI_API_KEY|GOOGLE_API_KEY|Vercel|adapter/i);
+    assert.doesNotMatch(JSON.stringify(body), /GEMINI_API_KEY|GOOGLE_API_KEY|ICDU_API_KEY|Vercel|adapter/i);
   });
 });

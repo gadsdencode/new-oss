@@ -1,6 +1,6 @@
 # Overture Systems Solutions - AI-Powered Business Platform
 
-Modern business website with integrated AI assistant powered by CopilotKit and Google Gemini.
+Modern business website with an Overture Systems Solutions assistant. The assistant uses CopilotKit and the ICDU model provider. Gemini remains an explicit rollback only.
 
 ## 🚀 Quick Start
 
@@ -37,8 +37,8 @@ npm run dev
                  │
                  ▼
 ┌─────────────────────────────────────────┐
-│  Google Gemini API                      │
-│  (AI Model Provider)                    │
+│  ICDU Chat Completions                  │
+│  (server-side model provider)           │
 └─────────────────────────────────────────┘
 ```
 
@@ -48,14 +48,14 @@ npm run dev
 - ✅ Conversational AI chatbot
 - ✅ Understands company services and offerings
 - ✅ Context-aware responses using `useCopilotReadable`
-- ✅ Powered by Google Gemini
+- ✅ Powered by the ICDU model provider through the same-origin assistant route
 
 ### **API-as-a-Service (NEW!)**
 - 🔌 **RESTful API** - Discoverable by other AI assistants
 - 📋 **OpenAPI Specification** - Ready for GPT Actions & Copilot Connectors
 - 🔐 **Secure Authentication** - API key-based access control
 - 📊 **Service Discovery** - Programmatic access to services and information
-- 📅 **Consultation Booking** - AI assistants can book consultations on behalf of users
+- 📅 **Consultation requests** - The assistant can open the contact form. Submitting it sends a request and does not book a calendar meeting.
 
 ### **Pages with AI Context**
 - 🏠 **Homepage** - Company overview and services
@@ -69,18 +69,22 @@ npm run dev
 - ⚛️ React 19
 - 🎨 Tailwind CSS 4
 - 🤖 CopilotKit for AI integration
-- 🔐 Google Gemini for AI responses
+- 🔐 ICDU for assistant responses, with Gemini available only as an explicit rollback
 
 ## 🔧 Environment Variables
 
 Create a `.env.local` file:
 
 ```env
-# Required: Google Gemini API Key
-GEMINI_API_KEY=your_gemini_api_key_here
+# Required for the website assistant. Server-only. Never use NEXT_PUBLIC_.
+ASSISTANT_PROVIDER=icdu
+ICDU_API_BASE_URL=https://icdu-api.uterpi.com/v1
+ICDU_MODEL=icdu
+ICDU_API_KEY=
 
-# Alternative (if not using GEMINI_API_KEY)
-GOOGLE_API_KEY=your_google_api_key_here
+# Explicit paid rollback only. Not selected automatically.
+# ASSISTANT_PROVIDER=gemini
+# GEMINI_API_KEY=
 
 # Required for API endpoints: API Key for external AI integrations
 # Generate with: openssl rand -hex 32
@@ -90,7 +94,7 @@ API_KEY=your_secure_api_key_here
 NEXT_PUBLIC_COPILOT_LICENSE_KEY=your_copilotkit_license_key
 ```
 
-**Get your Gemini API key:** https://aistudio.google.com/app/apikey
+Set `ICDU_API_KEY` in `.env.local` or the host secret store. Do not commit the value. See `.env.example` and `docs/assistant-setup.md`.
 
 **Generate API key for external integrations:**
 ```bash
@@ -120,7 +124,8 @@ npm run lint         # Run ESLint
    - Import project in Vercel Dashboard
 
 2. **Set Environment Variables**
-   - Add `GEMINI_API_KEY` in Vercel project settings
+   - Add `ICDU_API_KEY` in Vercel project settings
+   - Set `ASSISTANT_PROVIDER=icdu`, `ICDU_API_BASE_URL`, and `ICDU_MODEL`
    - Go to Settings → Environment Variables
 
 3. **Deploy**
@@ -131,8 +136,11 @@ npm run lint         # Run ESLint
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `GEMINI_API_KEY` | ✅ Yes | Google Gemini API key |
-| `GOOGLE_API_KEY` | Alternative | Alternative to GEMINI_API_KEY |
+| `ICDU_API_KEY` | ✅ Yes | Server-only ICDU gateway key |
+| `ASSISTANT_PROVIDER` | ✅ Yes | `icdu`, or `gemini` for an explicit rollback |
+| `ICDU_API_BASE_URL` | ✅ Yes | `https://icdu-api.uterpi.com/v1` |
+| `ICDU_MODEL` | ✅ Yes | `icdu` |
+| `GEMINI_API_KEY` | Rollback only | Used only when `ASSISTANT_PROVIDER=gemini` |
 | `API_KEY` | ✅ Yes (for API) | API key for external AI integrations (GPT Actions, Copilot Connectors) |
 
 ## 🧪 Testing
@@ -216,7 +224,7 @@ Built with **shadcn/ui** and **Tailwind CSS**:
 
 1. **Context Injection**: Each page uses `useCopilotReadable` to provide context
 2. **User Query**: User asks a question via the chatbot
-3. **AI Processing**: CopilotKit sends context + query to Google Gemini
+3. **AI Processing**: CopilotKit sends context and the query through `/api/copilotkit` to the ICDU Chat Completions endpoint
 4. **Intelligent Response**: AI responds with relevant, contextual information
 
 ### **Example Usage**
@@ -277,10 +285,10 @@ See `docs/API_REGISTRATION_GUIDE.md` for instructions on:
 
 ### **AI Not Responding**
 
-1. Check `GEMINI_API_KEY` is set
-2. Verify API key is valid at https://aistudio.google.com
+1. Check `ICDU_API_KEY` is set as a server secret and `ASSISTANT_PROVIDER=icdu`
+2. Confirm the browser calls `/api/copilotkit` and does not call the model host directly
 3. Check browser console for errors
-4. Review Vercel function logs
+4. Review Vercel function logs for provider, model, and error metadata. Logs must not contain the key or the conversation.
 
 ### **Build Errors**
 
@@ -293,10 +301,7 @@ npm run build
 
 ### **Environment Variable Issues**
 
-Ensure `.env.local` exists with required variables:
-```env
-GEMINI_API_KEY=AIza...
-```
+Ensure `.env.local` exists with the server settings from `.env.example`. Put the ICDU key there, and do not commit it.
 
 ## 🚀 Performance
 

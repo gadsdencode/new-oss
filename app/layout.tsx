@@ -10,6 +10,7 @@ import { ThemeProvider } from "next-themes";
 import { CopilotSidebarWrapper } from "./components/copilot-sidebar-wrapper";
 import { ThemeToggleWrapper } from "./components/theme-toggle-wrapper";
 import { GlobalAITools } from "@/components/global-ai-tools";
+import { SiteAssistantContext } from "@/components/site-assistant-context";
 import { StructuredData } from "@/components/structured-data";
 import { Analytics } from '@vercel/analytics/next';
 import { absoluteUrl, SITE_ORIGIN } from "@/lib/site";
@@ -90,6 +91,7 @@ export default function RootLayout({
           <CopilotKit runtimeUrl="/api/copilotkit">
             {/* Global AI Tools - Available on ALL pages */}
             <GlobalAITools />
+            <SiteAssistantContext />
             <ThemeToggleWrapper />
             {children}
             <Analytics />

@@ -1,107 +1,83 @@
-# Assistant setup and Gemini trial
+# Overture assistant setup
 
-This stage keeps CopilotKit 1.10.6, the local `/api/copilotkit` runtime, and existing website behavior. It prepares a controlled trial of `gemini-2.5-flash-lite` without changing cloud settings.
+The website assistant is the Overture Systems Solutions assistant. ICDU is the model provider. The public site is not icdu.ai, and the model endpoint does not search the icdu.ai knowledge database.
 
-## Server keys
+The browser only calls the same-origin route `POST /api/copilotkit`. The server owns the provider, model, base URL, and API key.
 
-Set one server-side key. Visitors never enter a key.
+## ICDU provider
 
-1. `GEMINI_API_KEY` (preferred)
-2. `GOOGLE_API_KEY` (used only when `GEMINI_API_KEY` is unset)
-
-Copy `.env.example` to `.env.local` for local/preview. Do not commit real values.
-
-## Model selection and rollback
-
-The app does not rewrite `GEMINI_MODEL` or deploy-environment settings.
-
-| Setting | Model | When to use |
-| --- | --- | --- |
-| Unset | `gemini-2.5-flash` | Production default and rollback |
-| `GEMINI_MODEL=gemini-2.5-flash-lite` | Trial candidate | Local/preview only for this stage |
-| `GEMINI_MODEL=gemini-2.5-flash` | Rollback | Explicit rollback if an override was set |
-
-Rollback procedure:
-
-1. Set `GEMINI_MODEL=gemini-2.5-flash`, or remove `GEMINI_MODEL` so the default applies.
-2. Restart the local process. Do not change Vercel/host model settings during this stage.
-3. Leave CopilotKit at 1.10.6 and keep `runtimeUrl="/api/copilotkit"`.
-
-An existing non-trial `GEMINI_MODEL` value is preserved. It is not silently replaced with Flash or Flash-Lite.
-
-## Limits
-
-Defaults, overridable with validated integers:
-
-- `ASSISTANT_MAX_INPUT_TOKENS=16000` — assembled input, including system instructions, page context, tool schemas, and history
-- `ASSISTANT_MAX_OUTPUT_TOKENS=1024` — provider-side generated tokens per model call
-- `ASSISTANT_GENERATION_TIMEOUT_MS=30000`
-- `ASSISTANT_ENABLED=true`
-
-There is no automatic model fallback and no extra retry loop. Each model call, including calls after tool execution, is counted in operational logs.
-
-## Checks
-
-Mocked:
+Required server settings:
 
 ```bash
-npx tsx --test lib/assistant/config.test.ts lib/assistant/provider-limits.test.ts lib/assistant/streaming-tools.test.ts lib/assistant/missing-key.test.ts lib/assistant/live-provider.test.ts lib/assistant/spend-controls.test.ts lib/assistant/copilot-request.test.ts lib/assistant/client-id.test.ts lib/assistant/pricing.test.ts lib/assistant/copilotkit-route.test.ts
+ASSISTANT_PROVIDER=icdu
+ICDU_API_BASE_URL=https://icdu-api.uterpi.com/v1
+ICDU_MODEL=icdu
+ICDU_API_KEY=<deployment secret>
 ```
 
-Real Gemini evidence is separate and opt-in. It is skipped unless `ASSISTANT_LIVE_CHECK=1` is set with a server key.
+`ICDU_API_KEY` is a server secret. Do not put it in `NEXT_PUBLIC_*`, browser code, logs, committed files, or this example. On Vercel, add it in Project Settings → Environment Variables for Production and Preview, then redeploy. Leave it unset in the repository.
 
-## Failure state
+The server calls OpenAI-compatible Chat Completions at `{ICDU_API_BASE_URL}/chat/completions` with Bearer authentication. It does not use the OpenAI Responses API. Embeddings, used only by the ingestion command and optional retrieval, call `{ICDU_API_BASE_URL}/embeddings` with model `icdu-embed-v1` and 768 dimensions.
 
-If the assistant cannot run, visitors see a contact-page message only. Configuration, provider errors, and keys are not included in that copy.
+If `ASSISTANT_PROVIDER` is omitted, the server still selects ICDU. A missing `ICDU_API_KEY` returns the public unavailable state. A configured `GEMINI_API_KEY` does not become a fallback.
 
-## Spend controls
+The shared gateway allows one active chat or embedding request, 2,048 output tokens, a 96 KiB request body, 100 messages, and 32 tools. Busy responses are HTTP 429 with `Retry-After`. The app does not retry those responses or replay a partial stream.
 
-`/api/copilotkit` generation requests are metered before each provider call, including retries and calls after tool results. Contact-form rate limiting is separate and is not reused: it fail-opens and trusts spoofable forwarding headers, which is not acceptable for paid model access.
+## Gemini rollback
 
-### What is enforced
+Set this only when you intend to pay for Gemini. It is not selected automatically.
 
-- CopilotKit 1.10.6 `generateCopilotResponse` bodies only. Metadata operations (`availableAgents`, `loadAgentState`, `hello`) do not spend budget. Unknown operations are rejected.
-- Request body, user-message, and tool-result size limits. Tool-result continuations remain valid traffic.
-- 10 generation requests/minute and 100/day per trusted client identifier (configurable).
-- Global modeled-charge budgets, initially **$1/UTC day** and **$10/UTC calendar month**, namespaced by `production`, `preview`, and `development`.
-- Conservative atomic reservation using bounded input tokens and `maxOutputTokens` before `ChatGoogleGenerativeAI.stream`. Concurrent requests cannot oversubscribe the remaining balance.
-- Unknown models or missing prices fail closed. They do not bypass enforcement.
-- If enforcement storage fails, new paid generations stop and visitors are directed to `/contact`.
-
-This is an **application budget for modeled Gemini API charges**. It is not a guaranteed cap on the full Google or Vercel invoice. Provider billing alerts are not spending caps.
-
-### Identifiers and storage
-
-On Vercel, client identifiers are derived from platform metadata (`x-vercel-forwarded-for`, `x-real-ip`, `x-vercel-ja4-digest`) and stored as a hash. Arbitrary `x-forwarded-for` values and client session IDs are not trusted as the only protection. Raw IPs are not written to usage records.
-
-Production and preview require the existing Neon `DATABASE_URL` family. In-memory storage is allowed only for local development (`NODE_ENV=development` and not on Vercel).
-
-### Operator procedure (do not run from the app)
-
-1. Review `database/assistant-spend-schema.sql`. Do not execute it from application code or against production from this checkout.
-2. In the Neon SQL editor for **preview**, apply the file. Confirm the functions `assistant_reserve_spend`, `assistant_reconcile_spend`, and `assistant_hit_rate_limit` exist.
-3. Repeat for **production** after preview looks correct. Vercel already uses Neon for contact/payments; no new service is required.
-4. Optional env overrides are listed in `.env.example`. Restart the process after changing them.
-5. Inspect usage in SQL when needed. There is no public usage or admin endpoint.
-
-```sql
-SELECT call_id, created_at, environment, namespace, model, pricing_version,
-       input_tokens, output_tokens, reasoning_tokens, usage_source,
-       estimated_cost_nanos, latency_ms, outcome
-FROM assistant_generation_usage
-ORDER BY created_at DESC
-LIMIT 100;
+```bash
+ASSISTANT_PROVIDER=gemini
+GEMINI_API_KEY=<deployment secret>
+# GEMINI_MODEL=gemini-2.5-flash
 ```
 
-Until the schema is applied, production and preview generation requests fail closed (contact fallback). That is intentional.
+`GOOGLE_API_KEY` is read only when `GEMINI_API_KEY` is unset and the provider is explicitly `gemini`. The allowlisted models are `gemini-2.5-flash` and `gemini-2.5-flash-lite`.
 
-### Pricing table
+## Knowledge
 
-Verified 2026-09-15 against https://ai.google.dev/gemini-api/docs/pricing (standard paid tier, text). Output price includes thinking tokens.
+Published page copy in this repository is the source for factual answers. Retrieval combines keyword matching with a 768-dimension vector search when the Neon index is available. If embeddings or the index are unavailable, keyword retrieval still runs and the model is told that limitation.
 
-| Model | Input | Output (includes thinking) |
-| --- | --- | --- |
-| `gemini-2.5-flash` | $0.30 / 1M | $2.50 / 1M |
-| `gemini-2.5-flash-lite` | $0.10 / 1M | $0.40 / 1M |
+Apply these files in the Neon SQL editor, in order, before relying on shared limits or vector search. Do not run them from application code.
 
-Version id: `google-ai-2026-09-15`.
+1. `database/assistant-spend-schema.sql` if the spend tables are not already present.
+2. `database/assistant-icdu-migration.sql` for the hourly visitor allowance and turn accounting.
+3. `database/overture-knowledge-schema.sql` after confirming `CREATE EXTENSION vector` is allowed on the Neon project.
+
+Then ingest from a trusted shell that already has `DATABASE_URL` and `ICDU_API_KEY`. The command prints counts, not content or secrets. Re-running it re-embeds changed chunks and marks removed pages unpublished.
+
+```bash
+npm run knowledge:ingest
+```
+
+## Local development
+
+```bash
+cp .env.example .env.local
+```
+
+Put `ICDU_API_KEY` in `.env.local`, which is gitignored. Start the app with `npm run dev` and open the assistant from the header. Without the key, the sidebar shows the public unavailable message.
+
+## Visitor limits
+
+ICDU is recorded as a self-hosted model with no external per-token provider charge. That is not a statement that infrastructure or hosting is cost-free. Abuse protection still applies:
+
+- 10 visitor messages per minute and 100 per day.
+- 25 visitor messages per hour, with the remaining allowance and reset time in the response.
+- A visitor message counts once for retries and tool continuations of the same turn.
+- At most 4 model calls and 6 tool events in that turn. The last allowed model call must answer in prose.
+- Production and Vercel preview fail closed when the shared Neon store is unavailable.
+
+Gemini dollar budgets remain in force only when `ASSISTANT_PROVIDER=gemini`.
+
+## Verification
+
+```bash
+npm test
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+`ASSISTANT_LIVE_CHECK=1` runs one short Gemini request and requires `ASSISTANT_PROVIDER=gemini`. It is not part of `npm test`. A live ICDU browser conversation requires `ICDU_API_KEY` in the server environment and is not claimed by the mocked tests.

@@ -19,6 +19,7 @@ import {
 
 function env(overrides: AssistantEnv = {}): AssistantEnv {
   return {
+    ASSISTANT_PROVIDER: "gemini",
     GEMINI_API_KEY: "test-gemini-key",
     ...overrides,
   };
@@ -69,8 +70,9 @@ describe("assistant configuration validation", () => {
     assert.deepEqual(resolved, { apiKey: "gemini-first", source: "GEMINI_API_KEY" });
   });
 
-  it("falls back to GOOGLE_API_KEY when GEMINI_API_KEY is absent", () => {
+  it("falls back to GOOGLE_API_KEY when GEMINI_API_KEY is absent on the Gemini rollback", () => {
     const loaded = loadAssistantConfig({
+      ASSISTANT_PROVIDER: "gemini",
       GOOGLE_API_KEY: "google-only",
     });
     assert.equal(loaded.ok, true);

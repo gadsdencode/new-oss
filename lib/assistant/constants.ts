@@ -35,6 +35,7 @@ export const VISITOR_BUSY_MESSAGE =
   "The assistant is busy right now. Please try again in a moment, or visit the contact page to reach our team.";
 
 export const ASSISTANT_DEFAULT_REQUESTS_PER_MINUTE = 10;
+export const ASSISTANT_DEFAULT_REQUESTS_PER_HOUR = 25;
 export const ASSISTANT_DEFAULT_REQUESTS_PER_DAY = 100;
 export const ASSISTANT_DEFAULT_DAILY_BUDGET_USD = 1;
 export const ASSISTANT_DEFAULT_MONTHLY_BUDGET_USD = 10;
@@ -42,3 +43,56 @@ export const ASSISTANT_DEFAULT_MAX_BODY_BYTES = 262_144;
 export const ASSISTANT_DEFAULT_MAX_USER_MESSAGE_CHARS = 4_000;
 export const ASSISTANT_DEFAULT_MAX_TOOL_RESULT_CHARS = 8_000;
 export const ASSISTANT_DEFAULT_MAX_MODEL_CALLS_PER_REQUEST = 4;
+export const ASSISTANT_DEFAULT_MAX_TOOL_EVENTS_PER_TURN = 6;
+
+/** ICDU is the assistant model provider. Gemini is an explicit rollback only. */
+export const ASSISTANT_DEFAULT_PROVIDER = "icdu" as const;
+export const ICDU_DEFAULT_BASE_URL = "https://icdu-api.uterpi.com/v1";
+export const ICDU_DEFAULT_MODEL = "icdu";
+export const ICDU_EMBED_MODEL = "icdu-embed-v1";
+export const ICDU_EMBED_DIMENSIONS = 768;
+export const ICDU_MAX_OUTPUT_TOKENS = 2_048;
+export const ICDU_MAX_UPSTREAM_BODY_BYTES = 96 * 1024;
+export const ICDU_MAX_MESSAGES = 100;
+export const ICDU_MAX_TOOLS = 32;
+export const ICDU_EMBED_MAX_STRINGS = 16;
+export const ICDU_EMBED_MAX_CHARS = 3_000;
+export const ICDU_EMBED_MAX_COMBINED_CHARS = 24_000;
+
+export const VISITOR_TURN_LIMIT_MESSAGE =
+  "This conversation has used its model-call allowance. Please send a new question later, or visit the contact page to reach our team.";
+
+export function visitorGatewayBusyMessage(retryAfterSeconds: number): string {
+  const seconds = Math.max(1, Math.ceil(retryAfterSeconds));
+  return `The assistant is busy right now. Please try again in ${seconds} seconds, or visit the contact page to reach our team.`;
+}
+
+export function visitorHourlyLimitMessage(limit: number, remaining: number, resetAtIso: string): string {
+  const left = Math.max(0, Math.floor(remaining));
+  return `You can send ${limit} messages per hour. ${left} remaining. The allowance resets at ${resetAtIso}. Please try again then, or visit the contact page.`;
+}
+
+export function approvedVisitorMessage(message: string | undefined): string {
+  if (!message) {
+    return VISITOR_UNAVAILABLE_MESSAGE;
+  }
+  if (message === VISITOR_UNAVAILABLE_MESSAGE || message === VISITOR_BUSY_MESSAGE || message === VISITOR_TURN_LIMIT_MESSAGE) {
+    return message;
+  }
+  if (
+    message.startsWith("The assistant is busy right now. Please try again in ")
+    && message.endsWith("or visit the contact page to reach our team.")
+    && !/api[_ -]?key|bearer|password|authorization/i.test(message)
+  ) {
+    return message;
+  }
+  if (
+    message.startsWith("You can send ")
+    && message.includes(" remaining. The allowance resets at ")
+    && message.endsWith("Please try again then, or visit the contact page.")
+    && !/api[_ -]?key|bearer|password|authorization/i.test(message)
+  ) {
+    return message;
+  }
+  return VISITOR_UNAVAILABLE_MESSAGE;
+}

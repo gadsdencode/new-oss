@@ -18,6 +18,24 @@ export interface SpendReservation {
   reused: boolean;
   dayStart?: string;
   monthStart?: string;
+  answerOnly?: boolean;
+}
+
+export interface VisitorAdmission {
+  ok: boolean;
+  alreadySeen: boolean;
+  blockedWindow?: "minute" | "hour" | "day";
+  retryAfterSeconds: number;
+  hourCount: number;
+  hourLimit: number;
+}
+
+export interface TurnModelCallResult {
+  ok: boolean;
+  callNumber: number;
+  answerOnly: boolean;
+  toolEvents: number;
+  reason?: "model_call_limit" | "store_error";
 }
 
 export interface UsageRecord {
@@ -46,10 +64,23 @@ export interface RateLimitHit {
 export interface SpendStore {
   hitRateLimit(input: {
     clientHash: string;
-    windowType: "minute" | "day";
+    windowType: "minute" | "hour" | "day";
     windowStart: Date;
     limit: number;
   }): Promise<RateLimitHit>;
+  admitVisitorMessage(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<VisitorAdmission>;
+  consumeTurnModelCall(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+    maxModelCalls: number;
+    toolEventsSeen: number;
+    maxToolEvents: number;
+  }): Promise<TurnModelCallResult>;
   reserve(input: {
     requestId: string;
     callIndex: number;
@@ -70,6 +101,15 @@ export function utcDayStart(now: Date): Date {
 
 export function utcMonthStart(now: Date): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+}
+
+export function utcHourStart(now: Date): Date {
+  return new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+    now.getUTCHours()
+  ));
 }
 
 export function utcMinuteStart(now: Date): Date {
@@ -98,6 +138,7 @@ export class MemorySpendStore implements SpendStore {
   private readonly reservations = new Map<string, SpendReservation>();
   private readonly reservationByCall = new Map<string, string>();
   private readonly windows = new Map<string, number>();
+  private readonly visitorTurns = new Map<string, { modelCalls: number; toolEvents: number }>();
   readonly usage: UsageRecord[] = [];
 
   constructor(private readonly config: AssistantSpendConfig) {}
@@ -116,21 +157,144 @@ export class MemorySpendStore implements SpendStore {
 
   hitRateLimit(input: {
     clientHash: string;
-    windowType: "minute" | "day";
+    windowType: "minute" | "hour" | "day";
     windowStart: Date;
     limit: number;
   }): Promise<RateLimitHit> {
+    return this.mutex.run(() => this.applyWindow(input));
+  }
+
+  private applyWindow(input: {
+    clientHash: string;
+    windowType: "minute" | "hour" | "day";
+    windowStart: Date;
+    limit: number;
+  }): RateLimitHit {
+    const key = `${input.clientHash}:${this.config.namespace}:${input.windowType}:${input.windowStart.toISOString()}`;
+    const count = this.windows.get(key) ?? 0;
+    const retryAfterSeconds = input.windowType === "minute" ? 60 : input.windowType === "hour" ? 3_600 : 86_400;
+    if (count >= input.limit) {
+      return { allowed: false, retryAfterSeconds };
+    }
+    this.windows.set(key, count + 1);
+    return { allowed: true, retryAfterSeconds: 0 };
+  }
+
+  private turnStorageKey(clientHash: string, turnKey: string, hourStart: Date): string {
+    return `${this.config.namespace}:${clientHash}:${turnKey}:${hourStart.toISOString()}`;
+  }
+
+  admitVisitorMessage(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<VisitorAdmission> {
     return this.mutex.run(() => {
-      const key = `${input.clientHash}:${this.config.namespace}:${input.windowType}:${input.windowStart.toISOString()}`;
-      const count = this.windows.get(key) ?? 0;
-      if (count >= input.limit) {
+      const hourStart = utcHourStart(input.now);
+      const storageKey = this.turnStorageKey(input.clientHash, input.turnKey, hourStart);
+      const hourLimit = this.config.requestsPerHour;
+      if (this.visitorTurns.has(storageKey)) {
         return {
-          allowed: false,
-          retryAfterSeconds: input.windowType === "minute" ? 60 : 86_400,
+          ok: true,
+          alreadySeen: true,
+          retryAfterSeconds: 0,
+          hourCount: 0,
+          hourLimit,
         };
       }
-      this.windows.set(key, count + 1);
-      return { allowed: true, retryAfterSeconds: 0 };
+
+      const minute = this.applyWindow({
+        clientHash: input.clientHash,
+        windowType: "minute",
+        windowStart: utcMinuteStart(input.now),
+        limit: this.config.requestsPerMinute,
+      });
+      if (!minute.allowed) {
+        return {
+          ok: false,
+          alreadySeen: false,
+          blockedWindow: "minute",
+          retryAfterSeconds: minute.retryAfterSeconds,
+          hourCount: 0,
+          hourLimit,
+        };
+      }
+
+      const hour = this.applyWindow({
+        clientHash: input.clientHash,
+        windowType: "hour",
+        windowStart: hourStart,
+        limit: hourLimit,
+      });
+      if (!hour.allowed) {
+        return {
+          ok: false,
+          alreadySeen: false,
+          blockedWindow: "hour",
+          retryAfterSeconds: hour.retryAfterSeconds,
+          hourCount: hourLimit,
+          hourLimit,
+        };
+      }
+
+      const day = this.applyWindow({
+        clientHash: input.clientHash,
+        windowType: "day",
+        windowStart: utcDayStart(input.now),
+        limit: this.config.requestsPerDay,
+      });
+      if (!day.allowed) {
+        return {
+          ok: false,
+          alreadySeen: false,
+          blockedWindow: "day",
+          retryAfterSeconds: day.retryAfterSeconds,
+          hourCount: 0,
+          hourLimit,
+        };
+      }
+
+      this.visitorTurns.set(storageKey, { modelCalls: 0, toolEvents: 0 });
+      const hourKey = `${input.clientHash}:${this.config.namespace}:hour:${hourStart.toISOString()}`;
+      return {
+        ok: true,
+        alreadySeen: false,
+        retryAfterSeconds: 0,
+        hourCount: this.windows.get(hourKey) ?? 1,
+        hourLimit,
+      };
+    });
+  }
+
+  consumeTurnModelCall(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+    maxModelCalls: number;
+    toolEventsSeen: number;
+    maxToolEvents: number;
+  }): Promise<TurnModelCallResult> {
+    return this.mutex.run(() => {
+      const storageKey = this.turnStorageKey(input.clientHash, input.turnKey, utcHourStart(input.now));
+      const current = this.visitorTurns.get(storageKey) ?? { modelCalls: 0, toolEvents: 0 };
+      if (current.modelCalls >= input.maxModelCalls) {
+        return {
+          ok: false,
+          callNumber: current.modelCalls,
+          answerOnly: true,
+          toolEvents: current.toolEvents,
+          reason: "model_call_limit" as const,
+        };
+      }
+      current.modelCalls += 1;
+      current.toolEvents = Math.max(current.toolEvents, input.toolEventsSeen);
+      this.visitorTurns.set(storageKey, current);
+      return {
+        ok: true,
+        callNumber: current.modelCalls,
+        answerOnly: current.modelCalls >= input.maxModelCalls || current.toolEvents >= input.maxToolEvents,
+        toolEvents: current.toolEvents,
+      };
     });
   }
 
@@ -273,7 +437,7 @@ export class NeonSpendStore implements SpendStore {
 
   async hitRateLimit(input: {
     clientHash: string;
-    windowType: "minute" | "day";
+    windowType: "minute" | "hour" | "day";
     windowStart: Date;
     limit: number;
   }): Promise<RateLimitHit> {
@@ -286,6 +450,89 @@ export class NeonSpendStore implements SpendStore {
       throw new Error("rate_limit_query_failed");
     }
     return { allowed: row.allowed, retryAfterSeconds: row.retry_after_seconds };
+  }
+
+  async admitVisitorMessage(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+  }): Promise<VisitorAdmission> {
+    const hourStart = utcHourStart(input.now);
+    const rows = await this.query<{
+      ok: boolean;
+      already_seen: boolean;
+      blocked_window: "minute" | "hour" | "day" | null;
+      retry_after_seconds: number;
+      hour_count: number;
+      hour_limit: number;
+    }>(
+      "SELECT ok, already_seen, blocked_window, retry_after_seconds, hour_count, hour_limit FROM assistant_admit_visitor_message($1,$2,$3,$4,$5,$6,$7,$8,$9)",
+      [
+        input.clientHash,
+        this.config.namespace,
+        input.turnKey,
+        hourStart.toISOString(),
+        utcMinuteStart(input.now).toISOString(),
+        utcDayStart(input.now).toISOString(),
+        this.config.requestsPerMinute,
+        this.config.requestsPerHour,
+        this.config.requestsPerDay,
+      ]
+    );
+    const row = rows[0];
+    if (!row) {
+      throw new Error("visitor_admit_failed");
+    }
+    return {
+      ok: row.ok,
+      alreadySeen: row.already_seen,
+      blockedWindow: row.blocked_window ?? undefined,
+      retryAfterSeconds: row.retry_after_seconds,
+      hourCount: row.hour_count,
+      hourLimit: row.hour_limit,
+    };
+  }
+
+  async consumeTurnModelCall(input: {
+    clientHash: string;
+    turnKey: string;
+    now: Date;
+    maxModelCalls: number;
+    toolEventsSeen: number;
+    maxToolEvents: number;
+  }): Promise<TurnModelCallResult> {
+    try {
+      const rows = await this.query<{
+        ok: boolean;
+        call_number: number;
+        answer_only: boolean;
+        tool_events: number;
+      }>(
+        "SELECT ok, call_number, answer_only, tool_events FROM assistant_consume_turn_model_call($1,$2,$3,$4,$5,$6,$7)",
+        [
+          input.clientHash,
+          this.config.namespace,
+          input.turnKey,
+          utcHourStart(input.now).toISOString(),
+          input.maxModelCalls,
+          input.toolEventsSeen,
+          input.maxToolEvents,
+        ]
+      );
+      const row = rows[0];
+      if (!row) {
+        return { ok: false, callNumber: 0, answerOnly: true, toolEvents: 0, reason: "store_error" };
+      }
+      return {
+        ok: row.ok,
+        callNumber: row.call_number,
+        answerOnly: row.answer_only,
+        toolEvents: row.tool_events,
+        reason: row.ok ? undefined : "model_call_limit",
+      };
+    } catch {
+      return { ok: false, callNumber: 0, answerOnly: true, toolEvents: 0, reason: "store_error" };
+    }
   }
 
   async reserve(input: {

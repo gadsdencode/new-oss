@@ -29,7 +29,12 @@ const ENV_KEYS = [
   "VERCEL",
   "VERCEL_ENV",
   "ASSISTANT_SPEND_STORE",
+  "ASSISTANT_PROVIDER",
+  "ICDU_API_KEY",
+  "ICDU_MODEL",
+  "ICDU_API_BASE_URL",
   "ASSISTANT_REQUESTS_PER_MINUTE",
+  "ASSISTANT_REQUESTS_PER_HOUR",
   "ASSISTANT_REQUESTS_PER_DAY",
 ] as const;
 
@@ -102,6 +107,8 @@ describe("copilotkit route spend gates", { concurrency: false }, () => {
       ...clearedDb,
       GEMINI_API_KEY: "test-key",
       GEMINI_MODEL: "gemini-2.5-flash",
+      ASSISTANT_PROVIDER: "gemini",
+      ICDU_API_KEY: undefined,
       VERCEL: "1",
       VERCEL_ENV: "production",
       ASSISTANT_SPEND_STORE: undefined,
@@ -131,6 +138,8 @@ describe("copilotkit route spend gates", { concurrency: false }, () => {
     setEnv({
       GEMINI_API_KEY: "test-key",
       GEMINI_MODEL: "gemini-1.5-pro",
+      ASSISTANT_PROVIDER: "gemini",
+      ICDU_API_KEY: undefined,
       VERCEL: "1",
       VERCEL_ENV: "production",
       DATABASE_URL: "postgres://example/db",
@@ -150,6 +159,8 @@ describe("copilotkit route spend gates", { concurrency: false }, () => {
     setEnv({
       GEMINI_API_KEY: "test-key",
       GEMINI_MODEL: "gemini-2.5-flash",
+      ASSISTANT_PROVIDER: "gemini",
+      ICDU_API_KEY: undefined,
       VERCEL: undefined,
       VERCEL_ENV: undefined,
       ASSISTANT_SPEND_STORE: "memory",
@@ -195,6 +206,8 @@ describe("copilotkit route spend gates", { concurrency: false }, () => {
     setEnv({
       GEMINI_API_KEY: "test-key",
       GEMINI_MODEL: "gemini-2.5-flash",
+      ASSISTANT_PROVIDER: "gemini",
+      ICDU_API_KEY: undefined,
       VERCEL: undefined,
       ASSISTANT_SPEND_STORE: "memory",
     });

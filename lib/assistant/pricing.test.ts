@@ -16,6 +16,13 @@ describe("assistant pricing and usage accounting", () => {
     assert.equal(lite.inputNanosPerToken, BigInt(100));
     assert.equal(lite.outputNanosPerToken, BigInt(400));
     assert.equal(getModelPrices("gemini-1.5-pro"), null);
+    const icdu = getModelPrices("icdu");
+    assert.ok(icdu);
+    assert.equal(icdu.externalCharge, false);
+    assert.equal(icdu.inputNanosPerToken, BigInt(0));
+    assert.equal(icdu.outputNanosPerToken, BigInt(0));
+    assert.equal(conservativeCallChargeNanos(icdu, 1_000, 2_048, 0), BigInt(0));
+    assert.match(icdu.notes, /not a statement that infrastructure or hosting is cost-free/i);
   });
 
   it("charges thinking tokens as billable output when reported separately", () => {

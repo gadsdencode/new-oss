@@ -59,9 +59,13 @@ After setup, test the form submission by:
 2. Submitting the form
 3. Verifying the submission appears in your Neon database
 
-## Assistant spend schema
+## Assistant spend and knowledge
 
-Modeled Gemini API charges for `/api/copilotkit` use `assistant-spend-schema.sql`. Apply it manually in the Neon SQL editor after review. Do not run it from the application, and do not treat it as a Google or Vercel invoice cap.
+`/api/copilotkit` uses the existing Neon database for shared visitor limits. Apply these files manually in the Neon SQL editor, in order. Do not run them from the application.
 
-Operator steps and query examples: `docs/assistant-setup.md`.
+1. `assistant-spend-schema.sql` — shared rate and budget tables. Dollar budgets apply to the explicit Gemini rollback. They are not a hosting invoice cap.
+2. `assistant-icdu-migration.sql` — hourly visitor allowance and per-turn model-call accounting. Non-destructive.
+3. `overture-knowledge-schema.sql` — namespaced Overture knowledge collection with a 768-dimension vector. Requires `pgvector` (`CREATE EXTENSION vector`).
+
+After the knowledge schema is applied, run `npm run knowledge:ingest` from a shell that already has `DATABASE_URL` and `ICDU_API_KEY`. Operator steps: `docs/assistant-setup.md`.
 

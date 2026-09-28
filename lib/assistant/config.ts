@@ -2,6 +2,7 @@ import {
   ASSISTANT_DEFAULT_MAX_INPUT_TOKENS,
   ASSISTANT_DEFAULT_MAX_OUTPUT_TOKENS,
   ASSISTANT_DEFAULT_MODEL,
+  ASSISTANT_DEFAULT_PROVIDER,
   ASSISTANT_DEFAULT_TIMEOUT_MS,
   ASSISTANT_KNOWN_TRIAL_MODELS,
   ASSISTANT_MAX_INPUT_TOKENS_CEILING,
@@ -9,16 +10,22 @@ import {
   ASSISTANT_ROLLBACK_MODEL,
   ASSISTANT_TIMEOUT_MS_CEILING,
   ASSISTANT_TRIAL_CANDIDATE_MODEL,
+  ICDU_DEFAULT_BASE_URL,
+  ICDU_DEFAULT_MODEL,
+  ICDU_MAX_OUTPUT_TOKENS,
   type AssistantKnownTrialModel,
 } from "./constants";
 
-export type AssistantApiKeySource = "GEMINI_API_KEY" | "GOOGLE_API_KEY";
+export type AssistantProviderName = "icdu" | "gemini";
+export type AssistantApiKeySource = "ICDU_API_KEY" | "GEMINI_API_KEY" | "GOOGLE_API_KEY";
 export type AssistantModelSource = "default" | "override";
 
 export interface AssistantConfig {
   enabled: true;
+  provider: AssistantProviderName;
   apiKey: string;
   apiKeySource: AssistantApiKeySource;
+  baseUrl?: string;
   model: string;
   modelSource: AssistantModelSource;
   isTrialCandidate: boolean;
@@ -59,9 +66,44 @@ function readTrimmed(value: string | undefined): string | undefined {
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
+export function resolveAssistantProvider(env: AssistantEnv = process.env): {
+  provider: AssistantProviderName;
+  issue?: string;
+} {
+  const trimmed = readTrimmed(env.ASSISTANT_PROVIDER)?.toLowerCase();
+  if (!trimmed) {
+    return { provider: ASSISTANT_DEFAULT_PROVIDER };
+  }
+  if (trimmed === "icdu" || trimmed === "gemini") {
+    return { provider: trimmed };
+  }
+  return { provider: ASSISTANT_DEFAULT_PROVIDER, issue: "ASSISTANT_PROVIDER must be icdu or gemini" };
+}
+
 /**
- * Current precedence: GEMINI_API_KEY, then GOOGLE_API_KEY.
- * Visitors never supply a key.
+ * ICDU credentials are never replaced with a Gemini key.
+ */
+export function resolveIcdUApiKey(env: AssistantEnv = process.env): string | null {
+  return readTrimmed(env.ICDU_API_KEY) ?? null;
+}
+
+export function resolveIcdUBaseUrl(raw: string | undefined): { baseUrl: string; issue?: string } {
+  const trimmed = readTrimmed(raw) ?? ICDU_DEFAULT_BASE_URL;
+  let url: URL;
+  try {
+    url = new URL(trimmed);
+  } catch {
+    return { baseUrl: ICDU_DEFAULT_BASE_URL, issue: "ICDU_API_BASE_URL must be an https URL" };
+  }
+  if (url.protocol !== "https:" || url.username || url.password) {
+    return { baseUrl: ICDU_DEFAULT_BASE_URL, issue: "ICDU_API_BASE_URL must be an https URL without credentials" };
+  }
+  return { baseUrl: trimmed.replace(/\/$/, "") };
+}
+
+/**
+ * Current Gemini precedence: GEMINI_API_KEY, then GOOGLE_API_KEY.
+ * Visitors never supply a key. This is used only when ASSISTANT_PROVIDER=gemini.
  */
 export function resolveAssistantApiKey(env: AssistantEnv = process.env): {
   apiKey: string;
@@ -128,21 +170,24 @@ export function parsePositiveInt(
   return { value: parsed };
 }
 
-export function resolveAssistantModel(raw: string | undefined): {
+export function resolveAssistantModel(
+  raw: string | undefined,
+  options: { envName: string; fallback: string } = { envName: "GEMINI_MODEL", fallback: ASSISTANT_DEFAULT_MODEL }
+): {
   model: string;
   source: AssistantModelSource;
   issue?: string;
 } {
   const trimmed = readTrimmed(raw);
   if (!trimmed) {
-    return { model: ASSISTANT_DEFAULT_MODEL, source: "default" };
+    return { model: options.fallback, source: "default" };
   }
 
   if (!MODEL_NAME_PATTERN.test(trimmed)) {
     return {
-      model: ASSISTANT_DEFAULT_MODEL,
+      model: options.fallback,
       source: "override",
-      issue: "GEMINI_MODEL contains unsupported characters",
+      issue: `${options.envName} contains unsupported characters`,
     };
   }
 
@@ -154,9 +199,9 @@ export function isKnownTrialModel(model: string): model is AssistantKnownTrialMo
 }
 
 /**
- * Load and validate assistant settings from the provided env (defaults to process.env).
- * Invalid overrides fail closed instead of silently substituting production defaults,
- * except that an unset GEMINI_MODEL keeps gemini-2.5-flash.
+ * Load and validate assistant settings.
+ * Unset ASSISTANT_PROVIDER selects ICDU and does not fall back to Gemini.
+ * ASSISTANT_PROVIDER=gemini is the explicit paid rollback.
  */
 export function loadAssistantConfig(env: AssistantEnv = process.env): AssistantConfigResult {
   const issues: string[] = [];
@@ -165,9 +210,21 @@ export function loadAssistantConfig(env: AssistantEnv = process.env): AssistantC
     issues.push(enabledResult.invalid);
   }
 
-  const modelResult = resolveAssistantModel(env.GEMINI_MODEL);
+  const providerResult = resolveAssistantProvider(env);
+  if (providerResult.issue) {
+    issues.push(providerResult.issue);
+  }
+
+  const modelResult = providerResult.provider === "icdu"
+    ? resolveAssistantModel(env.ICDU_MODEL, { envName: "ICDU_MODEL", fallback: ICDU_DEFAULT_MODEL })
+    : resolveAssistantModel(env.GEMINI_MODEL);
   if (modelResult.issue) {
     issues.push(modelResult.issue);
+  }
+
+  const baseUrl = providerResult.provider === "icdu" ? resolveIcdUBaseUrl(env.ICDU_API_BASE_URL) : undefined;
+  if (baseUrl?.issue) {
+    issues.push(baseUrl.issue);
   }
 
   const maxInput = parsePositiveInt(env.ASSISTANT_MAX_INPUT_TOKENS, ASSISTANT_DEFAULT_MAX_INPUT_TOKENS, {
@@ -188,6 +245,9 @@ export function loadAssistantConfig(env: AssistantEnv = process.env): AssistantC
   );
   if (maxOutput.issue) {
     issues.push(maxOutput.issue);
+  }
+  if (providerResult.provider === "icdu" && maxOutput.value > ICDU_MAX_OUTPUT_TOKENS) {
+    issues.push(`ASSISTANT_MAX_OUTPUT_TOKENS must be at most ${ICDU_MAX_OUTPUT_TOKENS} for the ICDU gateway`);
   }
 
   const timeout = parsePositiveInt(
@@ -211,6 +271,35 @@ export function loadAssistantConfig(env: AssistantEnv = process.env): AssistantC
     return { ok: false, code: "disabled", issues: ["Assistant is disabled"] };
   }
 
+  if (providerResult.provider === "icdu") {
+    const apiKey = resolveIcdUApiKey(env);
+    if (!apiKey) {
+      return {
+        ok: false,
+        code: "missing_key",
+        issues: ["ICDU_API_KEY is not configured. The assistant does not fall back to Gemini."],
+      };
+    }
+    return {
+      ok: true,
+      config: {
+        enabled: true,
+        provider: "icdu",
+        apiKey,
+        apiKeySource: "ICDU_API_KEY",
+        baseUrl: baseUrl?.baseUrl ?? ICDU_DEFAULT_BASE_URL,
+        model: modelResult.model,
+        modelSource: modelResult.source,
+        isTrialCandidate: false,
+        isRollbackModel: false,
+        isKnownTrialModel: isKnownTrialModel(modelResult.model),
+        maxInputTokens: maxInput.value,
+        maxOutputTokens: maxOutput.value,
+        timeoutMs: timeout.value,
+      },
+    };
+  }
+
   const apiKey = resolveAssistantApiKey(env);
   if (!apiKey) {
     return { ok: false, code: "missing_key", issues: ["No server API key is configured"] };
@@ -220,6 +309,7 @@ export function loadAssistantConfig(env: AssistantEnv = process.env): AssistantC
     ok: true,
     config: {
       enabled: true,
+      provider: "gemini",
       apiKey: apiKey.apiKey,
       apiKeySource: apiKey.source,
       model: modelResult.model,
@@ -236,6 +326,7 @@ export function loadAssistantConfig(env: AssistantEnv = process.env): AssistantC
 
 export function publicAssistantConfigSummary(config: AssistantConfig): Record<string, unknown> {
   return {
+    provider: config.provider,
     model: config.model,
     modelSource: config.modelSource,
     isTrialCandidate: config.isTrialCandidate,

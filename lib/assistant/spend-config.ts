@@ -6,7 +6,9 @@ import {
   ASSISTANT_DEFAULT_MAX_USER_MESSAGE_CHARS,
   ASSISTANT_DEFAULT_MONTHLY_BUDGET_USD,
   ASSISTANT_DEFAULT_REQUESTS_PER_DAY,
+  ASSISTANT_DEFAULT_REQUESTS_PER_HOUR,
   ASSISTANT_DEFAULT_REQUESTS_PER_MINUTE,
+  ASSISTANT_DEFAULT_MAX_TOOL_EVENTS_PER_TURN,
 } from "./constants";
 import { parsePositiveInt, type AssistantEnv } from "./config";
 import { parseUsdToNanos, type NanoDollars } from "./money";
@@ -19,6 +21,7 @@ export interface AssistantSpendConfig {
   namespace: SpendNamespace;
   storeKind: SpendStoreKind;
   requestsPerMinute: number;
+  requestsPerHour: number;
   requestsPerDay: number;
   dailyBudgetNanos: NanoDollars;
   monthlyBudgetNanos: NanoDollars;
@@ -26,6 +29,7 @@ export interface AssistantSpendConfig {
   maxUserMessageChars: number;
   maxToolResultChars: number;
   maxModelCallsPerRequest: number;
+  maxToolEventsPerTurn: number;
 }
 
 export type SpendConfigResult =
@@ -70,6 +74,10 @@ export function loadAssistantSpendConfig(env: AssistantEnv = process.env): Spend
     max: 1_000,
     name: "ASSISTANT_REQUESTS_PER_MINUTE",
   });
+  const perHour = parsePositiveInt(env.ASSISTANT_REQUESTS_PER_HOUR, ASSISTANT_DEFAULT_REQUESTS_PER_HOUR, {
+    max: 10_000,
+    name: "ASSISTANT_REQUESTS_PER_HOUR",
+  });
   const perDay = parsePositiveInt(env.ASSISTANT_REQUESTS_PER_DAY, ASSISTANT_DEFAULT_REQUESTS_PER_DAY, {
     max: 100_000,
     name: "ASSISTANT_REQUESTS_PER_DAY",
@@ -98,10 +106,19 @@ export function loadAssistantSpendConfig(env: AssistantEnv = process.env): Spend
       name: "ASSISTANT_MAX_MODEL_CALLS_PER_REQUEST",
     }
   );
+  const maxToolEvents = parsePositiveInt(
+    env.ASSISTANT_MAX_TOOL_EVENTS_PER_TURN,
+    ASSISTANT_DEFAULT_MAX_TOOL_EVENTS_PER_TURN,
+    {
+      min: 1,
+      max: 32,
+      name: "ASSISTANT_MAX_TOOL_EVENTS_PER_TURN",
+    }
+  );
   const daily = parseUsdToNanos(env.ASSISTANT_DAILY_BUDGET_USD, ASSISTANT_DEFAULT_DAILY_BUDGET_USD);
   const monthly = parseUsdToNanos(env.ASSISTANT_MONTHLY_BUDGET_USD, ASSISTANT_DEFAULT_MONTHLY_BUDGET_USD);
 
-  for (const parsed of [perMinute, perDay, maxBody, maxUser, maxTool, maxCalls]) {
+  for (const parsed of [perMinute, perHour, perDay, maxBody, maxUser, maxTool, maxCalls, maxToolEvents]) {
     if (parsed.issue) {
       issues.push(parsed.issue);
     }
@@ -122,6 +139,7 @@ export function loadAssistantSpendConfig(env: AssistantEnv = process.env): Spend
       namespace: resolveSpendNamespace(env),
       storeKind,
       requestsPerMinute: perMinute.value,
+      requestsPerHour: perHour.value,
       requestsPerDay: perDay.value,
       dailyBudgetNanos: daily.value,
       monthlyBudgetNanos: monthly.value,
@@ -129,6 +147,7 @@ export function loadAssistantSpendConfig(env: AssistantEnv = process.env): Spend
       maxUserMessageChars: maxUser.value,
       maxToolResultChars: maxTool.value,
       maxModelCallsPerRequest: maxCalls.value,
+      maxToolEventsPerTurn: maxToolEvents.value,
     },
   };
 }

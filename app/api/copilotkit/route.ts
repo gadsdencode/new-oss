@@ -14,6 +14,7 @@ import { logAssistantError, logAssistantEvent } from "@/lib/assistant/logging";
 import { loadAssistantSpendConfig } from "@/lib/assistant/spend-config";
 import { parseCopilotKitRequest, findExcessUserMessage } from "@/lib/assistant/copilot-request";
 import { deriveClientHash } from "@/lib/assistant/client-id";
+import { visitorTurnKey } from "@/lib/assistant/visitor-turn";
 import { createSpendStore } from "@/lib/assistant/spend-store";
 import { createSpendGuard } from "@/lib/assistant/spend-controls";
 import { getModelPrices } from "@/lib/assistant/pricing";
@@ -121,10 +122,11 @@ export const POST = async (req: NextRequest) => {
     spend: spendLoaded.config,
     assistant: config,
     clientHash: client.hash,
+    turnKey: visitorTurnKey(parsed.messages),
   });
 
   try {
-    await spend.checkRateLimit();
+    await spend.admitVisitorMessage(visitorTurnKey(parsed.messages));
   } catch (error) {
     if (error instanceof AssistantSpendError) {
       return responseFromSpendError(error);
@@ -161,7 +163,7 @@ export const POST = async (req: NextRequest) => {
         source: "copilotkit-route",
         endpoint: "/api/copilotkit",
         method: "POST",
-        adapterName: "AssistantGeminiAdapter",
+        adapterName: config.provider === "icdu" ? "AssistantIcdUAdapter" : "AssistantGeminiAdapter",
         model: config.model,
         environment: process.env.NODE_ENV || process.env.VERCEL_ENV || "unknown",
       });

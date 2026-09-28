@@ -138,7 +138,7 @@ describe("streaming and tool compatibility", () => {
   });
 
   it("builds a CopilotKit LangChainAdapter without exposing unsupported GoogleGenerativeAIAdapter options", () => {
-    const loaded = loadAssistantConfig({ GEMINI_API_KEY: "test-key" });
+    const loaded = loadAssistantConfig({ GEMINI_API_KEY: "test-key", ASSISTANT_PROVIDER: "gemini" });
     assert.equal(loaded.ok, true);
     if (!loaded.ok) {
       return;

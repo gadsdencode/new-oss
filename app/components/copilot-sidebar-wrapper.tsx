@@ -5,17 +5,14 @@ import { CopilotSidebar } from "@copilotkit/react-ui";
 import { BrandLogo } from "@/components/brand-logo";
 import { X, SendHorizontal } from "lucide-react";
 import {
+  approvedVisitorMessage,
   ASSISTANT_CONTACT_PATH,
-  VISITOR_BUSY_MESSAGE,
   VISITOR_UNAVAILABLE_MESSAGE,
 } from "@/lib/assistant/constants";
 import "./copilot-chat-theme.css";
 
 function visitorFacingMessage(error?: { message?: string }) {
-  if (error?.message === VISITOR_BUSY_MESSAGE) {
-    return VISITOR_BUSY_MESSAGE;
-  }
-  return VISITOR_UNAVAILABLE_MESSAGE;
+  return approvedVisitorMessage(error?.message);
 }
 
 function AssistantErrorMessage({

@@ -16,6 +16,7 @@ assert.ok(prices);
 
 function assistantConfig(maxOutputTokens = 8) {
   const loaded = loadAssistantConfig({
+    ASSISTANT_PROVIDER: "gemini",
     GEMINI_API_KEY: "test-key",
     GEMINI_MODEL: MODEL,
     ASSISTANT_MAX_OUTPUT_TOKENS: String(maxOutputTokens),
@@ -32,6 +33,7 @@ function spendConfig(overrides: Partial<AssistantSpendConfig> = {}): AssistantSp
     namespace: "development",
     storeKind: "memory",
     requestsPerMinute: 10,
+    requestsPerHour: 25,
     requestsPerDay: 100,
     dailyBudgetNanos: usdToNanos(1),
     monthlyBudgetNanos: usdToNanos(10),
@@ -39,6 +41,7 @@ function spendConfig(overrides: Partial<AssistantSpendConfig> = {}): AssistantSp
     maxUserMessageChars: 4_000,
     maxToolResultChars: 8_000,
     maxModelCallsPerRequest: 4,
+    maxToolEventsPerTurn: 6,
     ...overrides,
   };
 }
@@ -69,6 +72,12 @@ class FailingSpendStore implements SpendStore {
   }
   recordUsage(): Promise<void> {
     return Promise.reject(new Error("connection refused"));
+  }
+  admitVisitorMessage(): ReturnType<SpendStore["admitVisitorMessage"]> {
+    return Promise.reject(new Error("connection refused"));
+  }
+  consumeTurnModelCall(): ReturnType<SpendStore["consumeTurnModelCall"]> {
+    return Promise.resolve({ ok: false, callNumber: 0, answerOnly: true, toolEvents: 0, reason: "store_error" });
   }
 }
 

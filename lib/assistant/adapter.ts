@@ -1,6 +1,7 @@
 import { LangChainAdapter } from "@copilotkit/runtime";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { AIMessage, type BaseMessage } from "@langchain/core/messages";
+import { ChatOpenAI } from "@langchain/openai";
+import { AIMessage, SystemMessage, ToolMessage, type BaseMessage } from "@langchain/core/messages";
 import type { AssistantConfig } from "./config";
 import { boundAssembledModelInput, type BoundInputResult } from "./token-budget";
 import { logAssistantError, logAssistantEvent } from "./logging";
@@ -10,6 +11,12 @@ import { readUsageMetadata, type ProviderUsage } from "./usage";
 import type { SpendGuard } from "./spend-controls";
 import { getModelPrices } from "./pricing";
 import { applyOperatingInstructions } from "./instructions";
+import { ICDU_MAX_OUTPUT_TOKENS, ICDU_MAX_TOOLS, ICDU_MAX_UPSTREAM_BODY_BYTES } from "./constants";
+import { acquireIcdUSlot } from "./icdu-gate";
+import { classifyUpstreamError } from "./provider-errors";
+import { fitUpstreamChatRequest } from "./upstream-request";
+import { formatRetrievedPassages } from "./knowledge/retrieve";
+import { retrieveForVisitor } from "./retrieval";
 
 export type { ProviderUsage } from "./usage";
 export { readUsageMetadata } from "./usage";
@@ -41,6 +48,23 @@ export function createGeminiChatModelFields(config: AssistantConfig) {
     maxRetries: 0,
     streaming: true,
     streamUsage: true,
+  };
+}
+
+export function createIcdUChatModelFields(config: AssistantConfig) {
+  return {
+    model: config.model,
+    apiKey: config.apiKey,
+    maxTokens: Math.min(config.maxOutputTokens, ICDU_MAX_OUTPUT_TOKENS),
+    maxRetries: 0,
+    streaming: true,
+    streamUsage: true,
+    timeout: config.timeoutMs,
+    useResponsesApi: false as const,
+    configuration: {
+      baseURL: config.baseUrl,
+      apiKey: config.apiKey,
+    },
   };
 }
 
@@ -139,12 +163,64 @@ export function normalizeCopilotKitStreamChunk(value: unknown): unknown {
   return value;
 }
 
+/**
+ * OpenAI-compatible streams already carry tool-call ids on the first fragment.
+ * Later fragments often omit the id. Do not replace those with a new synthetic id,
+ * or CopilotKit will lose the tool-result association.
+ */
+export function normalizeIcdUStreamChunk(value: unknown): unknown {
+  if (!value || typeof value !== "object") {
+    return value;
+  }
+
+  const chunk = value as {
+    content?: unknown;
+    tool_call_chunks?: StreamToolCallChunk[];
+    tool_calls?: Array<{ id?: string; name?: string; args?: unknown }>;
+  };
+
+  if (Array.isArray(chunk.content)) {
+    chunk.content = flattenCopilotKitStreamContent(chunk.content);
+  }
+
+  let toolChunks = Array.isArray(chunk.tool_call_chunks) ? chunk.tool_call_chunks : [];
+  if (toolChunks.length === 0 && Array.isArray(chunk.tool_calls) && chunk.tool_calls.length > 0) {
+    toolChunks = chunk.tool_calls.map((toolCall, index) => ({
+      id: toolCall.id,
+      name: toolCall.name,
+      args: typeof toolCall.args === "string" ? toolCall.args : JSON.stringify(toolCall.args ?? {}),
+      index,
+      type: "tool_call_chunk",
+    }));
+  }
+
+  if (toolChunks.length === 0) {
+    return value;
+  }
+
+  chunk.tool_call_chunks = toolChunks.map((toolChunk, index) => {
+    const existingId = typeof toolChunk.id === "string" ? toolChunk.id.trim() : "";
+    const name = typeof toolChunk.name === "string" ? toolChunk.name.trim() : "";
+    const stableIndex = typeof toolChunk.index === "number" ? toolChunk.index : index;
+    if (existingId) {
+      return { ...toolChunk, id: existingId, index: stableIndex };
+    }
+    if (name) {
+      return { ...toolChunk, id: `icdu-tool-${stableIndex}`, index: stableIndex };
+    }
+    return { ...toolChunk, index: stableIndex };
+  });
+
+  return value;
+}
+
 export function instrumentLangChainStream<T>(
   stream: T,
   options: {
     signal: AbortSignal;
     onUsage: (usage: ProviderUsage) => void;
     onFinally?: (details: { aborted: boolean }) => void;
+    normalizer?: (value: unknown) => unknown;
   }
 ): T {
   if (!stream || typeof stream !== "object" || !("getReader" in stream)) {
@@ -202,7 +278,7 @@ export function instrumentLangChainStream<T>(
         if (usage) {
           options.onUsage(usage);
         }
-        controller.enqueue(normalizeCopilotKitStreamChunk(value));
+        controller.enqueue((options.normalizer ?? normalizeCopilotKitStreamChunk)(value));
       } catch (error) {
         try {
           await reader.cancel();
@@ -210,7 +286,10 @@ export function instrumentLangChainStream<T>(
           // Ignore cancel failures while propagating the original error.
         }
         settle(options.signal.aborted);
-        controller.error(error instanceof Error ? error : new AssistantUnavailableError());
+        const safe = error instanceof AssistantUnavailableError
+          ? error
+          : classifyUpstreamError(error, options.signal.aborted);
+        controller.error(safe);
       }
     },
     async cancel(reason) {
@@ -243,18 +322,47 @@ function accountGeneration(
   };
 }
 
+function latestUserText(messages: BaseMessage[]): string {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+    if (!message) {
+      continue;
+    }
+    const type = typeof message._getType === "function" ? message._getType() : "";
+    if (type === "human" && typeof message.content === "string" && message.content.trim()) {
+      return message.content.trim();
+    }
+  }
+  return "";
+}
+
+function countToolMessages(messages: BaseMessage[]): number {
+  return messages.filter((message) => {
+    const type = message && typeof message._getType === "function" ? message._getType() : "";
+    return type === "tool" || message instanceof ToolMessage;
+  }).length;
+}
+
+function requireNaturalLanguageAnswer(messages: BaseMessage[]): BaseMessage[] {
+  const note = "Answer the visitor in natural language now. Do not call tools. Summarize tool results already in the conversation, then offer a next step.";
+  const first = messages[0];
+  if (first && typeof first._getType === "function" && first._getType() === "system") {
+    return [new SystemMessage(`${String(first.content)}\n\n${note}`), ...messages.slice(1)];
+  }
+  return [new SystemMessage(note), ...messages];
+}
+
 /**
  * Smallest CopilotKit-compatible adapter change: same LangChainAdapter streaming
- * path as GoogleGenerativeAIAdapter, plus input bounding, provider output limits,
- * usage accounting, timeout, and cancellation. No automatic fallback or retries.
+ * path, plus input bounding, provider output limits, usage accounting, timeout,
+ * and cancellation. ICDU uses Chat Completions. There is no automatic fallback
+ * to Gemini and no retry of a busy or partial response.
  */
 export function createAssistantServiceAdapter(
   config: AssistantConfig,
   requestSignal?: AbortSignal,
   spend?: SpendGuard
 ) {
-  const modelFields = createGeminiChatModelFields(config);
-
   return new LangChainAdapter({
     chainFn: async ({ messages, tools, threadId }) => {
       if (!spend || !getModelPrices(config.model)) {
@@ -269,6 +377,7 @@ export function createAssistantServiceAdapter(
       let providerStarted = false;
       let finished = false;
       let failed = false;
+      let releaseSlot: (() => void) | undefined;
 
       const finish = async (aborted: boolean) => {
         if (finished) {
@@ -280,6 +389,7 @@ export function createAssistantServiceAdapter(
           : undefined;
         logAssistantEvent("assistant.generation", {
           source: "assistant-adapter",
+          provider: config.provider,
           model: config.model,
           estimatedInputTokens: account?.estimatedInputTokens,
           providerInputTokens: account?.providerInputTokens,
@@ -308,22 +418,65 @@ export function createAssistantServiceAdapter(
         throwIfAborted(signal);
 
         const filtered = filterEmptyAssistantMessages(messages);
-        const withPolicy = applyOperatingInstructions(filtered);
+        const query = latestUserText(filtered);
+        const retrieval = query
+          ? await retrieveForVisitor(query, {
+              embed: config.provider === "icdu",
+              apiKey: config.apiKey,
+              baseUrl: config.baseUrl,
+              signal,
+            })
+          : null;
+        const retrievalText = retrieval ? formatRetrievedPassages(retrieval) : null;
+        const withRetrieval = retrievalText ? [...filtered, new SystemMessage(retrievalText)] : filtered;
+        const withPolicy = applyOperatingInstructions(withRetrieval);
         bound = boundAssembledModelInput(withPolicy, tools, config.maxInputTokens);
-        reservation = await spend.beforeModelCall(bound);
+        reservation = await spend.beforeModelCall(bound, undefined, {
+          toolEventsSeen: countToolMessages(filtered),
+        });
+
+        let outboundMessages = reservation.answerOnly ? requireNaturalLanguageAnswer(bound.messages) : bound.messages;
+        const outboundTools = reservation.answerOnly ? [] : tools.slice(0, ICDU_MAX_TOOLS);
+        if (config.provider === "icdu") {
+          const fitted = fitUpstreamChatRequest(
+            outboundMessages,
+            outboundTools,
+            config.model,
+            Math.min(config.maxOutputTokens, ICDU_MAX_OUTPUT_TOKENS)
+          );
+          if (fitted.bodyBytes > ICDU_MAX_UPSTREAM_BODY_BYTES) {
+            throw new AssistantUnavailableError("ASSISTANT_UNAVAILABLE");
+          }
+          outboundMessages = fitted.messages;
+          bound = {
+            ...bound,
+            messages: outboundMessages,
+            historyTruncated: bound.historyTruncated || fitted.truncated,
+            droppedMessageCount: bound.droppedMessageCount + fitted.droppedMessageCount,
+          };
+        }
 
         logAssistantEvent("assistant.model_call", {
           source: "assistant-adapter",
+          provider: config.provider,
           model: config.model,
           estimatedInputTokens: bound.estimatedInputTokens,
           historyTruncated: bound.historyTruncated,
           droppedMessageCount: bound.droppedMessageCount,
           maxOutputTokens: config.maxOutputTokens,
+          retrievalMode: retrieval?.mode,
+          sourceIds: retrieval?.sourceIds.join(","),
         });
 
+        if (config.provider === "icdu") {
+          releaseSlot = await acquireIcdUSlot(signal);
+        }
         providerStarted = true;
-        const model = new ChatGoogleGenerativeAI(modelFields).bindTools(tools);
-        const rawStream = await model.stream(bound.messages, {
+        const chat = config.provider === "icdu"
+          ? new ChatOpenAI(createIcdUChatModelFields(config))
+          : new ChatGoogleGenerativeAI(createGeminiChatModelFields(config));
+        const runnable = outboundTools.length > 0 ? chat.bindTools(outboundTools) : chat;
+        const rawStream = await runnable.stream(outboundMessages, {
           signal,
           metadata: {
             conversation_id: threadId,
@@ -332,25 +485,29 @@ export function createAssistantServiceAdapter(
 
         return instrumentLangChainStream(rawStream, {
           signal,
+          normalizer: config.provider === "icdu" ? normalizeIcdUStreamChunk : normalizeCopilotKitStreamChunk,
           onUsage: (usage) => {
             latestUsage = usage;
           },
           onFinally: ({ aborted }) => {
+            releaseSlot?.();
+            releaseSlot = undefined;
             void finish(aborted);
           },
         });
       } catch (error) {
         failed = true;
+        releaseSlot?.();
+        const classified = classifyUpstreamError(error, signal.aborted);
         logAssistantError(error, {
           source: "assistant-adapter",
-          errorCode: signal.aborted ? "ASSISTANT_TIMEOUT" : "ASSISTANT_PROVIDER_ERROR",
+          errorCode: classified.code,
+          provider: config.provider,
           model: config.model,
           providerStarted,
         });
         await finish(signal.aborted);
-        throw error instanceof AssistantUnavailableError
-          ? error
-          : new AssistantUnavailableError(signal.aborted ? "ASSISTANT_TIMEOUT" : "ASSISTANT_PROVIDER_ERROR");
+        throw classified;
       }
     },
   });
